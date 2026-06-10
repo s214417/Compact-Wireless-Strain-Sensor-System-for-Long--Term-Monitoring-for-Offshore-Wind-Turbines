@@ -1,0 +1,35 @@
+\section{Wireless Communication and Zigbee Network}
+\subsection{Wireless communication selection}
+Wireless communication will be used in the application to transmit information from each module to the user. In each windmill app. 1000 sensor modules will be needed, one for each bolt and joint, therefore an appropriate solution would be to use a mesh network structure protocol as zigbee. A zigbee mesh network structure is build up of three components: The coordinator, the routers and the end devices. The end devices are each sensor module, the routers helps to make bridges and carry on the signal between end devices and the coordinator, and the coordinator collect data from all end devices and transmits it to the home assistant application. An advantage of the mesh network structure is that it is selfhealing, and can reach further than eg. a star formation, which only has communication between master and end device. A visual representation of a zigbee mesh network can be seen in \cref{fig:Zigbee_Network}.
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing, width=\linewidth]{Standalone/Drawings/wireless_com_selection-tikz}
+    \caption{Zigbee mesh network structure and star network structure.}
+    \label{fig:Zigbee_Network}
+\end{figure}
+
+
+
+Compared to similar network protocols such as Bluetooth Low Energy (BLE) and thread, Zigbee is preferable for this application, because it can host many devices and has relatively low complexity \cite{Thread_vs_zigbee, Zigbee_alliance}. BLE is a network protocol designed for low-power, short-range applications, but is more suited for peer-to-peer communcation or to be used in a star formation and Thread is a IPv6-based mesh networking protocol built on IEEE 802.15.4 at 2.4 GHz, where each nodes receives it's own IP adress, which enables direct IP communication and simplified integration with cloud services. Eventhough this seems preferable it requires additional layers such as 6LoWPAN, UDP, and IPv6 header handling, which makes a more complicated process with increased stack complexity, memory usage, and firmware size.
+
+Zigbee uses a purpose-built, lightweight mesh networking layer with 16-bit short addressing managed by a coordinator. This results in smaller packet overhead and a simpler state machine for sleepy end devices. For sensors that wake up only once per month, this simplicity improves predictability and reduces implementation risk, especially in harsh offshore environments where maintenance access is limited.
+
+From a hardware perspective, Zigbee and Thread can run on the same 802.15.4 SoCs. However, Zigbee stacks typically require slightly less flash and RAM, allowing the use of compact integrated solutions such as QFN packages around 5×5 mm (e.g., EFR32MG22, CC2652R). Using an integrated Zigbee SoC avoids the need for larger module-based Thread solutions or more powerful MCUs, which may increase PCB size and power consumption. 
+
+In an offshore windmill environment, where metal structures already limit 2.4 GHz propagation, the choice of protocol does not improve RF penetration. Therefore, the decision should prioritize system simplicity, long-term stability, and predictable mesh behavior. Given these constraints, Zigbee offers a lower-complexity, mature, and well-proven solution compared to Thread and BLE for this specific application.
+
+\subsection{Integrated or external Zigbee module}
+Each module must include a wireless communication circuit and this can either be integrated onto the modular PCB's or be bought as a working external PCB. The pros of choosing an external solution is that RF tuning is easier, since a finished product would not need any tuning and therefore it could be a more secure solution for a stable RF connection. It would also open up for a larger microcontroller selection, since it would not be a criteria that the microcontroller had a wireless feature. The cons of this implementation is that it is more expensive, uses more space and could possibly face some synchronization problems. 
+In the end it was chosen that the RF section would be integrated into the system, since this would save more on costs and space in total.
+
+\subsection{The Zigbee Network}
+\autoref{fig:WC_Overview} illustrates the placements of the end notes, routers and the coordinator in a windmill. The yellow dots, representing the end devices, are to be placed on each nut around the flange, sending information to the nearest router, blue dots, which are spaced evenly out thoughout the windmill tower. The green dot represents the coordinator, which works as a host, collecting information from the end devices and tranfers the data to a wifi connection. For proof of concept each end device will include a 2.4 GHz antenna which will be used to transmit data to the routers and onwards to the coordinator. For the coordinator a Sonoff Gateway ZigBee 3.0 USB Dongle Plus will be connected to a computer, which has been configured to work as a home assistant platform using the open-source linux based system UBUNTU. 
+The routers are often integrated into lightbulbs or other analog outlets and will not be explored in the prototype setup.
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing, width=\linewidth]{Standalone/Drawings/WC_overview}
+    \caption{Kom nu ind i kampen Crille}
+    \label{fig:WC_Overview}
+\end{figure}

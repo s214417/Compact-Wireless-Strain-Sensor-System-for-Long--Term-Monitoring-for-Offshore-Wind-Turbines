@@ -1,0 +1,10 @@
+\chapter{System Overview} \label{sec:System_overview}
+
+\autoref{fig:System} shows a simplified overview of the system design. The system can be seperated into four parts. Wireless communication, Schematic and PCB design, 3D printed strain sensors and firmware implementation. A battery will drive the MCU and will be selected based on a power consumption analysis and expected lifetime. The MCU will handle powering the strain sensors and data collection through integrated ADC, and will communicate wirelessly via zigbee to home assisstant which will work as a GUI for the user. The system is designed to be proof of concept. 
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Drawings/System_overview-tikz}
+    \caption{System overview.}
+    \label{fig:System}
+\end{figure}

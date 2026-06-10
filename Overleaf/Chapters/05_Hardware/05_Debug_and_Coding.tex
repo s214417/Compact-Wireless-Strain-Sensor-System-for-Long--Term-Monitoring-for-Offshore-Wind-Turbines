@@ -1,0 +1,13 @@
+\section{Debugging and Coding}
+
+\subsection{Debugging}
+Debugging will be done using the serial wire debug (SWD) interface using pins PA01 SWCLK, PA02 SWDIO, PA03 SWO, RESETn, GND and Vtarget. Vtarget is connected to the internal DCDC-converter output of 1.8 V since it needs to match the voltage at IOVDD. 
+
+\subsection{Power Modes}
+\label{Sec:Power_Modes}
+The EFR32MG22E has six different powermodes EM0, EM1, EM1P, EM2, EM3 and EM4, where EM4 is the lowest power mode. For most of the time the system will be in EM4, in a deep-sleep which lasts a month before it wakes up again. When waking from EM4 the system must go to EM0 where it can go another power mode if needed.
+
+\subsection{IADC}
+The sensor readings will be handled via the interal analog-to-digital converter (IADC), which will receive a differential reading from the wheatstone bridge.
+
+\subsection{Zigbee Communication}

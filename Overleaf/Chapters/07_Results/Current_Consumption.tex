@@ -1,0 +1,91 @@
+\subsection{Current Consumption Analysis}
+\autoref{fig:cc_full} shows the testresults from a full system implementation, tested in a climate chamber under a temperature range of \SI{-20}{\celsius} to \SI{+50}{\celsius}, with constant humidity. The testresults showed that the MCU has a higher current consumption in EM0 (run mode) at low temperatures and vice versa a higher current consumption in EM4 (sleep mode) at high temperatures.  
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Plots/FullSystem_neg_deg_cc_meas}
+    \caption{Measurement mode}
+    \label{fig:measurement}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Plots/FullSystem_neg_deg_cc_sleep}
+    \caption{Sleep mode}
+    \label{fig:sleep}
+\end{subfigure}
+\caption{Full system performance under different operating modes}
+\label{fig:cc_full}
+\end{figure}
+
+The measured average current consumption of the two modes at \SI{-20}{\celsius} and \SI{+50}{\celsius} can be seen in \autoref{tab:cc_averages}. The measurements fit the datasheet values where \SI{0.17}{\micro\ampere} was the lowest EM4 current consumption and a current consumption between \SI{5.612}{\micro\ampere} and \SI{6.674}{\micro\ampere} 
+
+\begin{table}[H]
+\centering
+\caption{Measured current consumption and charge per wake-up}
+\label{tab:cc_averages}
+\begin{tabular}{@{}lcr@{}}
+\toprule
+Mode &
+Temp. &
+$I_{\mathrm{avg}}$  \\
+&
+(\si{\celsius}) &
+(\si{\milli\ampere}) \\
+\midrule
+EM0 & -20 & \SI{5.612}{\milli\ampere} \\
+EM0 & +50 & \SI{6.674}{\milli\ampere} \\
+EM4 & -20 & \SI{171.9}{\nano\ampere} \\
+EM4 & +50 & \SI{767.7}{\nano\ampere} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Compared to datasheet values the microcontroller gets near the \SI{0.17}{\micro\ampere} in EM4 at lower te \cite{EFR32MG22E}.
+
+With an approximate number of hours in 10 years being
+\begin{equation}
+    H_{10y} = 24~\text{h/day}\cdot 365~\text{days/year}\cdot 10~\text{years} = 87600~\text{h},
+\end{equation}
+
+The following relation will be used to determine the charge for the measured current consumption
+\begin{equation}
+    Q = I \cdot t
+\end{equation}
+
+\begin{table}[H]
+\centering
+\caption{Estimated charge consumption over 10 years}
+\label{tab:charge_10y}
+\begin{tabular}{@{}crrrr@{}}
+\toprule
+Readings/day &
+Temp. &
+$Q_{\mathrm{EM0}}$ &
+$Q_{\mathrm{EM4}}$ &
+$Q_{\mathrm{total}}$ \\
+Over 10 years  &
+(\si{\celsius}) &
+(\si{\milli\ampere\hour}) &
+(\si{\milli\ampere\hour}) &
+(\si{\milli\ampere\hour}) \\
+\midrule
+1 & -20 & 15.24 & 15.05 & 30.29 \\
+1 & +50 & 18.12 & 67.23 & 85.35 \\
+\hline
+2 & -20 & 30.48 & 15.05 & 45.52 \\
+2 & +50 & 36.24 & 67.21 & 103.45 \\
+\hline
+5 & -20 & 76.19 & 15.04 & 91.22 \\
+5 & +50 & 90.61 & 67.15 & 157.75 \\
+\hline
+10 & -20 & 152.38 & 15.01 & 167.39 \\
+10 & +50 & 181.21 & 67.04 & 248.25 \\
+\hline
+55 & -20 & 838.07 & 14.80 & 852.87 \\
+55 & +50 & 996.67 & 66.10 & 1062.77 \\
+\bottomrule
+\end{tabular}
+\end{table}

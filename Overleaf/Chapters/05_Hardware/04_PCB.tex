@@ -1,0 +1,120 @@
+\section{PCB Design}
+\subsection{Initial PCB design}
+The initial PCB design is based on Silicon Labs' Layout Design Guide 'AN928.2: EFR32 Series 2 Layout Design Guide' \cite{Layout_guide}. 
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{Pictures/PCB_3D_TOP.png}
+        \caption{Top View.}
+        \label{fig:PCB_3D_TOP}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{Pictures/PCB_3D_BOTTOM.png}
+        \caption{Bottom View.}
+        \label{fig:PCB_3D_BOT}
+    \end{subfigure}
+    \caption{PCB 3D Views.}
+    \label{fig:PCB_3D}
+\end{figure}
+
+\subsection{PCB Stackup and Cobber Pours}
+The PCB has a 4-layer stackup in the order: signal, ground, ground, signal. This stackup is used to minimize the distance between the top signal layer and the first internal ground layer, since a smaller distance decreases the EMI. It also makes it possible to route traces on the bottom, which is used for power traces. From the layout guide it is recommended to have a prepreg thickness of betweem 300 $\upmu$m to 800 $\upmu$m, in the final design a prepreg thickness of 294$\upmu$m was selected, since it also matched \textit{JLCPCB}'s controlled impedance stackups. When ordering the PCB from \textit{JLCPCB} the PCB stackup was changed due to test and calculations from engineers made by the manufacturor, and the prepreg thickness therefore changed to 210  $\upmu$m. \autoref{tab:INIT_PCBStackup} shows the intial stackup made in \textit{Altium Designer Professional} and \autoref{tab:PCBStackup} shows the final stackup from \textit{JLCPCB}.
+
+
+\begin{table}[H]
+\centering
+\caption{Initial PCB Stackup}
+\label{tab:INIT_PCBStackup}
+\begin{tabular}{@{}lcccSS@{}}
+\toprule
+                    & {Type}  & {Material}    & {Weight (oz)} & {Thickness (mm)} & {Dk} \\
+\midrule
+Top Layer           & Signal  & Copper        & 1             & 0.0350           &         \\ 
+\midrule
+Dielectric 1        & Prepreg & 7628*1        & ---           & 0.2180           & 4.4     \\ 
+Dielectric 2        & Prepreg & 1080*1        & ---           & 0.0764           & 3.91    \\ 
+\midrule
+GND 1               & Signal  & Copper        & 0.5           & 0.0152           &         \\ 
+\midrule
+Dielectric 3        & Core    & Core          & ---           & 0.8650           & 4.6     \\ 
+\midrule
+GND 2               & Signal  & Copper        & 0.5           & 0.0152           &         \\
+\midrule
+Dielectric 4        & Prepreg & 1080*1        & ---           & 0.0764           & 3.91    \\
+Dielectric 5        & Prepreg & 7628*1        & ---           & 0.2180           & 4.4     \\ 
+\midrule
+Bottom Layer        & Signal  & Copper        & 1             & 0.0350           &         \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Final PCB Stackup}
+\label{tab:PCBStackup}
+\begin{tabular}{@{}lcccSS@{}}
+\toprule
+                    & {Type}  & {Material}    & {Weight (oz)} & {Thickness (mm)} & {Dk} \\
+\midrule
+Top Layer           & Signal  & Copper        & 1             & 0.0350           &         \\ 
+\midrule
+Dielectric 1        & Prepreg & 7628*1        & ---           & 0.2104           & 4.4     \\ 
+\midrule
+GND 1               & Signal  & Copper        & 0.5           & 0.0152           &         \\ 
+\midrule
+Dielectric 2        & Core    & Core          & ---           & 1.0650           & 4.6     \\ 
+\midrule
+GND 2               & Signal  & Copper        & 0.5           & 0.0152           &         \\
+\midrule
+Dielectric 3        & Prepreg & 7628*1        & ---           & 0.2104           & 4.4     \\ 
+\midrule
+Bottom Layer        & Signal  & Copper        & 1             & 0.0350           &         \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+Cobber pours has been used for ground layer 1 and 2, but have been more sparsely used on the signal layers. On the top layer a stitched ground pour has been placed sorrounding the RF trace. This helps do decrease the EMI and isolate the path from the external interferences. Apart from this, ground pours have not been used on the signal layers, with the reason being that a ground pour does not necessarily reduce EMI or create a better ground path. Studies shows that a better solution is to either leave out the ground pours all together, or to have a tight stiching pattern. 
+
+\subsection{Antenna and impedance trace}
+The RF section layout is based upon the layout of the explorer kit. The layout has been copied closely, except that the distance between the components in the impedance trace has been increased slightly, to make assembling the board easier, since placing 0201 components can be a challinge. 
+The RF trace has been designed as a single coplanar trace with ground stitching vias to minimize electromagnetic inteference (EMI). The trace width is calculated in \textit{Altium Designer Professional} based on the 50 $\Omega$ impedance matching criteria and the layer stackup to 0.291 mm (11.47 mils) and a recommend ground clearance width of 0.94 mm (37 mils). The final implementation was calculated by \textit{JLCPCB} with a trace width of 0.332 mm (13.07 mils) and a ground clearance width of 0.95 mm (37.21 mils)
+
+The Antenna is required to be placed in the center and by the edge of the board with a ground clearance of 4mmx6mm, with ground stitching vias along both the clearance and the edge of the board.  
+
+\subsection{PCB Assembly}
+The PCB was assembled maunually using T5 solder paste, placing the components by hand, and afterwards using a T962A reflow oven to melt the solder paste and securing the components. Heat sensitive components like the connector headers and the button was soldered by hand afterwards.
+
+\subsection{Final PCB Design}
+After assembling and testing the PCB, some alterations were made to the PCB design. \autoref{fig:Final_PCB} shows the final design including the alterations from \autoref{Final_Schem}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Pictures/PCB_Final_Top.png}
+    \caption{Enter Caption}
+    \label{fig:Final_PCB}
+\end{figure}
+
+\autoref{fig:Final_PCB_3D_2} shows a design for a final prototype, where pogo pins are used instead of an SH connector for debug connections. This makes for a smaller layout and faster debug in manufacturing.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=1.3\linewidth]{Pictures/Master_Rev6_½AA_PCB_TOP.pdf}
+        \caption{Top View.}
+        \label{fig:PCB_3D_TOP}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=1.3\linewidth]{Pictures/Master_Rev6_½AA_PCB_BOT.pdf}
+        \caption{Bottom View.}
+        \label{fig:PCB_3D_BOT}
+    \end{subfigure}
+    \caption{Final PCB design including pogo pins connections.}
+    \label{fig:Final_PCB_3D_2}
+\end{figure}

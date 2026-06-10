@@ -1,0 +1,40 @@
+\chapter{Introduction} \label{sec:Introduction}
+Offshore wind energy has become a central component in the transition to low-carbon power generation. As turbine size and farm complexity continue to increase, the structural integrity of critical components becomes increasingly important. In particular, the integrity of bolted joints plays a critical role in maintaining safe operation, since loss of preload can lead to fatigue damage, costly maintenance, misalignment, and unplanned downtime.
+
+Bolted joints in offshore wind turbines are exposed to moisture, vibration, temperature variation, and cyclic loading, which over time can gradually reduce preload. In practice, preload degradation is difficult to monitor continuously. Current approaches are typically based on periodic manual inspection and torque verification. While these methods are established, they are discontinuous, labor-intensive, and costly, especially in offshore environments where access is limited and weather dependent. This creates a need for continuous, reliable, and cost-effective monitoring solutions capable of detecting early signs of degradation and supporting condition-based maintenance.
+
+A compact, permanently installed monitoring solution can address this limitation by providing joint-level structural health information. However, this application must satisfy several strict requirements such as limited mounting area, low power availability, long autonomous lifetime, environmental robustness, and scalability to a large number of monitored joints. These constraints make conventional sensing approaches challenging to deploy at scale.
+
+Recent advances in additive manufacturing have introduced new opportunities for the development of novel sensing technologies. In particular, conductive 3D printing materials enable the fabrication of integrated electromechanical components, such as strain sensors, with a high degree of geometric flexibility and low production cost. These properties make 3D-printed sensors an attractive alternative to conventional strain gauges, especially in applications where scalability, low-cost, and long-term deployment are essential.
+
+This thesis investigates a compact wireless strain sensing system designed specifically for long-term monitoring of offshore bolted joints. The work combines sensor development, low-power electronics, and system-level integration in order to move from concept to validated prototype.
+
+\section{Problem Statement}
+The main objective of this thesis is therefore to address the following research question:
+How can a compact, wireless, strain sensor system be designed and validated to reliably measure $\le$800 µstrain elongated deformation on an M48 steel nut under offshore environmental conditions for more than 10 years of operation?\\
+To answer this, the thesis addresses the following sub-questions:
+
+\begin{itemize}
+    \item[-] How can 3D printed sensor characteristics be optimized for accurate strain transfer and sensitivity?
+    \item[-] How can encapsulation be implemented to resist water, oil, and grease while maintaining strain transfer?
+    \item[-] How can strain measurement systems be integrated within a 30 x 30 mm metallic surface?
+    \item[-] How can wireless communication be implemented in a compact system suitable for acquiring data across numerous bolted joints in a wind turbine?
+    \item[-] How can ultra-low-power electronics support long-term autonomous operation for more than 10 years?
+    \item[-] How does system performance vary across relevant operating temperatures and long-term use conditions?
+\end{itemize}
+
+\section{Methodology \& Scope}
+The project follows an iterative experimental engineering process. It begins with a literature study and requirement analysis to clarify the constraints imposed by offshore use, bolt geometry, autonomous operation, and environmental exposure. These requirements are then translated into design targets for the sensor, electronics, encapsulation, and wireless communication.
+
+The sensing concept is developed through repeated cycles of additive manufacturing and bench testing. 3D printing is used to rapidly vary geometry and material parameters, while measurements are used to evaluate sensitivity, repeatability, and strain transfer. This allows the design to be refined without relying on expensive tooling or long fabrication loops.
+
+The electronic system is developed in parallel using a modular embedded design approach. Firmware, acquisition circuitry, and wireless communication are designed and simulated as separate blocks before integration. A similar build-test-refine cycle is used for power management, calibration, and signal processing, where the objective is to balance measurement quality with ultra-low-power operation.
+
+Validation is based on controlled experiments rather than purely theoretical analysis. The sensor response is evaluated under known loading conditions, and the prototype is tested in representative environmental and mechanical scenarios to assess robustness, drift, and practical feasibility. Due to the limited time frame of a master's thesis, the scope is limited to demonstrating a working prototype and quantifying its performance, rather than carrying out full-life qualification for offshore deployment.
+
+\section{Previous work}
+Wireless strain sensing for structural health monitoring has been demonstrated in several studies  \cite{SHM_bog, wireless_strain_sensor}, and offshore monitoring has been widely investigated \cite{offshore_sensor_solutions, WindTurbineStrainSensor, StrainBand}. However, conventional strain-gauge-based systems still require significant signal conditioning, which increases complexity, power consumption, and physical footprint \cite{MetalFoilStrain}. This makes them difficult to integrate into compact, autonomous monitoring solutions.
+
+At the same time, 3D-printed conductive materials have emerged as a promising alternative for custom sensing applications because they enable rapid prototyping, geometric optimization, and low-cost fabrication \cite{G.O.A.T, 3DprintStrain, 3DprintWheatstoneStrain}. These approaches are particularly relevant in applications where sensor shape, installation space, and integration constraints are tightly coupled. Even so, the combination of compact packaging, low power operation, environmental sealing, and long-term offshore deployment remains insufficiently addressed in the literature.
+
+Building on these developments, this thesis explores a compact wireless strain sensor system designed for long-term monitoring of offshore bolted joints. The project combines a miniaturized sensing concept, a low-power embedded measurement architecture for multi-year operation, and an encapsulated design for harsh environments, supported by calibration and validation to assess system performance and feasibility.
