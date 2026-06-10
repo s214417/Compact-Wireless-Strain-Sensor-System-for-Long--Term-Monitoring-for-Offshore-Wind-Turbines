@@ -1,0 +1,103 @@
+# Silicon Labs Project Configuration Tools: slcp, v0, Component selection file.
+project_name: Custom_PCB_V3
+label: Custom_PCB_V3
+description: |
+  This example project shows an empty configuration that can be used as a starting point to add components and functionality.
+category: Example|Platform
+filter:
+- name: Device Type
+  value:
+  - SoC
+- name: MCU
+  value:
+  - 32-bit MCU
+- name: Project Difficulty
+  value:
+  - Beginner
+package: platform
+quality: production
+readme:
+- path: readme.md
+source:
+- path: app.c
+include:
+- path: .
+  file_list:
+  - path: app.h
+sdk:
+  vendor: silabs
+  id: simplicity_sdk
+  version: 2025.12.1
+toolchain_settings: [
+  ]
+component:
+- package: simplicity_sdk
+  vendor: silabs
+  id: EFR32MG22E224F512IM32
+- package: simplicity_sdk
+  vendor: silabs
+  id: board_control
+- package: simplicity_sdk
+  vendor: silabs
+  id: clock_manager
+- package: simplicity_sdk
+  vendor: silabs
+  id: configuration_over_swo
+- package: simplicity_sdk
+  vendor: silabs
+  id: device_init
+- package: simplicity_sdk
+  vendor: silabs
+  id: dmadrv
+- package: simplicity_sdk
+  vendor: silabs
+  id: emlib_iadc
+- package: simplicity_sdk
+  vendor: silabs
+  id: emlib_timer
+- package: simplicity_sdk
+  vendor: silabs
+  id: hal_eusart
+- package: simplicity_sdk
+  vendor: silabs
+  id: sl_main
+- package: simplicity_sdk
+  vendor: silabs
+  id: sleeptimer
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_basic
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_find_and_bind_initiator
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_identify_feedback
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_network_steering
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_phy_2_4
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_pro_leaf_stack
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_reporting
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_scan_dispatch
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_zcl_framework_core
+- package: simplicity_sdk
+  vendor: silabs
+  id: zigbee_zll_identify_server
+define:
+- name: DEBUG_EFM
+ui_hints:
+  highlight:
+  - path: readme.md
+    focus: true
+
