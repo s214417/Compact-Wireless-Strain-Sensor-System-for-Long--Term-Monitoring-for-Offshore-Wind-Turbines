@@ -1,0 +1,4 @@
+C:/Users/lukas/SimplicityStudio/Master_Tests/Custom_PCB_V3/cmake_gcc/build/CMakeFiles/slc.dir
+C:/Users/lukas/SimplicityStudio/Master_Tests/Custom_PCB_V3/cmake_gcc/build/CMakeFiles/Custom_PCB_V3.dir
+C:/Users/lukas/SimplicityStudio/Master_Tests/Custom_PCB_V3/cmake_gcc/build/CMakeFiles/edit_cache.dir
+C:/Users/lukas/SimplicityStudio/Master_Tests/Custom_PCB_V3/cmake_gcc/build/CMakeFiles/rebuild_cache.dir
