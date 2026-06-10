@@ -1,0 +1,73 @@
+\documentclass[a4paper,twoside,11pt]{report} %openright
+\input{Setup/Statics.tex}
+\input{Setup/Preamble.tex}
+\input{Setup/Settings.tex}
+
+\begin{document}
+
+\pagenumbering{roman}
+\input{Frontmatter/Frontpage.tex}
+\pagecolor{white}
+\newgeometry{top=2.81cm, bottom=2.75cm, outer=2.5cm, inner=3.5cm}
+\pagestyle{empty}
+\cleardoublepage 
+\input{Frontmatter/Copyright.tex}
+\clearpage 
+\pagestyle{main}
+% \input{Frontmatter/Approval.tex}
+% \clearpage 
+\input{Frontmatter/Abstract.tex}
+\clearpage 
+\input{Frontmatter/Acknowledgements.tex}
+\clearpage 
+\input{Frontmatter/Use_of_AI}
+\cleardoublepage 
+\tableofcontents
+\cleardoublepage
+\listoffigures
+\addcontentsline{toc}{section}{List of Figures}
+\cleardoublepage
+\listoftables
+\addcontentsline{toc}{section}{List of Tables}
+\cleardoublepage
+\input{Frontmatter/Symbols}
+\cleardoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{arabic}
+\input{Chapters/01_Introduction/01_Introduction}
+\cleardoublepage
+\input{Chapters/02_Theory/01_Strain}
+\input{Chapters/02_Theory/02_Constriction_resistance}
+\cleardoublepage 
+\input{Chapters/03_System_Overview/01_System_overview}
+\cleardoublepage
+\input{Chapters/04_Sensor/01_Sensor}
+\cleardoublepage
+\input{Chapters/05_Hardware/01_System}
+\input{Chapters/05_Hardware/02_Zigbee}
+\input{Chapters/05_Hardware/03_Schematic}
+\input{Chapters/05_Hardware/04_PCB}
+\input{Chapters/05_Hardware/05_Debug_and_Coding}
+\cleardoublepage 
+\input{Chapters/06_Firmware_and_software/01_Firmware}
+\input{Chapters/06_Firmware_and_software/02_Software}
+\cleardoublepage 
+\input{Chapters/07_Results/Results}
+\input{Chapters/07_Results/Current_Consumption}
+\cleardoublepage 
+\input{Chapters/08_Discussion/01_Discussion}
+\cleardoublepage 
+\input{Chapters/09_Conclusion/01_Conclusion}
+\cleardoublepage 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\printbibliography[heading=bibintoc,title={Bibliography}]
+\cleardoublepage 
+\appendix
+\input{Backmatter/project_plan}
+\input{Backmatter/github}
+\cleartoleftpage
+\input{Backmatter/Backpage.tex}
+
+\end{document}
