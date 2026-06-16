@@ -1,42 +1,44 @@
 \section{Schematic Design and Component Selection}
-The initial design included components which are not present in the final design, see \cref{Final_Schem}. In this section the initial design will be thoroughly explained, whereafter the alterations leading to a final design will be explained.
+The schematic design was developed with a focus on low power consumption, reliable sensor measurements, and wireless communication capability while maintaining a compact and cost-effective implementation. During the initial design phase, additional circuitry was included to address potential issues related to power supply stability, noise susceptibility, voltage regulation, and system reliability. As the expected operating conditions and component interactions were not yet fully characterized, a conservative design approach was adopted to minimize the risk of performance issues during prototype testing.
 
-\cref{fig:circuit_block} shows a simplified block diagram overview of the intitial signal path in the circuit design. The design is based around an MCU which need to have an internal ADC to measure sensor readings and an internal radio controller to make for an easier wireless communication implementation. In the initial desing it was thought advenatgious to include an LDO to regulate the battery input voltage, since the sensors originally was going to be powered via a PMOS directly from the input 3V rail.
+Following assembly and experimental validation, the necessity of each component was evaluated based on its impact on system performance, power consumption, and overall cost. Components that provided limited practical benefit were subsequently removed or simplified, resulting in the final schematic shown in \Cref{sec:Final_Schem}. This iterative design process enabled optimization of both the electrical performance and the manufacturability of the system.
+
+\subsection{Initial Schematic Design}
+\cref{fig:circuit_block} shows a simplified block diagram overview of the initial signal path in the circuit design. The design is based around an MCU which includes an internal ADC for sensor measurements and an integrated radio transceiver to simplify the implementation of wireless communication. The initial design included an LDO to regulate the battery voltage to a stable \SI{3}{\volt}. The sensors were powered through a PMOS switch directly from the regulated \SI{3}{\volt} supply to maximize the available sensing range while allowing the MCU to disconnect the sensors during sleep periods to reduce power consumption.
 
 \begin{figure}[H]
 \centering
-\includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Drawings/Circuit_overview-tikz.tex}
+\includestandalone[mode=buildmissing, width=0.85\textwidth]{Standalone/Drawings/Circuit_overview-tikz.tex}
     \caption{Block diagram of initial signal path.}
     \label{fig:circuit_block}
 \end{figure}
 
-\subsection{Initial Schematic design}
 The initial schematic design of the complete implementation can be seen on \cref{fig:Full_Schematic}. The schematic was designed using \textit{Altium Designer Professional}. The design is structured into functional blocks, including power regulation, wheatstone bridge sensing powering PMOS circuit, the microcontroller, RF circuit, and external connectors.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{Pictures/Master_Rev4_½AA.pdf}
+    \includegraphics[width=1\linewidth]{Pictures/REV4/Master_Rev4_½AA_PCB_Schematic.pdf}
     \caption{Initial schematic of full system.}
     \label{fig:Full_Schematic}
 \end{figure}
 
 \subsection{Microcontroller Selection}
-The microcontroller (MCU) used in this implementation is Silicon labs' EFR32MG22E, which is the optimal choice for this design due to its low-power design, versatility, and its low price. The MCU has a 32-bit ARM® Cortex®-M33 core with 76.8 MHz maximum operating frequency and has a suitable low amount of storage with up to 512 kB of flash and 32 kB of RAM, since it does not need to store many readings before it transmits data onwards. 
+The microcontroller (MCU) used in this implementation is Silicon labs' EFR32MG22E, which is the optimal choice for this design due to its low-power design, versatility, and its low price.The MCU features a 32-bit ARM® Cortex®-M33 core operating at up to 76.8 MHz and provides up to 512 kB of Flash memory and 32 kB of RAM. These resources are well suited to the application, as the firmware requirements remain relatively modest due to Zigbee being a lightweight protocol with a compact stack. As a result, a smaller memory footprint is sufficient, making the selected memory configuration appropriate while supporting an efficient and cost-effective design.
 
-The MCU also features an seperate ARM Cortex M0+ Radio Controller with up to 6 dBm (2.4 GHz) TX output power, making it useful when working with zigbee connections. A TX power of 6 dBm is acceptable for this implementation, but could prove to be not enough in the final implementation, since a windmill flanger is made of solid metal and therefore could compromise the radio signal. Another solution could be to add extra routers if this happens or choose an MCU which can operate in the sub-GHz bands.
+The MCU also features an separate ARM Cortex M0+ Radio Controller with up to 6 dBm (2.4 GHz) TX output power, making it useful when working with Zigbee connections. A TX power of 6 dBm is acceptable for this implementation, but could prove to be insufficient in the final implementation, since a windmill flanger is made of solid metal and therefore could compromise the radio signal. Another solution could be to add extra routers if this happens or choose an MCU which can operate in the sub-GHz bands.
 The MCU has an operating range between 1.71 V to 3.8 V single power supply, between a temperature of -40 °C to 125 °C. It has a power profile of 8.2 mA TX current at 6 dBm output power and min 0.17 $\upmu$A current in the lowest power mode EM4. The build in IADC has a resolution of 12-bit at 1 Msps and of 16-bit at 76.9 ksps and has integrated voltage reference options, which makes it possible to optimize the ADC input range and precision.
 
-Compared to other suitable microcontrollers the EFR32MG22E has the lowest sleep current and lowest TX current at 6 dBm. It is also among the cheapest options at 14.32 DKK pr. unit, and eventhough it is a more expensive than the standard EFR32MG22, it is preferrable, because of its faster stardup times at 1.83 ms compared to 8.81 ms, from lowest standby mode EM4. That is 4.8 times faster than the EFR32MG22, which makes for a power saving of 79.2\% in startup, when going from EM4, which is the lowest power mode, to EM0, that is normal run mode.
+Compared to other suitable microcontrollers the EFR32MG22E has the lowest sleep current and lowest TX current at 6 dBm. It is also among the cheapest options at 14.32 DKK pr. unit, and even though it is a more expensive than the standard EFR32MG22, it is preferable, because of its faster startup times at 1.83 ms compared to 8.81 ms, from lowest standby mode EM4. That is 4.8 times faster than the EFR32MG22, which makes for a power saving of 79.2\% in startup, when going from EM4, which is the lowest power mode, to EM0, that is normal run mode.
 
-\begin{equation}
-    \text{Savings(\%)} = \frac{t_{normal}-t_{fast}}{t_{normal}} \cdot 100 = \frac{8.81 \text{ms} - 1.83 \text{ms}}{8.81 \text{ms}} \cdot 100 = 79.2 \%
-\end{equation}
+% \begin{equation}
+%     \text{Savings(\%)} = \frac{t_{normal}-t_{fast}}{t_{normal}} \cdot 100 = \frac{8.81 \text{ms} - 1.83 \text{ms}}{8.81 \text{ms}} \cdot 100 = 79.2 \%
+% \end{equation}
 
-In \autoref{tab:mcu_comparison} a comparison of different suitable MCU's has been made. Prices are estimated based on Mouser Electronics listings (April 2026).
+In \cref{tab:mcu_comparison} a comparison of different suitable MCU's has been made. Prices are estimated based on Mouser Electronics listings (April 2026).
 
 \begin{table}[H]
 \centering
-\caption{Comparison of selected wireless microcontrollers}
+\caption{Comparison of selected wireless microcontrollers.}
 \label{tab:mcu_comparison}
 \begin{tabular}{@{}l
 S[table-format=2.2]
@@ -64,10 +66,12 @@ EFR32MG1   \cite{EFR32MG1}   & 35.36 & 256  & 32  & 23.3 & 8  & 0.65 \\
 \end{table}
 
 \subsection{Power Section}
-The design of the power section is build upon Silicon Labs' guide 'AN0002.2: EFM32 and EFR32 Wireless Gecko Series 2 Hardware Design Considerations' \cite{Hardware_design_considerations} and the schematic of Silicons Labs' development kit build around the EFR32MG22E  \cite{Dev_Kit_Schematic}. \newline
-The MCU has an operating range between 1.71 V to 3.8 V single power supply. To optimize the voltage range on the ADC readings the MCU will be driven with 3 V. The MCU has a build in DCDC-converter, which makes it possible to generate an input voltage of 1.8 V for peripherals that do not need a 3 V input. This includes PAVDD (Supply to radio power amplifier), RFVDD (Supply to radio analog and HFXO) and IOVDD (I/O power supply). These inputs do not need 3 V since  it is transmitting with 6 dBm output power on Tx, and a higher input voltage is only needed for 14 dBm and above, and there are no GPIO outputs that need 3 V. VREGSW (DC-DC powertrain switching node) is connected to DVDD (Input to the internal digital LDO) via an inductor L4 which helps with energy storage and smoothing during switching together with a capacitor C9 which filters voltage ripple. 
+The design of the power section is build upon Silicon Labs' guide 'AN0002.2: EFM32 and EFR32 Wireless Gecko Series 2 Hardware Design Considerations' \cite{Hardware_design_considerations} and the schematic of Silicons Labs' development kit build around the EFR32MG22E \cite{Dev_Kit_Schematic}.
 
-Decoupling capacitors C3, C4, C7, C8, C9, C14 are based on Silicon Labs' recommended values. In Silicon labs' application notes it is mentioned that decoupling should exist of one large and one small capacitor to mitigate both high and low frequency nosie. In this design it has been determined that a single larger decoupling capacitor is sufficiton, since smd capacitors are short leaded, and that high frequency impedance is not about the capacitance but the lead inductance, therefore a single short leaded smd bulk capacitor works fine for decoupling \cite{}. All decoupling capacitors have been chosen to be ceramic X5R or X7R since the system will be operating in a wide temperature range, and they have a more staedy capacitance across a wider temperature range.
+To optimize the resolution of the ADC measurements, both the sensors and the MCU are supplied with 3 V. The MCU includes an integrated DC-DC converter, enabling the generation of a secondary 1.8 V supply rail for peripherals that do not require the full 3 V operating voltage. This lower-voltage rail is used for domains such as PAVDD (power amplifier supply), RFVDD (radio analog and HFXO supply), and IOVDD (I/O supply).
+In this design, a higher supply voltage for the radio front end is not required, as the selected device is limited to a maximum output power of 6 dBm. Higher supply voltages are typically only necessary for variants supporting output powers of 14 dBm and above. Additionally, no GPIOs in the system require operation at 3 V. The DC-DC converter switching node (VREGSW) is connected to DVDD (input to the internal digital LDO) through inductor L4, which provides energy storage and smooths switching transients. Capacitor C9 is used to further reduce output voltage ripple and stabilize the supply.
+
+Decoupling capacitors C3, C4, C7, C8, C9, C14 are based on Silicon Labs' recommended values. In Silicon labs' application notes it is mentioned that decoupling should exist of one largeer and one smaller capacitor to mitigate both high and low frequency nosie. In this design it has been determined that a single larger decoupling capacitor is sufficiton, since smd capacitors are short leaded, and that high frequency impedance is not about the capacitance but the lead inductance, therefore a single short leaded smd bulk capacitor works fine for decoupling \cite{ti_decoupling_capacitors_notes}\cite{bogatin_unlearn_pcb}. All decoupling capacitors have been chosen to be ceramic X5R or X7R since the system will be operating in a wide temperature range, and they have a more staedy capacitance across a wider temperature range.
 
 Ferrite beads FB1, FB2 and FB3 have been added as an extra precaution to mitigate high frequency noise as much as possible. The system could work without them, but it could make for a more precise ADC measurement, which is preferable.
 
@@ -77,19 +81,23 @@ A reset button SW1 with fitting debounce has also been integrated to make for an
 For this design, the chosen primary cell is the EVE ER14250 Lithium Thionyl Chloride (Li-SOCl₂) battery, size ½AA, with a nominal capacity of 1200 mAh. This battery has a high energy density and operates over a wide temperature range from \SI{-60}{\celsius} to \SI{+80}{\celsius} \cite{Battery}. It provides a pulse current capacity of up to 50 mA, enabling it to reliably supply the higher current pulses required during radio transmission (Tx) and reception (Rx) events. In addition, its self-discharge rate is exceptionally low at only 1\% per year, which is essential for achieving a 10+ year operational lifetime in ultra-low-power applications.
 
 Although Li-SOCl₂ batteries are more expensive than conventional coin cells, they are a keystone in making this product viable, given the requirements for both long lifetime and reliable pulse performance under varying environmental conditions. As of this writing, the most economical EVE ER14250 battery was found on the European battery distributor nkon.nl at a price of 1.45 $\texteuro$ (approximately 10.83 DKK)\cite{BatteryPrice}.
-For comparison, the most economical appropriate CR2477 1000 mAh coin cell battery was found at the Danish distributor Batteribyen.dk for approximately 6,00 DKK per unit. To enable reliable operation for pulsed loads, a bulk capacitor is required due to the high internal resistance typical of coin cells. The cost for such a capacitor is approximately 1.60 DKK per unit from Digikey.com \cite{Bulk_cap}, resulting in a total cost of 7.60 DKK per unit for the coin cell solution. This is 3.23 DKK less per unit than the Li-SOCl₂ solution. Despite this lower initial cost, the Li-SOCl₂ battery offers significant advantages and is more probable to last 10+ years, due to a wider operational temperature range and a lower self-discharge rate.
+For comparison, the most economical appropriate CR2477 1000 mAh coin cell battery was found at the Danish distributor Batteribyen.dk for approximately 6,00 DKK per unit. To enable reliable operation for pulsed loads, a bulk capacitor is required due to the high internal resistance typical of coin cells. The cost for such a capacitor is approximately 1.60 DKK per unit from Digikey.com \cite{Bulk_cap}, resulting in a total cost of 7.60 DKK per unit for the coin cell solution. This is 3.23 DKK less per unit than the Li-SOCl₂ solution. Despite this lower initial cost, the Li-SOCl₂ battery offers significant advantages and is more probable to last 10+ years, due to a wider operational temperature range and a lower self-discharge rate. Depending on the required nominal capacitance, other Li-SOCl₂ batteries with smaller dimensions could also be used. For this project, the battery selected was the cheapest suitable option that could be found.
 
 \subsection{External Crystal Oscillators}
-Two external crystal oscillators X1 and X2 have been added to the circuit eventhough the MCU already has four integrated clocks. The integrated clocks are RC oscillators and both resistance and capacitance varies with temperature more than the properties of quartz. Therefore it is favourable to add two external crystal oscillators to optimize the precision of the clocks over a wider range of temperatures.
+Two external crystal oscillators X1 and X2 have been added to the circuit eventhough the MCU already has four integrated clocks. The integrated clocks are RC oscillators and both resistance and capacitance varies with temperature more than the properties of quartz. Therefore it is favorable to add two external crystal oscillators to optimize the precision of the clocks over a wider range of temperatures. X1 is a high frequency 38.4 MHz crystal resonator \cite{X1_crystal} and X2 is a low frequency 32.768 kHz crystal resonator \cite{X2_crystal}.
 
-\subsection{PMOS and Sensor Readings}
-To reduce current consumption a PMOS transitor \cite{PMOS} is used to switch on the power to the sensors by connecting them to the 3 V VMCU voltage from the LDO. The PMOS is selected based on that it has ultra low shutdown leakage current of 0.20 nA and a low quiescent current of 0.01 nA to mitigate power waste. The PMOS is being enabled by GPIO pin PC00 which pulls it high during data collection. The enable network also has a pull-down resistor to avoid current spikes during reset of the MCU. Only powering the sensors during data collection will minimize leakage current from the sensors and reduce overall power consumption. 
+\subsection{PMOS and ADC Measurement}
+To reduce current consumption a PMOS transitor \cite{PMOS} is used to switch on the power to the sensors by connecting them to the 3 V VMCU voltage rail from the LDO. The PMOS is selected based on its ultra low shutdown leakage current of 0.20 nA and a low quiescent current of 0.01 nA to mitigate power waste. The PMOS is being enabled by GPIO pin \texttt{PC00} which pulls it high during data collection. The enable network also has a pull-down resistor, R2, to avoid current spikes during reset of the MCU. Only powering the sensors during data collection will minimize leakage current from the sensors and reduce overall power consumption.
+Capacitors C12 and C13 are required to ensure stable operation of the device by providing local decoupling and reducing voltage transients during switching events.
 
-% Her skal også skrives noget om capacitoren der sidder i parallel
+% Her skal måske også skrives noget om capacitoren der sidder i parallel
 
-\subsection{RF section and impedance matching}
+\subsection{RF Section and Impedance Matching}
 The design of the RF section is based on Silicon Labs' 'AN930.2: EFR32 Series 2 2.4 GHz
-Matching Guide' \cite{Matching_guide} and 'UG582: EFR32xG22E Explorer Kit User's Guide' \cite{User_guide}. Silicon labs recommend using a T-filter for layouts using the EFR32MG22E chip, since it is less sensetive to layout variations compared to a PI-filter and achieves the best radiated harmonic margin for boards with a distance between the top layer and the first GND layer smaller than 800 $\upmu$m. Due to bonding wires and parasitics, Silicon Labs recommend a optimum termination impedance of $37 + j5\, \Omega$ at the pin RF2G4\_IO. For ease of design, the impedance matching circuit chosen for this design is highly inspired by the design Silicon Labs uses for their explorer kit with the same 2.4 GHz 50 $\Omega$ antenna \cite{Antenna}. Equations \eqref{eq:ZL1}--\eqref{eq:Ztotal} are used to calculate impedance matching at the pin for this design. 
+Matching Guide' \cite{Matching_guide} and 'UG582: EFR32xG22E Explorer Kit User's Guide' \cite{User_guide}. Silicon labs recommend using a T-filter for layouts using the EFR32MG22E chip, since it is less sensetive to layout variations compared to a PI-filter and achieves the best radiated harmonic margin for boards with a distance between the top layer and the first GND layer smaller than 800 $\upmu$m. Due to bonding wires and parasitics, Silicon Labs recommend a optimum termination impedance of $37 + j5\, \Omega$ at the pin RF2G4\_IO. For ease of design, the impedance matching circuit chosen for this design is highly inspired by the design Silicon Labs uses for their explorer kit with the same 2.4 GHz 50 $\Omega$ antenna \cite{Antenna}. \crefrange{eq:ZL1}{eq:Ztotal} are used to calculate impedance matching at the pin for this design. 
+
+Each component was first expressed in terms of its complex impedance at the operating angular frequency $\omega$, as shown in \crefrange{eq:ZL1}{eq:Zant}. Inductors were modelled as $Z_L = j\omega L$, while capacitors were modelled as $Z_C = \frac{1}{j\omega C}$. The antenna was modelled as a purely resistive 50~$\Omega$ load.
+
 \begin{align}
 Z_{L1} &= j\omega L_1 = j\,40.72\,\Omega \label{eq:ZL1}\\
 Z_{L2} &= j\omega L_2 = j\,45.24\,\Omega \label{eq:ZL2}\\
@@ -101,6 +109,9 @@ Z_{C6} &= \frac{1}{j\omega C_6} = -j\,55.26\,\Omega \label{eq:ZC6}\\
 Z_{\text{ant}} &= 50\,\Omega \label{eq:Zant}
 \end{align}
 
+The network was then simplified stepwise by applying standard series and parallel impedance combinations starting from the antenna port and progressing towards the input. This allows the complex RF matching network to be reduced into an equivalent impedance seen by the transceiver.
+First, the antenna impedance was combined in parallel with $L_3$ to obtain $Z_a$, which represents the initial transformed load seen after the shunt inductor. The result was then combined in series with $L_2$, $C_1$, and $C_2$ to form $Z_b$, which models the intermediate matching stage. Next, $Z_b$ was combined in parallel with $C_6$ to obtain $Z_c$, introducing additional frequency-dependent shunt compensation. The result was then combined in series with $L_1$ to form $Z_d$, representing the final series transformation stage. Finally, $Z_d$ was combined in parallel with $C_5$ to obtain the total input impedance $Z_{total}$.
+
 \begin{align}
 Z_a &= Z_{\text{ant}} \parallel Z_{L3} = \frac{1}{\dfrac{1}{50\,\Omega} + \dfrac{1}{j\,241.27\,\Omega}} = 47.94 + j\,9.93\,\Omega \label{eq:Za}\\[0.5em]
 Z_b &= Z_a + Z_{L2} + Z_{C1} + Z_{C2} \notag\\
@@ -110,35 +121,27 @@ Z_d &= Z_c + Z_{L1} = 33.71 - j\,23.47 + j\,40.72 = 33.71 + j\,17.25\,\Omega \la
 Z_{total} &= Z_d \parallel Z_{C5} = \frac{1}{\dfrac{1}{33.71 + j\,17.25\,\Omega} + \dfrac{1}{-j\,663.15\,\Omega}} = 35.44 + j\,15.86\,\Omega \label{eq:Ztotal}
 \end{align}
 
-From equation \eqref{eq:Ztotal} the impedance is calculated to be $35.44 + j\,15.86\,\Omega$ at the pin, which is close to Silicon Labs' theoretical recommendation, but since their explorer board's desing was tested further taken into account other parasitics from variations in boards thickness and trace lengths, it is only appropriate to closely replicate the layout of the explorer kit to get the most effective RF capabilities.
+From \cref{eq:Ztotal} the impedance is calculated to be $35.44 + j\,15.86\,\Omega$ at the pin, which is close to Silicon Labs' theoretical recommendation, but since their explorer board's design was tested further taken into account other parasitics from variations in boards thickness and trace lengths, it is only appropriate to closely replicate the layout of the explorer kit to get the most effective RF capabilities.
 
 \subsection{Connectors}
-The connectors selected for this design are JST‑SH board headers, chosen for their compact footprint. Three connectors are used: J1, a 2‑pin connector that connects the battery and provides the input supply voltage; J2, a 4‑pin connector that supplies the sensor interface and carries the sensor measurement signals; and P2, a 6‑pin debug connector that exposes the serial wire debug (SWD) programming signals (SWCLK, SWDIO, SWO, nRESET) as well as VDCDC and GND.
+The connectors selected for this design are JST‑SH board headers, chosen for their compact footprint. Three connectors are used: J1, a 2‑pin connector that connects the battery and provides the input supply voltage; J2, a 4‑pin connector that supplies the sensor interface and carries the sensor measurement signals; and P2, a 6‑pin debug connector that exposes the serial wire debug (SWD) programming signals (SWCLK, SWDIO, SWO) as well as VDCDC, nRESET and GND. SWD is a two-pin alternative to JTAG that uses SWCLK, which carries the clock signal, and SWDIO, which carries bidirectional data between the debugger and the target device. In addition, SWO provides an optional single-wire trace output used for real-time logging and can be omitted if trace functionality is not required.
 
-\subsection{Final Schematic Design}
-\label{Final_Schem}
-After assembling and testing the PCB, some alterations were made to the schematic. 
+A SEGGER J-LINK EDU Mini is used as the external debug probe. This probe supports target voltage sensing and level adjustment to ensure proper logic compatibility with the PCB. In this design, the target operates at 1.8 V, as the MCU IOVDD is supplied at this voltage. It is important to note that not all debug probes support target voltages below 3 V, so compatibility with low-voltage systems must be verified when selecting a debugger.
 
-\textbf{LDO}\newline
-The LDO was removed since a stable voltage of 3 V is not needed, since the precision of the sensor readings does not depend on the voltage input in a wheatstone formation. AVDD was also changed to be powered from the DCDC-converter with 1.8 V, since the voltage on AVDD has to match the voltage on IOVDD. When IOVDD was powered from 1.8 V and AVDD from 3 V, it was noticed that the voltage range was set to the lower of the two, making it obsolete to power AVDD at 3 V via an LDO.
+\subsection{Final Schematic Design} \label{sec:Final_Schem}
+After assembling and testing the PCB, several modifications were made to the initial schematic. The LDO was removed because a tightly regulated 3 V supply was not required, as the accuracy of the sensor measurements is not dependent on supply voltage when using a Wheatstone bridge configuration.
+AVDD was also changed to be powered from the DC-DC converter with 1.8 V, since the voltage on AVDD has to match the voltage on IOVDD. When IOVDD was powered from 1.8 V and AVDD from 3 V, it was noticed that the voltage range was set to the lower of the two, making it obsolete to power AVDD at 3 V via an LDO.
+The PMOS was used to power the sensors with the batteries 3 V input, but since the voltage range has been lowered to 1.8 V, due to the rewiring of AVDD, the sensors can be powered from a GPIO driven high at 1.8 V, which removes the need of a PMOS.
+When measuring the VDCDC voltage rail the noise with and without the ferrite beads was equal and they made no difference in the implementation. This is mostly due to the battery having a low noise and to L4 efficiently reducing switching noise from the DC-DC converter.
+The reset circuit was removed in the final implementation, since a reset button is mostly preferred during debugging, but is not necessary in the final implementation.
+The low frequency clock X2 was removed due to it not being used in the final implementation, since it is more relevant for low power modes EM1-EM3, further explained in \Cref{sec:Power_Modes}. For an application that only runs in EM0 and EM4 it is not necessary, since the external high frequency clock HFXO X1 is used in EM0 and the integrated ultra-low frequency 1 kHz RC oscillator ULFRCO is used in EM4.
+With this 14 out of 36 components were removed without compromising with efficiency, noise levels or ADC measurement precision.
 
-\textbf{PMOS}\newline
-The PMOS was used to power the sensors with the batteries 3 V input, but since the voltage range has been lowered to 1.8 V due to the rewiring of AVDD, the sensors can be powered from a GPIO driven high at 1.8 V, which removes the need of a PMOS.
-
-\textbf{Ferrite Beads}\newline
-When measuring the voltage on VDCDC the noise with and without the ferrite beads was equal and they made no difference in the implementation. This is mostly due to the battery having a low noise and to L4 effeciently reducing switching noise from the DCDC-converter.
-
-\textbf{Reset Circuit}\newline
-The reset circuit was removed in the final implementation, since a reset button is mostly preffered during debugging, but is not necessary in the final implementation.
-
-\textbf{LFXO Low Frequency Clock}\newline
-The low frequency clock X2 was removed due to it not being used in the final implementation, since it is more relevant for low power modes EM1-EM3, \autoref{Sec:Power_Modes}. For an applicaiton that only runs in EM0 and EM4 it is not necessary, since the external high frequency clock HFXO X1 is used in EM0 and the integrated ultra-low frequency 1 kHz RC oscillator ULFRCO is used in EM4.
-
-The final schematic design can be seen on \autoref{fig:final_schem}.
+The final schematic design can be seen on \cref{fig:final_schem}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{Pictures/Master_Rev5_½AA.pdf}
+    \includegraphics[width=1\linewidth]{Pictures/REV7/Master_Rev7_½AA_PCB_SCHEM.pdf}
     \caption{Final schematic design.}
     \label{fig:final_schem}
 \end{figure}
