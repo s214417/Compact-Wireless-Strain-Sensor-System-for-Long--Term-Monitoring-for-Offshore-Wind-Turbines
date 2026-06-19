@@ -17,7 +17,7 @@ The 3D printed sensing elements are arranged in a Wheatstone bridge, which conve
 The microcontroller periodically excites the bridge, samples this voltage with its internal analog-to-digital converter, and forms a digital measurement. The radio transceiver integrated in the microcontroller then passes the measurement to the RF front-end, the antenna and its matching network, from where it is transmitted over a wireless network to the graphical user interface that the operator accesses onshore. 
 To meet the ten-year lifetime requirement, the node spends nearly all of its time in a low-power sleep state and wakes only briefly to excite the bridge, take a measurement, and report it before returning to sleep. This low-power strategy governs the firmware design and forms the basis of the power budget of the system.
 
-The remainder of the report follows this architecture. \Cref{sec:Sensor} covers the design and characterization of the 3D-printed sensor, while \Cref{sec:Hardware} treats the selection of the wireless solution together with the schematic and PCB design of the node electronics. \Cref{sec:Firmware_and_software} describes the firmware and the user-facing software, and \Cref{sec:Results} presents the experimental validation of the integrated prototype. The system is developed as a proof of concept, and design decisions are accordingly evaluated against the requirements above rather than against full qualification for offshore deployment.
+The remainder of the report follows this architecture. \Cref{sec:Sensor} covers the design and characterization of the 3D printed sensor, while \Cref{sec:Hardware} treats the selection of the wireless solution together with the schematic and PCB design of the node electronics. \Cref{sec:Firmware_and_software} describes the firmware and the user-facing software, and \Cref{sec:Results} presents the experimental validation of the integrated prototype. The system is developed as a proof of concept, and design decisions are accordingly evaluated against the requirements above rather than against full qualification for offshore deployment.
 
 \begin{figure}[hb]
 \centering
@@ -25,32 +25,3 @@ The remainder of the report follows this architecture. \Cref{sec:Sensor} covers 
     \caption{Functional architecture of a sensor node and the surrounding infrastructure. Solid arrows show the on-board signal path and dashed arrows the power supply and the wireless links. The references in parentheses indicate where each part is treated in the report.}
     \label{fig:System_blocks}
 \end{figure}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% Crille
-
-% \cref{fig:System} shows a simplified overview of the system design. The system can be seperated into four parts. Wireless communication, Schematic and PCB design, 3D printed strain sensors and firmware implementation. A battery will drive the MCU and will be selected based on a power consumption analysis and expected lifetime. The MCU will handle powering the strain sensors and data collection through integrated ADC, and will communicate wirelessly via zigbee to home assisstant which will work as a GUI for the user. The system is designed to be proof of concept. 
-
-% \begin{figure}[H]
-% \centering
-% \includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Drawings/System_overview-tikz}
-%     \caption{System overview.}
-%     \label{fig:System}
-% \end{figure}

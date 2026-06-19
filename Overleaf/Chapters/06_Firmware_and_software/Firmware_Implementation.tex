@@ -1,3 +1,5 @@
+%Introduction section. Introduce  the module decomposition (app.c, zigbee.c, wheatstone.c, em4.c), and presents a block diagram. 
+
 The firmware is developed in C using the Silicon Labs Simplicity Studio extension for Visual Studio Code, targeting the EFR32MG22E microcontroller with the Simplicity SDK (version 2025.12.1). The firmware runs bare-metal, without a real-time operating system.
 The SDK uses a cooperative super-loop execution model in which each iteration of the main loop first runs the internal SDK processing via \texttt{sl\_main\_process\_action()}, followed by the application tick function \texttt{app\_process\_action()}.
 This structure is sufficient because the firmware has a single, well-defined repeating cycle with no concurrent tasks that would require a scheduler.

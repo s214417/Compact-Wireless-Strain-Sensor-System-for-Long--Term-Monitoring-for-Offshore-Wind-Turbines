@@ -1,0 +1,22 @@
+Network bring-up is handled in \texttt{zigbee.c}, which is implemented as a helper for a Zigbee End Device.
+Because the device wakes from a full reset on every cycle, the network must be established or restored from scratch each time before any measurement can be reported, and this module is responsible for reaching a state in which the application is both joined and able to send secured traffic.
+The module exposes its progress to \texttt{app.c} through two query functions and otherwise advances through the Zigbee stack callbacks and the periodic \texttt{zigbee\_process\_action()} call from the main loop.
+
+On start-up the module inspects the stored network state and selects one of two paths.
+If valid network credentials are present from a previous session, the device already holds a stored network and the module waits for the stack to bring that network up on its own within a restore timeout.
+If no stored network is present, the module treats the bring-up as a fresh join and immediately starts the Network Steering procedure, which scans the available channels and attempts to join a suitable Home Automation network.
+
+When a stored network is present but does not come up within the restore timeout, the module does not give up immediately but instead escalates through a defined sequence.
+It first attempts a single secure rejoin of the stored network, and only if that rejoin also fails to bring the network up does it leave the stored network and restart Network Steering to join a fresh network.
+This staged fallback, where a quiet restore is preferred first, a secure rejoin is attempted second, and a full leave and re-steer is used only as a last resort, avoids the cost of a full rejoin in the common case where the stored network is still present while still recovering automatically if the original network has become permanently unreachable.
+
+For a Sleepy End Device, joining the network is not by itself enough to make the device usable by Home Assistant.
+When a device first joins, the ZHA integration performs an interview in which it reads the device's attributes and clusters, and for a sleepy device these interview frames are queued at the parent and only delivered when the device polls for them.
+If the device were to enter deep sleep immediately after joining, the interview frames would not be collected and the device would not be correctly registered.
+To prevent this, a fresh join opens a short fast-poll window during which the device is forced to stay awake and polls its parent at a fixed interval, so that the queued interview traffic is drained before the first sleep.
+This stay-awake behaviour is applied only after a genuine fresh join, since a restored stored network has already completed its interview in a previous session and can return to normal low-power polling immediately.
+
+The application interacts with the module through two query functions that together form the interface between the network layer and the application state machine.
+The first, \texttt{zigbee\_is\_network\_up()}, reports whether the device is joined and the security state is established, where a valid security context rather than mere association is treated as the point at which application traffic may begin, since the network can be associated before the network key is installed.
+The second, \texttt{zigbee\_ok\_to\_sleep()}, reports whether it is safe to enter EM4, returning false while the interview poll window is active or while the stack indicates that polling should continue because traffic is still pending.
+To prevent a deadlock in which the coordinator keeps traffic pending indefinitely, the second function blocks sleep only for a bounded interval, after which the device is allowed to proceed into its EM4 reset cycle regardless, so that forward progress is always guaranteed.

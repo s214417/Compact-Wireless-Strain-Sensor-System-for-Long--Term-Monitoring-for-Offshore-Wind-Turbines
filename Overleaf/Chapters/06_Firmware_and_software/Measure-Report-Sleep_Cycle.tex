@@ -1,0 +1,29 @@
+%Explains the top-level operation of the system as one coherent cycle. 
+%It covers the state machine in order: boot/reset → network join → ADC measurement → ZCL report → TX callback → EM4 entry → BURTC wake → reset. A flow diagram here. 
+
+The firmware operates as a single repeating cycle in which the device wakes, joins the network, takes one measurement, reports it, and returns to deep sleep.
+This cycle is implemented as a flat state machine inside \texttt{app\_process\_action()}, which the main loop calls once per iteration after the Zigbee stack has been serviced.
+Rather than holding state across cycles, each cycle begins from a full reset, since waking from EM4 Shutoff restarts the MCU from boot.
+The complete cycle, including the error-recovery branches, is shown in \cref{fig:measure_report_sleep}.
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing, width=0.9\textwidth]{Standalone/Drawings/Meas_Reap_Sleep.tex}
+    \caption{The measure--report--sleep cycle. The centre column shows the nominal path from boot to deep sleep. The right branch handles a failed transmission, and the left branch shows the no-progress watchdog that forces a reboot if the active phase stalls.}
+    \label{fig:measure_report_sleep}
+\end{figure}
+
+After a reset, the application initializes the analog front, the Zigbee helper and arms the no-progress watchdog.
+Control then passes to the main loop, where \texttt{zigbee\_process\_action()} drives the network bring-up while \texttt{app\_process\_action()} evaluates the state machine on every iteration.
+The report step is held off until the Zigbee network is confirmed up, so that no measurement is transmitted before a communication path to the coordinator exists.
+Once the network is up, a single measurement is taken and packaged into two ZCL reports, the details of which are described in \cref{sec:Sensor_Acquisition} and \cref{sec:ZCL_Data_Reporting}.
+The firmware then waits for the transmission callback of the ADC report, which is the confirmation that the data has been acknowledged at the application support sublayer, and it is the event that gates the transition into deep sleep.
+When the callback reports success, the firmware latches a deep-sleep request and enters EM4 Shutoff, from which the BURTC wakes the device through a full reset and the cycle repeats.
+ 
+Deep-sleep entry is deliberately split into a request and an actual entry, which are handled in separate steps of the state machine.
+When the firmware decides to sleep it calls \texttt{em4\_request()}, which only latches the request, and the entry into EM4 occurs on a later iteration once \texttt{zigbee\_ok\_to\_sleep()} confirms that the Zigbee stack has no pending work.
+This separation prevents the device from sleeping in the middle of a stack operation, such as an ongoing ZHA interview exchange, which would otherwise leave the network in an inconsistent state and force a costly rejoin on the next wake.
+ 
+The cycle also includes two error-recovery branches so that a single failure does not strand the device in an active, high-current state.
+A failed transmission triggers a short publish retry rather than an immediate sleep, and a no-progress watchdog forces a reboot if the active phase never completes.
+Both mechanisms are described in detail in \cref{sec:Safety_&_Robustness}.
