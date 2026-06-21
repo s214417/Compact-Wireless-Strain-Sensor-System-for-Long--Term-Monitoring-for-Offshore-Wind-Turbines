@@ -83,7 +83,7 @@ The microcontroller is supplied through six independent power inputs. VREGVDD pr
  
 Since several domains do not require the full 3 V, the integrated DC-DC buck converter generates a secondary 1.8 V rail from VREGVDD in order to reduce the overall power consumption. This rail supplies DVDD, IOVDD, RFVDD and PAVDD. VREGVDD remains at 3 V because it constitutes the input to the converter, while AVDD is likewise maintained at 3 V so that the full-scale sensing range of the ADC is preserved.
 
-% nævn DECOUPLE
+The DECOUPLE pin is the output of the internal digital LDO of the MCU. This regulator takes DVDD, the \SI{1.8}{\volt} output of the buck converter, as its input and steps it down to the core voltage of approximately \SI{1.1}{\volt}, which supplies the internal digital logic. The \SI{1}{\micro\farad} capacitor C14 connected to it serves solely to stabilize the internal regulator and to decouple the core rail, providing the local charge reservoir required for a clean and stable core voltage.
  
 A higher supply voltage for the radio is not necessary in this design, as the selected device is limited to an output power of 6 dBm. An elevated PAVDD becomes relevant only for variants rated at 14 dBm and above. The input and output stages can likewise operate at 1.8 V, since no GPIO in the system is required to function at 3 V. The output of the buck converter is conditioned by an LC low-pass filter formed by inductor L4 and the shunt capacitor C9. As the converter switches the node VREGSW between the input supply and ground, this filter averages the resulting waveform into a steady 1.8 V rail.
 
@@ -98,26 +98,37 @@ A reset button SW1 with appropriate debouncing has also been integrated in order
 \subsection{External Crystal Oscillators}
 Two external crystal oscillators X1 and X2 have been added to the circuit eventhough the MCU already has four integrated clocks. The integrated clocks are RC oscillators and both resistance and capacitance varies with temperature more than the properties of quartz. Therefore it is favorable to add two external crystal oscillators to optimize the precision of the clocks over a wider range of temperatures. X1 is a high frequency 38.4 MHz crystal resonator \cite{X1_crystal} and X2 is a low frequency 32.768 kHz crystal resonator \cite{X2_crystal}.
 
-\subsection{PMOS and ADC Measurement}
+\subsection{PMOS}
  
 To reduce current consumption, a P-channel MOSFET (PMOS)~\cite{PMOS} is used to power-gate the sensors, connecting them to the 3 V VMCU rail supplied by the LDO only when required. The device was selected for its ultra-low shutdown leakage current of 0.20 nA and its low quiescent current of 0.01 nA, both of which minimise wasted power. The switch is enabled through GPIO pin \texttt{PC00}, which is asserted high during data collection. Resistor R2 acts as a pull-down on the enable network and holds the switch disabled while the GPIO is high-impedance, for instance during an MCU reset, thereby preventing spurious activation and the associated current spikes. Powering the sensors only during data collection minimises their leakage contribution and reduces the overall power consumption.
  
 Capacitors C12 and C13 provide local decoupling at the switched output, reducing voltage transients during the switching events and ensuring stable operation
 
-The input impedance of the converter in the ADC can be calculated by \cite[p. 728]{silabs_efr32xg22_reference}
-
-The IADC samples its input onto a small internal capacitor and therefore presents a switched-capacitor input impedance
-\begin{equation}
-Z_\mathrm{in} = \frac{1}{C_s\,f_s} \approx \SI{222}{\kilo\ohm},
-\end{equation}
-at the configured unity gain ($C_s = \SI{1.8}{\pico\farad}$, $f_s = \SI{2.5}{\mega\hertz}$). Driven directly, the bridge source resistance $R_s$ and $Z_\mathrm{in}$ form a resistive voltage divider, giving a gain error
-\begin{equation}
-\varepsilon_R = \frac{R_s}{R_s + Z_\mathrm{in}}
-\end{equation}
-of \SI{4.3}{\percent} (177 LSB) at \SI{10}{\kilo\ohm} and \SI{31}{\percent} (1272 LSB) at \SI{100}{\kilo\ohm}. As $R_s$ is the measurand, this error is non-linear and cannot be calibrated out.
+\subsection{IADC Measurement}
+The IADC acquires its input by charging a small internal sampling capacitor during a limited acquisition window. When the source impedance is high, the input signal cannot settle within this window, and the conversion result is corrupted by a gain error. A well-established and inexpensive remedy is to connect a sufficiently large capacitor directly across the analog inputs, \texttt{ADC+} and \texttt{ADC-}, which supplies the fast sampling charge locally rather than drawing it through the source resistance~\cite{analog_devices_metering_filters}. The settling then depends only on the small internal resistance of the converter rather than on the much larger source resistance, and the input is sampled accurately.
  
+This principle is applied by connecting capacitor C11 differentially between the \texttt{ADC+} and \texttt{ADC-} inputs. Its value of \SI{47}{\nano\farad} provides the corresponding local charge reservoir for the bridge resistances encountered here. This passive measure improves the measurement accuracy without an additional active component, in keeping with the low-power and low-complexity goals of the design.
 
-% Her skal måske også skrives noget om capacitoren der sidder i parallel
+% The IADC is a switched-capacitor converter, meaning that each conversion briefly connects a small internal capacitor to the input and charges it to the input voltage. Because this charge is taken in repeated pulses rather than drawn continuously, the source does not see an ideal open circuit but a finite input impedance. This impedance follows from the internal sampling capacitor at unity gain, $C_s = \SI{1.8}{\pico\farad}$, and the sampling frequency $f_s = f_{\mathrm{ADC\_CLK}}/4 = \SI{10}{\mega\hertz}/4 = \SI{2.5}{\mega\hertz}$~\cite[p.~728]{silabs_efr32xg22_reference}, and is given by
+% \begin{equation}
+% Z_\mathrm{in} = \frac{1}{C_s\,f_s} = \frac{1}{\SI{1.8}{\pico\farad}\cdot\SI{2.5}{\mega\hertz}} = \SI{222}{\kilo\ohm}.
+% \end{equation}
+% The IADC samples its input onto a small internal capacitor. To avoid loading the high-impedance bridge during sampling, a reservoir capacitor $C_\mathrm{ext}$, corresponding to C11, is placed at the input. Between conversions this capacitor is recharged from the bridge through the source resistance $R_\mathrm{source}$, which is the Th\'evenin equivalent resistance of the driving source as seen by $C_\mathrm{ext}$~\cite{childers2004adc}.
+ 
+% The recharge is an RC settling process. Settling to within half a least significant bit at $N$ bits of resolution requires
+% \begin{equation}
+% \gamma = \ln\!\left(2^{\,N+1}\right) \quad \text{time constants},
+% \end{equation}
+% which for $N = 12$ evaluates to $\gamma = \ln\!\left(2^{13}\right) \approx 9.0$. Given a recharge interval $T_\mathrm{cyc}$, the source resistance that still allows $C_\mathrm{ext}$ to be replenished is
+% \begin{equation}
+% R_\mathrm{source} = \frac{T_\mathrm{cyc}}{\tau\,C_\mathrm{ext}}.
+% \end{equation}
+ 
+% With $C_\mathrm{ext} = \SI{47}{\nano\farad}$ and a worst-case source resistance of \SI{100}{\kilo\ohm}, the required recharge interval is
+% \begin{equation}
+% T_\mathrm{cyc} = \tau\,R_\mathrm{source}\,C_\mathrm{ext} = 9.0 \cdot \SI{100}{\kilo\ohm} \cdot \SI{47}{\nano\farad} \approx \SI{42}{\milli\second},
+% \end{equation}
+% which is accommodated within the sensor power-on time.
 
 \subsection{RF Section and Impedance Matching}
 The design of the RF section is based on Silicon Labs' 'AN930.2: EFR32 Series 2 2.4 GHz

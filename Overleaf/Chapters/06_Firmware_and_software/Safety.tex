@@ -9,7 +9,7 @@ This turns a transient delivery failure into a brief, bounded retry loop rather 
 The second mechanism protects against the more serious case in which the active phase never completes at all, for example if a network join or the ZHA interview stalls and the device would otherwise stay awake waiting forever.
 A no-progress watchdog records a deadline at start-up and the state machine checks on every iteration whether that deadline has passed.
 If the active phase has not completed within the deadline, set to sixty seconds, the watchdog forces a short EM4 cycle that reboots the device and restarts the whole sequence from a clean state.
-The deadline is armed once during initialization, and because every wake from EM4 is a full reset the watchdog is effectively re-armed at the start of every cycle without any explicit reset logic.
+The deadline is armed once during initialisation, and because every wake from EM4 is a full reset the watchdog is effectively re-armed at the start of every cycle without any explicit reset logic.
 This guarantees that the device can never remain in the active phase for longer than the deadline, so a stalled join or interview costs at most one wasted cycle of active current rather than the entire battery.
 
 This watchdog is implemented in software within the application rather than using the hardware watchdog peripheral of the EFR32MG22E, which is deliberately left disabled.

@@ -1,5 +1,3 @@
-%Introduction section. Introduce  the module decomposition (app.c, zigbee.c, wheatstone.c, em4.c), and presents a block diagram. 
-
 The firmware is developed in C using the Silicon Labs Simplicity Studio extension for Visual Studio Code, targeting the EFR32MG22E microcontroller with the Simplicity SDK (version 2025.12.1). The firmware runs bare-metal, without a real-time operating system.
 The SDK uses a cooperative super-loop execution model in which each iteration of the main loop first runs the internal SDK processing via \texttt{sl\_main\_process\_action()}, followed by the application tick function \texttt{app\_process\_action()}.
 This structure is sufficient because the firmware has a single, well-defined repeating cycle with no concurrent tasks that would require a scheduler.
@@ -20,6 +18,9 @@ All four modules are built on top of the Simplicity SDK, which provides the Zigb
 
 The architectural driver behind this design is the battery lifetime requirement.
 The system must operate for more than ten years on a primary cell, which demands that both the active time per measurement cycle and the current consumption during deep sleep are minimised.
-The firmware therefore structures every cycle around three phases: a brief active phase in which the Zigbee network is joined or verified, the Wheatstone bridge is sampled, and a ZCL report is transmitted; a confirmation phase in which the firmware waits for the transmission callback before committing to sleep; and a deep-sleep phase in EM4 Shutoff, from which the device wakes via a BURTC compare event.
+The firmware therefore structures every cycle around three phases.
+The first is a brief active phase in which the Zigbee network is joined or verified, the Wheatstone bridge is sampled, and a ZCL report is transmitted.
+The second is a confirmation phase in which the firmware waits for the transmission callback before committing to sleep.
+The third is a deep-sleep phase in EM4 Shutoff, from which the device wakes via a BURTC compare event.
 On the EFR32 Series~2, EM4 Shutoff behaves like a full power-on reset, where RAM contents are lost and the chip boots from scratch on wake-up. As a result, each measurement cycle begins identically, which eliminates the need for any persistent state management between cycles and simplifies the firmware considerably.
 The subsequent sections describe each module in detail.

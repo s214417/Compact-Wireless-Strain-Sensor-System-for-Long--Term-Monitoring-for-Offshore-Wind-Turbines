@@ -1,6 +1,3 @@
-%Explains the top-level operation of the system as one coherent cycle. 
-%It covers the state machine in order: boot/reset → network join → ADC measurement → ZCL report → TX callback → EM4 entry → BURTC wake → reset. A flow diagram here. 
-
 The firmware operates as a single repeating cycle in which the device wakes, joins the network, takes one measurement, reports it, and returns to deep sleep.
 This cycle is implemented as a flat state machine inside \texttt{app\_process\_action()}, which the main loop calls once per iteration after the Zigbee stack has been serviced.
 Rather than holding state across cycles, each cycle begins from a full reset, since waking from EM4 Shutoff restarts the MCU from boot.
@@ -13,7 +10,7 @@ The complete cycle, including the error-recovery branches, is shown in \cref{fig
     \label{fig:measure_report_sleep}
 \end{figure}
 
-After a reset, the application initializes the analog front, the Zigbee helper and arms the no-progress watchdog.
+After a reset, the application initialises the analog front end, the Zigbee helper and arms the no-progress watchdog.
 Control then passes to the main loop, where \texttt{zigbee\_process\_action()} drives the network bring-up while \texttt{app\_process\_action()} evaluates the state machine on every iteration.
 The report step is held off until the Zigbee network is confirmed up, so that no measurement is transmitted before a communication path to the coordinator exists.
 Once the network is up, a single measurement is taken and packaged into two ZCL reports, the details of which are described in \cref{sec:Sensor_Acquisition} and \cref{sec:ZCL_Data_Reporting}.
