@@ -3,7 +3,9 @@
 Each sensor module transmits its measurements wirelessly to a central server application. In a wind turbine installation, comprising several thousand bolts and joints, each fitted with its own module, the network architecture must support a large number of devices while remaining robust under the challenging RF conditions imposed by the metallic structure of the turbine.
  
 \subsection{Wireless Communication Selection}
-Zigbee was selected as the wireless protocol for this application, as its mesh network architecture supports a large number of devices and provides self-healing connectivity through multi-hop routing between nodes. A Zigbee mesh network consists of three node types: end devices, which correspond to the sensor modules; routers, which relay messages between nodes; and a coordinator, which manages the network and forwards collected data to the server application. The mesh topology is illustrated in \cref{fig:Zigbee_Network}.
+Among comparable \SI{2.4}{\giga\hertz} mesh protocols, Zigbee, Bluetooth Low Energy (BLE), and Thread are the primary candidates~\cite{Thread_vs_zigbee, Zigbee_alliance}. BLE is optimized for short-range peer-to-peer communication and is not well suited to large mesh deployments. Thread supports direct IP-based communication and simplified cloud integration, but introduces greater protocol stack complexity, which increases memory usage and firmware size relative to Zigbee.
+
+Zigbee was selected as the wireless protocol for this application, as its mesh network architecture supports a large number of devices and provides self-healing connectivity through multi-hop routing between nodes. A Zigbee mesh network consists of three node types: end devices, which correspond to the sensor modules, routers, which relay messages between nodes, and a coordinator, which manages the network and forwards collected data to the server application. The mesh topology is illustrated in \cref{fig:Zigbee_Network}.
 
 \begin{figure}
 \centering
@@ -11,10 +13,8 @@ Zigbee was selected as the wireless protocol for this application, as its mesh n
     \caption{Zigbee mesh network structure.}
     \label{fig:Zigbee_Network}
 \end{figure}
-
-Among comparable \SI{2.4}{\giga\hertz} mesh protocols, Zigbee, Bluetooth Low Energy (BLE), and Thread are the primary candidates~\cite{Thread_vs_zigbee, Zigbee_alliance}. BLE is optimized for short-range peer-to-peer communication and is not well suited to large mesh deployments. Thread supports direct IP-based communication and simplified cloud integration, but introduces greater protocol stack complexity, which increases memory usage and firmware size relative to Zigbee.
  
-Zigbee uses a lightweight, purpose-built mesh networking layer that results in lower packet overhead and a simpler state machine for sleepy end devices, which is advantageous for modules that wake only once per reporting interval. Both Zigbee and Thread can run on the same class of \SI{2.4}{\giga\hertz} wireless microcontroller, but Zigbee stacks typically require less flash and RAM, permitting more compact and cost-effective hardware solutions.
+Zigbee uses a mesh networking layer that results in lower packet overhead and a simpler state machine for sleepy end devices, which is advantageous for modules that wake only once per reporting interval. Both Zigbee and Thread can run on the same class of \SI{2.4}{\giga\hertz} wireless microcontroller, but Zigbee stacks typically require less flash and RAM, permitting more compact and cost-effective hardware solutions.
  
 In an offshore wind turbine environment, metal structures and turbine geometry significantly attenuate and reflect \SI{2.4}{\giga\hertz} signals, and no protocol in this frequency band offers inherently superior RF penetration under these conditions. Protocol selection therefore prioritizes mesh reliability, implementation simplicity, and long-term operational stability. Zigbee satisfies these criteria through its mature ecosystem, established interoperability standards, and proven track record in industrial deployments, making it the most suitable choice for this application.
 
@@ -27,7 +27,7 @@ The wireless communication circuit can either be integrated directly onto the mo
 
 The Zigbee network implemented in a wind turbine is illustrated in \cref{fig:WC_Overview}. The end devices, represented by yellow dots, are placed on each bolt of a flanged joint and transmit measurement data to the nearest router. The routers, represented by blue dots, are distributed throughout the turbine tower to provide coverage and relay data toward the coordinator. The coordinator, represented by the green dot, collects data from all end devices and forwards it to a server application via a WiFi connection.
  
-Each end device is equipped with a \SI{2.4}{\giga\hertz} antenna for communication with the routers. Routers must be mains-powered devices, as they remain active continuously to relay traffic; in practice they can be any permanently powered device with Zigbee support, such as smart outlets or similar infrastructure. In the prototype setup, a Sonoff Zigbee 3.0 USB Dongle Plus is used as the coordinator, connected to a computer running the open-source Linux distribution Ubuntu, which hosts the user-facing software described in \Cref{sec:Software_imp}. The router infrastructure is not explored further in the prototype.
+Each end device is equipped with a \SI{2.4}{\giga\hertz} antenna for communication with the routers. Routers must be mains-powered devices, as they remain active continuously to relay traffic. In practice they can be any permanently powered device with Zigbee support, such as smart outlets or similar infrastructure. In the prototype setup, a Sonoff Zigbee 3.0 USB Dongle Plus is used as the coordinator, connected to a computer running the open-source Linux distribution Ubuntu, which hosts the user-facing software described in \Cref{sec:Software_imp}. The router infrastructure is not explored further in the prototype.
 
 \begin{figure}[H]
 \centering

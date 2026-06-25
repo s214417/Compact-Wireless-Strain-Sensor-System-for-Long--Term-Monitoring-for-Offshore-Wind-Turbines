@@ -1,0 +1,12 @@
+\section{Full System Implementation}
+A full system implementation was tested with the Wheatstone bridge print-optimization used in \cref{Wheatstone Half-Bridge Design}, using the assembled final PCB design described in \cref{sec:final_pcb} to acquire data via ZHA. The Wheatstone measurements was also collected via the Keithley 2450 Sourcemeter to test the precision of the IADC onboard the MCU. The MCU was powered via the external battery which was connected to another Keithley 2450 Sourcemeter to measure the battery input voltage. 
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/FullSystem_neg_deg_ADCogVout}
+    \caption{Output voltage with sourcemeter measurement $\left( V_{out}\right)$ and with microcontrollers ADC in varying enviromental conditions.}
+    \label{fig:FS_ADCogVout}
+\end{figure}
+
+
+The test setup including the Linear stage actuator, stepper motor, stepper driver and Arduino UNO, was placed together with the bias sensors, battery and PCB in a climate chamber, and was tested at a constant temperature of \SI{25}{\celsius} and a constant humidity of 50 \%.
