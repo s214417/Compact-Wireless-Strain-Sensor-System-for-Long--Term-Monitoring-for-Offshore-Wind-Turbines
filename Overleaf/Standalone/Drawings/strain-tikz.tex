@@ -1,5 +1,7 @@
-\documentclass[border=2mm]{standalone}
+\documentclass[11pt,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
+
+\providecommand{\FigScale}{0.8}
  
 \usepackage{siunitx}
 \usepackage{tikz}
@@ -34,7 +36,7 @@
 
 \begin{document}
 
-\begin{tikzpicture}[line join=round, line cap=round]
+\begin{tikzpicture}[scale=\FigScale, line join=round, line cap=round]
 
 \definecolor{metalLight}{RGB}{230,230,235}
 \definecolor{metalDark}{RGB}{120,120,130}
@@ -156,8 +158,8 @@
 \draw[-{Stealth[length=2.5mm]}] (2.5,2.6075) -- (2.5,1.99+0.035);
 \draw[-{Stealth[length=2.5mm]}] (2.5,-2.6075) -- (2.5,-3.225+0.035);
 \draw[-{Stealth[length=2.5mm]}] (2.5,-2.6075) -- (2.5,-1.99-0.035);
-\node[anchor=west,align=center] at (2.5,2.6075) {$L_{0,n}$\\[-2pt]$-$\\[-2pt]$\Delta L_n$};
-\node[anchor=west,align=center] at (2.5,-2.6075) {$L_{0,n}$\\[-2pt]$-$\\[-2pt]$\Delta L_n$};
+\node[anchor=west,align=center] at (2.5,2.75) {$L_{0,n}$\\[-2pt]$-$\\[-2pt]$\Delta L_n$};
+\node[anchor=west,align=center] at (2.5,-2.75) {$L_{0,n}$\\[-2pt]$-$\\[-2pt]$\Delta L_n$};
 
 %top nut
 \fill[nutFill] (-1.30,1.95) -- (1.30,1.95) --

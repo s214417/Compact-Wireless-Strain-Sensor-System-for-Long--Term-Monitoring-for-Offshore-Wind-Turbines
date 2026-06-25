@@ -1,5 +1,7 @@
-\documentclass[border=2mm]{standalone}
+\documentclass[11pt,tikz,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
+
+\providecommand{\FigScale}{1.25}
  
 \usepackage{siunitx}
 \usepackage{tikz}
@@ -35,21 +37,24 @@
 
 \begin{document}
 
-\begin{tikzpicture}[line join=round, line cap=round, line width=0.4pt]
+\begin{tikzpicture}[scale=\FigScale, line join=round, line cap=round, line width=0.4pt]
 
 \tikzset{
+  coordlegend/.style={coord, minimum size=8mm},
+  routerlegend/.style={router, minimum size=8mm},
+  enddevlegend/.style={enddev, minimum size=3.5mm},
   coord/.style={circle, fill=IBM10, draw=black!69, minimum size=8mm},
   router/.style={circle, fill=IBM8, draw=black!69, minimum size=8mm},
   enddev/.style={circle, fill=IBM5, draw=black!69, minimum size=3.5mm},
   link/.style={<->,
     >={Stealth[length=2pt,width=1.6pt]},
-    line width=0.5pt, shorten <=0.1pt, shorten >=0.1pt, IBM5},
+    line width=0.5pt, shorten <=0.75pt, shorten >=0.75pt, IBM5},
   link2/.style={<->,
     >={Stealth[length=2pt,width=1.6pt]},
-    line width=0.5pt, shorten <=1pt, shorten >=1pt, IBM8},
+    line width=0.5pt, shorten <=0.75pt, shorten >=0.75pt, IBM8},
   link3/.style={<->,
     >={Stealth[length=2pt,width=1.6pt]},
-    line width=0.5pt, shorten <=1pt, shorten >=1pt, IBM10},
+    line width=0.5pt, shorten <=1.35pt, shorten >=1pt, IBM10},
 }
 
 \def\bladeScale{0.69}
@@ -157,22 +162,23 @@
 \coordinate (mc) at (-0.3,6.4) {};
   \node[circle, minimum size=0.35cm, inner sep=0pt, outer sep=0pt, draw=none, fill=none] (mc) at (-0.3,6.4) {};
 
-\begin{scope}[shift={(0.07,6.36)},scale=0.2]
-    \draw[semithick] (0,0) rectangle (1.75,1.25);
-        \node[inner sep=0pt, scale=0.69] at (0.875,0.65) {\faWifi};
-    \draw[semithick] (0,-0.1) -- (0,-0.85) -- (1.75,-0.85) -- (1.75,-0.1);
-    \foreach \i in {0.3,0.5,...,1.3} {
-        \draw[ultra thin] (\i,-0.25) rectangle ++(0.1,0.1);
-    }
-    \foreach \i in {0.3,0.5,...,1.3} {
-        \draw[ultra thin] (\i,-0.45) rectangle ++(0.1,0.1);
-    }
-    \foreach \i in {0.3,0.5,...,1.3} {
-        \draw[ultra thin] (\i,-0.65) rectangle ++(0.1,0.1);
-    }    
-    \end{scope}
+\node[inner sep=0pt, scale=0.86] at (0.25,6.435) {\faWifi};
+    \draw[link3] (-0.15, 6.4) --++ (0.28,0);
 
-    \draw[link3] (-0.15, 6.4) --++ (0.24,0);
+% \begin{scope}[shift={(0.07,6.36)},scale=0.2]
+%     \draw[semithick] (0,0) rectangle (1.75,1.25);
+%         \node[inner sep=0pt, scale=0.69] at (0.875,0.65) {\faWifi};
+%     \draw[semithick] (0,-0.1) -- (0,-0.85) -- (1.75,-0.85) -- (1.75,-0.1);
+%     \foreach \i in {0.3,0.5,...,1.3} {
+%         \draw[ultra thin] (\i,-0.25) rectangle ++(0.1,0.1);
+%     }
+%     \foreach \i in {0.3,0.5,...,1.3} {
+%         \draw[ultra thin] (\i,-0.45) rectangle ++(0.1,0.1);
+%     }
+%     \foreach \i in {0.3,0.5,...,1.3} {
+%         \draw[ultra thin] (\i,-0.65) rectangle ++(0.1,0.1);
+%     }    
+%     \end{scope}
 
     \draw[link] (r1) -- (r1e1);
     \draw[link] (r1) -- (r1e2);
@@ -194,9 +200,12 @@
     \draw[link2] (r2) -- (r3);
     \draw[link2] (r3) -- (mc);
 
-    \node[coord, label=right:Coordinator] at (-4,-1) {};
-    \node[router, label=right:Router] at (0,-1) {};
-    \node[enddev, label=right:End device] at (3,-1) {};
+    \node[coordlegend,
+      label={[font=\small]right:Coordinator}] at (-4.5,6.45) {};
+    \node[routerlegend,
+      label={[font=\small]right:Router}] at (-4.5,4.75) {};
+    \node[enddevlegend,
+      label={[font=\small]right:End device}] at (-4.5,3.05) {};
 
 \end{tikzpicture}
 

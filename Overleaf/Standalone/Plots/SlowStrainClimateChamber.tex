@@ -1,4 +1,4 @@
-\documentclass[tikz,border=2mm]{standalone}
+\documentclass[11pt,tikz,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
 
 \usepackage{siunitx}
@@ -30,7 +30,8 @@
 \definecolor{IBM9}{HTML}{f0e442}%yellow
 \definecolor{IBM10}{HTML}{009e73}%green
 
-
+\providecommand{\PlotFont}{\normalsize}
+\pgfplotsset{every axis/.append style={font=\PlotFont}}
 
 \begin{document}
 
@@ -38,10 +39,10 @@
 \def\XMin{0}
 %\def\XMax{66780.06103936}
 \def\XMax{66000}
-\def\PlotWidth{18cm}
-\def\PlotHeight{6cm}
-\def\RawYMin{-265}
-\def\RawYMax{220}
+\def\PlotWidth{12.5cm}
+\def\PlotHeight{4.5cm}
+\def\RawYMin{-220}
+\def\RawYMax{265}
 \def\Vexc{1.8}
 \pgfmathsetmacro{\NormYMin}{\RawYMin/\Vexc}
 \pgfmathsetmacro{\NormYMax}{\RawYMax/\Vexc}
@@ -49,7 +50,7 @@
 \def\StrainYMax{0.1}
 
 \begin{groupplot}[
-	group style={group size=1 by 2, vertical sep=0.5cm, group name=dual},
+	group style={group size=1 by 1, vertical sep=0.5cm, group name=dual},
 	width=\PlotWidth,
 	height=\PlotHeight,
 	grid=none,
@@ -149,87 +150,6 @@
 	(\XMax,0)
 };
 
-\nextgroupplot[
-	ylabel={Strain},
-	y unit={\si{\percent}},
-]
-\addplot[ultra thick] coordinates {
-	(0,0)
-	({60*60*2*0.25},0)
-    ({60*60*2*0.25},{0.01627604167*1})
-    ({60*60*4*0.25},{0.01627604167*1})
-    ({60*60*4*0.25},{0.01627604167*2})
-    ({60*60*6*0.25},{0.01627604167*2})
-    ({60*60*6*0.25},{0.01627604167*3})
-    ({60*60*8*0.25},{0.01627604167*3})
-    ({60*60*8*0.25},{0.01627604167*4})
-    ({60*60*10*0.25},{0.01627604167*4})
-    ({60*60*10*0.25},{0.01627604167*5})
-    ({60*60*12*0.25},{0.01627604167*5})
-    ({60*60*12*0.25},{0.01627604167*0})
-    ({60*60*14*0.25},{0.01627604167*0})
-    ({60*60*14*0.25},{0.01627604167*1})
-    ({60*60*16*0.25},{0.01627604167*1})
-    ({60*60*16*0.25},{0.01627604167*2})
-    ({60*60*18*0.25},{0.01627604167*2})
-    ({60*60*18*0.25},{0.01627604167*3})
-    ({60*60*20*0.25},{0.01627604167*3})
-    ({60*60*20*0.25},{0.01627604167*4})
-    ({60*60*22*0.25},{0.01627604167*4})
-    ({60*60*22*0.25},{0.01627604167*5})
-    ({60*60*24*0.25},{0.01627604167*5})
-    ({60*60*24*0.25},{0.01627604167*0})
-    ({60*60*26*0.25},{0.01627604167*0})
-    ({60*60*26*0.25},{0.01627604167*1})
-    ({60*60*28*0.25},{0.01627604167*1})
-    ({60*60*28*0.25},{0.01627604167*2})
-    ({60*60*30*0.25},{0.01627604167*2})
-    ({60*60*30*0.25},{0.01627604167*3})
-    ({60*60*32*0.25},{0.01627604167*3})
-    ({60*60*32*0.25},{0.01627604167*4})
-    ({60*60*34*0.25},{0.01627604167*4})
-    ({60*60*34*0.25},{0.01627604167*5})
-    ({60*60*36*0.25},{0.01627604167*5})
-    ({60*60*36*0.25},{0.01627604167*0})
-    ({60*60*38*0.25},{0.01627604167*0})
-    ({60*60*38*0.25},{0.01627604167*1})
-    ({60*60*40*0.25},{0.01627604167*1})
-    ({60*60*40*0.25},{0.01627604167*2})
-    ({60*60*42*0.25},{0.01627604167*2})
-    ({60*60*42*0.25},{0.01627604167*3})
-    ({60*60*44*0.25},{0.01627604167*3})
-    ({60*60*44*0.25},{0.01627604167*4})
-    ({60*60*46*0.25},{0.01627604167*4})
-    ({60*60*46*0.25},{0.01627604167*5})
-    ({60*60*48*0.25},{0.01627604167*5})
-    ({60*60*48*0.25},{0.01627604167*0})
-    ({60*60*50*0.25},{0.01627604167*0})
-    ({60*60*50*0.25},{0.01627604167*1})
-    ({60*60*52*0.25},{0.01627604167*1})
-    ({60*60*52*0.25},{0.01627604167*2})
-    ({60*60*54*0.25},{0.01627604167*2})
-    ({60*60*54*0.25},{0.01627604167*3})
-    ({60*60*56*0.25},{0.01627604167*3})
-    ({60*60*56*0.25},{0.01627604167*4})
-    ({60*60*58*0.25},{0.01627604167*4})
-    ({60*60*58*0.25},{0.01627604167*5})
-    ({60*60*60*0.25},{0.01627604167*5})
-    ({60*60*60*0.25},{0.01627604167*0})
-    ({60*60*62*0.25},{0.01627604167*0})
-    ({60*60*62*0.25},{0.01627604167*1})
-    ({60*60*64*0.25},{0.01627604167*1})
-    ({60*60*64*0.25},{0.01627604167*2})
-    ({60*60*66*0.25},{0.01627604167*2})
-    ({60*60*66*0.25},{0.01627604167*3})
-    ({60*60*68*0.25},{0.01627604167*3})
-    ({60*60*68*0.25},{0.01627604167*4})
-    ({60*60*70*0.25},{0.01627604167*4})
-    ({60*60*70*0.25},{0.01627604167*5})
-    ({60*60*72*0.25},{0.01627604167*5})
-    ({60*60*72*0.25},{0.01627604167*0})
-	(\XMax,0)
-};
-
 \end{groupplot}
 
 \begin{axis}[
@@ -237,38 +157,6 @@
 	height=\PlotHeight,
 	at={(dual c1r1.south west)},
 	anchor=south west,
-    y dir=reverse,
-	xmin=\XMin,
-	xmax=\XMax,
-    xtick={0,{60*60*3},...,{60*60*18}},
-    xticklabels={0,3,...,18},
-    minor x tick num=5,
-    scaled x ticks=false,
-	xticklabels=\empty,
-	ymin=\RawYMin,
-	ymax=\RawYMax,
-	axis on top=false,
-	grid=both,
-	ylabel={Output},
-	y unit={\si{\milli\volt}},
-	legend style={at={(0.5,1.15)}, anchor=center, legend columns=4},
-	unbounded coords=discard,
-	filter discard warning=false
-]
-\addlegendimage{ultra thick}
-\addlegendentry{Strain}
-\addplot[IBM1, ultra thick]
-	table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/SlowStrainClimateChamber_latex.csv};
-\addlegendentry{$V_{out}$}
-
-\end{axis}
-
-\begin{axis}[
-	width=\PlotWidth,
-	height=\PlotHeight,
-	at={(dual c1r2.south west)},
-	anchor=south west,
-    y dir=reverse,
 	xmin=\XMin,
 	xmax=\XMax,
     xtick={0,{60*60*3},...,{60*60*18}},
@@ -286,12 +174,15 @@
 	ylabel = $\dfrac{V_{out}}{V_{exc}}$,
 	ylabel style = {rotate=-90,},
 	y unit={\si[per-mode=fraction]{\milli\volt\per\volt}},
+	legend style={at={(0.5,1.15)}, anchor=center, legend columns=4},
 	unbounded coords=discard,
 	filter discard warning=false
 ]
-
+\addlegendimage{ultra thick}
+\addlegendentry{Strain}
 \addplot[IBM1, ultra thick]
-	table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}/\Vexc}] {CSV/SlowStrainClimateChamber_latex.csv};
+	table[col sep=comma, skip first n=1, x index=0, y expr={(-1)*\thisrowno{1}/\Vexc}] {CSV/SlowStrainClimateChamber_latex.csv};
+\addlegendentry{$V_{out}$}
 
 \end{axis}
 

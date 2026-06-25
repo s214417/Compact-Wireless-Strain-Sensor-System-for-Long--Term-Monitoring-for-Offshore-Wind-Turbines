@@ -1,4 +1,4 @@
-\documentclass[tikz,border=2mm]{standalone}
+\documentclass[11pt,tikz,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
 
 \usepackage{siunitx}
@@ -41,6 +41,15 @@
 \tikzstyle{densely dashdotted}=      [dash pattern=on 3pt off 1pt on \the\pgflinewidth off 1pt]
 \tikzstyle{loosely dashdotted}=      [dash pattern=on 3pt off 4pt on \the\pgflinewidth off 4pt]
 
+
+% Standard font + uniform size for the (overlaid) time-series axes, so
+% they stay aligned and match the 11pt body. The two hysteresis axes below
+% keep their own explicit \HystW/\HystH (they override this). Include at
+% NATURAL size (no width=); tune the pins.
+\providecommand{\PlotFont}{\normalsize}
+\providecommand{\PlotWidth}{12cm}
+\providecommand{\PlotHeight}{6.5cm}
+\pgfplotsset{every axis/.append style={font=\PlotFont, width=\PlotWidth, height=\PlotHeight}}
 
 \begin{document}
 

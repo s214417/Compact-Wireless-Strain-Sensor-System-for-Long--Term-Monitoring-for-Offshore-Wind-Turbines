@@ -1,4 +1,4 @@
-\documentclass[tikz,border=2mm]{standalone}
+\documentclass[11pt,tikz,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
 
 \usepackage{siunitx}
@@ -41,6 +41,10 @@
 \tikzstyle{densely dashdotted}=      [dash pattern=on 3pt off 1pt on \the\pgflinewidth off 1pt]
 \tikzstyle{loosely dashdotted}=      [dash pattern=on 3pt off 4pt on \the\pgflinewidth off 4pt]
 
+\providecommand{\PlotFont}{\normalsize}
+\providecommand{\PlotWidth}{12cm}
+\providecommand{\PlotHeight}{6.5cm}
+\pgfplotsset{every axis/.append style={font=\PlotFont, width=\PlotWidth, height=\PlotHeight}}
 
 \begin{document}
 
@@ -69,10 +73,10 @@
     xmin=0, xmax=70000,
     ylabel={Humidity},
     y unit={\si{\percent}},
-    ytick={0,15,...,90},
-    y axis line style={color=IBM10, xshift=14mm, thick},
-    yticklabel style={color=IBM10, xshift=14mm},
-    ytick style={color=IBM10, xshift=14mm, thick},
+    ytick={0,30,...,90},
+    y axis line style={color=IBM10, xshift=15mm, thick},
+    yticklabel style={color=IBM10, xshift=15mm},
+    ytick style={color=IBM10, xshift=15mm, thick},
     ylabel style={color=IBM10},
 ]
 \addplot[IBM10, thick]
@@ -88,13 +92,15 @@
     axis y line*=right,
     axis x line=none,
     xmin=0, xmax=70000,
+    ytick={-20,0,25,50},
+    yticklabels={-20,0,25,50},
     ymin=-25, ymax=58,
     ylabel={Chamber temperature},
     y unit={\si{\degreeCelsius}},
     y axis line style={color=IBM3, thick},
     yticklabel style={color=IBM3},
     ytick style={color=IBM3, thick},
-    ylabel style={color=IBM3, yshift=4mm},
+    ylabel style={color=IBM3, yshift=2mm},
 ]
 \addplot[IBM3, thick]
     table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{3}}] {CSV/FullSystem_neg_deg_latex.csv};

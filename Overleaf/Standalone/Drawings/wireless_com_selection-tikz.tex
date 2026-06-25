@@ -1,11 +1,13 @@
-\documentclass[tikz,border=2mm]{standalone}
+\documentclass[11pt,tikz,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
+
+\providecommand{\FigScale}{1}
 
 \usepackage{xcolor}
 \usetikzlibrary{arrows.meta, positioning, calc}
 
 \begin{document}
-\begin{tikzpicture}[font=\small]
+\begin{tikzpicture}[font=\small, scale=\FigScale]
 
 \definecolor{IBM1}{HTML}{648fff}
 \definecolor{IBM2}{HTML}{785ef0}
@@ -97,17 +99,17 @@
 \draw[link] (ex) -- (mc);
 
 %star
-\begin{scope}[xshift=9cm]
-\node[font=\bfseries] at (0,4.5) {Star network};
-\node[coord] (sc) at (0,0) {};
-\foreach \ang in {20,80,140,200,260,320} {
-  \path (sc) ++(\ang:2.6) node[enddev] (s\ang) {};
-  \draw[link] (sc) -- (s\ang);
-}
-\end{scope}
+% \begin{scope}[xshift=9cm]
+% \node[font=\bfseries] at (0,4.5) {Star network};
+% \node[coord] (sc) at (0,0) {};
+% \foreach \ang in {20,80,140,200,260,320} {
+%   \path (sc) ++(\ang:2.6) node[enddev] (s\ang) {};
+%   \draw[link] (sc) -- (s\ang);
+% }
+% \end{scope}
 
-\node[coord, label=right:Coordinator] at (1,-5) {};
-\node[router, label=right:Router] at (4.5,-5) {};
-\node[enddev, label=right:End device] at (7,-5) {};
+\node[coord, label={[font=\small]right:Coordinator}] at (-7.5,3) {};
+\node[router, label={[font=\small]right:Router}] at (-7.5,0) {};
+\node[enddev, label={[font=\small]right:End device}] at (-7.5,-3) {};
 \end{tikzpicture}
 \end{document}

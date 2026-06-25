@@ -1,5 +1,7 @@
-\documentclass[border=2mm]{standalone}
+\documentclass[11pt,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
+
+\providecommand{\FigScale}{1}
  
 \usepackage{siunitx}
 \usepackage{tikz}
@@ -25,7 +27,7 @@
 
 \begin{document}
 
-\begin{tikzpicture}[line join=round, line cap=round, yscale=1]
+\begin{tikzpicture}[scale=\FigScale, line join=round, line cap=round]
 
 \definecolor{IBM1}{HTML}{648fff}
 \definecolor{IBM2}{HTML}{785ef0}

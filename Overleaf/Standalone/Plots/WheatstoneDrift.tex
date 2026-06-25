@@ -1,4 +1,4 @@
-\documentclass[tikz,border=2mm]{standalone}
+\documentclass[11pt,tikz,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
 
 \usepackage{siunitx}
@@ -29,7 +29,10 @@
 \definecolor{IBM9}{HTML}{f0e442}%gul
 \definecolor{IBM10}{HTML}{009e73}%grøn
 
-
+\providecommand{\PlotFont}{\normalsize}
+\providecommand{\PlotWidth}{13.5cm}
+\providecommand{\PlotHeight}{6cm}
+\pgfplotsset{every axis/.append style={font=\PlotFont, width=\PlotWidth, height=\PlotHeight}}
 
 \begin{document}
 

@@ -1,4 +1,4 @@
-\documentclass[tikz,border=2mm]{standalone}
+\documentclass[11pt,tikz,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
 
 \usepackage{siunitx}
@@ -16,6 +16,9 @@
 \usepgfplotslibrary{groupplots}
 \pgfplotsset{compat=1.18}
 \pgfplotsset{set layers}
+
+\providecommand{\PlotFont}{\normalsize}
+\pgfplotsset{every axis/.append style={font=\PlotFont}}
  
 \ctikzset{tripoles/mos style/arrows}
 
@@ -37,8 +40,8 @@
 \begin{tikzpicture}
 \def\XMin{0}
 \def\XMax{47.34378}
-\def\PlotWidth{18cm}
-\def\PlotHeight{6cm}
+\def\PlotWidth{12.5cm}
+\def\PlotHeight{4.5cm}
 \def\RawYMin{-169}
 \def\RawYMax{169}
 \def\Vexc{1.8}
@@ -108,7 +111,6 @@
 	height=\PlotHeight,
 	at={(dual c1r1.south west)},
 	anchor=south west,
-    y dir=reverse,
 	xmin=\XMin,
 	xmax=\XMax,
 	ymin=\RawYMin,
@@ -125,7 +127,7 @@
 \addlegendimage{ultra thick}
 \addlegendentry{Strain}
 \addplot[IBM1, ultra thick]
-	table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/WheatstoneBasic_volt.csv};
+	table[col sep=comma, skip first n=1, x index=0, y expr={(-1)*\thisrowno{1}}] {CSV/WheatstoneBasic_volt.csv};
 \addlegendentry{$V_{out}$}
 
 \end{axis}
@@ -135,7 +137,6 @@
 	height=\PlotHeight,
 	at={(dual c1r2.south west)},
 	anchor=south west,
-    y dir=reverse,
 	xmin=\XMin,
 	xmax=\XMax,
 	ymin=\NormYMin,
@@ -152,7 +153,7 @@
 ]
 
 \addplot[IBM1, ultra thick]
-	table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}/\Vexc}] {CSV/WheatstoneBasic_volt.csv};
+	table[col sep=comma, skip first n=1, x index=0, y expr={(-1)*\thisrowno{1}/\Vexc}] {CSV/WheatstoneBasic_volt.csv};
 
 \end{axis}
 

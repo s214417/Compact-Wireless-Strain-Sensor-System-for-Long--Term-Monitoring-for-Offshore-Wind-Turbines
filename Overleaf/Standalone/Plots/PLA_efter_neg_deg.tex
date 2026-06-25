@@ -1,4 +1,4 @@
-\documentclass[tikz,border=2mm]{standalone}
+\documentclass[11pt,tikz,border=2mm]{standalone}
 \input{Setup/StandalonePreamble}
 
 \usepackage{siunitx}
@@ -30,15 +30,16 @@
 \definecolor{IBM9}{HTML}{f0e442}%gul
 \definecolor{IBM10}{HTML}{009e73}%grøn
 
-
+\providecommand{\PlotFont}{\normalsize}
+\pgfplotsset{every axis/.append style={font=\PlotFont}}
 
 \begin{document}
 
 \begin{tikzpicture}
 \def\XMin{0}
 \def\XMax{47.34378}
-\def\PlotWidth{18cm}
-\def\PlotHeight{6cm}
+\def\PlotWidth{13.5cm}
+\def\PlotHeight{4.5cm}
 \def\RawYMin{35.5}
 \def\RawYMax{51.69}
 \def\DeltaYMin{-4.3/100}
@@ -116,7 +117,7 @@
     ylabel={Resistance},
     y unit={\si{\kilo\ohm}},
     xticklabels=\empty,
-    legend style={at={(0.5,1.25)}, anchor=center, legend columns=3},
+    legend style={at={(0.5,1.35)}, anchor=center, legend columns=3},
     unbounded coords=discard,
     filter discard warning=false
 ]
