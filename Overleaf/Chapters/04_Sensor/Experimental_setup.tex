@@ -1,0 +1,83 @@
+To test and evaluate the strain sensors, an experimental setup is build. \cref{tab:setup} provides an technical overview of the equipment used and \cref{fig:setup} a picture of the test bench. 
+
+\begin{table}[!b]
+\centering
+\caption{Overview of the equipment used in the experimental setup. The last column links each item to its numbered callout in \cref{fig:setup}.}
+\label{tab:setup}
+\small
+\setlength{\tabcolsep}{6pt}
+\begin{tabularx}{\textwidth}{@{}l l X r@{}}
+\toprule
+Equipment & Model name & Details & \cref{fig:setup} reference\\
+\midrule
+Linear Stage Actuator & EBX1605-200 & \SI{5}{\milli\meter} travel per revolution & 1 \\
+Stepper Motor & 57BYGH56 & \SI{3}{\ampere}, \SI{0.9}{\newton\meter} & 2 \\
+Digital Stepper Driver & DM542T & 25600 pulse per revolution & 3 \\
+Microcontroller & Arduino Uno & Controls motor and synchronization & 4 \\
+SourceMeter & Keithley 2450 & Resistance \& voltage measurements & 5 \\
+DC Power Supply & DP832 & Multi-channel power supply & 6 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[!t]
+    \centering
+    \begin{tikzpicture}[
+        marker/.style={ellipse, draw=green, line width=1.1pt, inner sep=0pt,
+            preaction={draw=white, line width=2.6pt}},
+        leader/.style={green, line width=1pt,
+            preaction={draw=white, line width=2.4pt}},
+        numlabel/.style={circle, draw=green, fill=white, text=green,
+                         line width=1pt, inner sep=1pt, minimum size=14pt,
+                         font=\small\bfseries},
+    ]
+        \node[anchor=south west, inner sep=0] (img) at (0,0)
+            {\includegraphics[width=0.8\linewidth]{Pictures/setup.jpeg}};
+
+        \begin{scope}[x={(img.south east)}, y={(img.north west)}]
+            \coordinate (t1) at (0.3, 0.26);
+            \coordinate (t2) at (0.54, 0.26);
+            \coordinate (t3) at (0.50, 0.505);
+            \coordinate (t4) at (0.57, 0.61);
+            \coordinate (t5) at (0.81, 0.66);
+            \coordinate (t6) at (0.3, 0.55);
+            \coordinate (l1) at (0.355,  -0.06);
+            \coordinate (l2) at ( 0.485, -0.06);
+            \coordinate (l3) at ( 0.47,  1.06);
+            \coordinate (l4) at ( 0.60,  1.06);
+            \coordinate (l5) at ( 1.06,  0.5);
+            \coordinate (l6) at (-0.06,  0.5);
+        \end{scope}
+
+        \newcommand{\setupcallout}[4][0]{%
+            \node[marker, minimum width=#3, minimum height=#4, rotate=#1] (m#2) at (t#2) {};
+            \node[numlabel] (n#2) at (l#2) {#2};
+            \draw[leader] (m#2) -- (n#2);
+        }
+        \setupcallout{1}{115pt}{40pt}
+        \setupcallout{2}{40pt}{50pt}
+        \setupcallout{3}{35pt}{38pt}
+        \setupcallout{4}{25pt}{25pt}
+        \setupcallout{5}{125pt}{125pt}
+        \setupcallout{6}{96pt}{74pt}
+    \end{tikzpicture}
+    \caption{Experimental test bench used to characterize the strain sensors. The numbered callouts correspond to the equipment listed in \cref{tab:setup}.}
+    \label{fig:setup}
+\end{figure}
+
+The microcontroller (Arduino Uno, item~4 in \cref{fig:setup}) is the central controller of the test bench, coordinating both the actuation and the measurement. It drives the digital stepper driver (item~3), which steps the stepper motor (item~2), then rotating the lead screw of the linear stage (item~1), and generating the linear travel that strains the device under test (DUT). 
+To synchronize the measurements with this motion, the microcontroller sends a digital trigger to the I/O port of the source meter (Keithley 2450, item~5), so that each measurement starts at a known motor position and time stamp. The DC power supply (item~6) powers the motor through the stepper driver and can additionally supply the excitation voltage for the Wheatstone bridge.
+
+The problem statement (\Cref{sec:ProblemStatement}) requires the sensor to be able to measure strains of at least \SI{800}{\micro\strain} over a square surface with a side length of \SI{30}{\milli\meter}. To produce this strain on the test bench, the required elongation follows from the definition of strain (\cref{eq:strain definition}, \Cref{sec:Strain}):
+
+\begin{align}\label{eq:microStrain}
+    \Delta L = \varepsilon L_{0} = \SI{800}{\micro\strain} \cdot \SI{30}{\milli\meter} = \SI{24}{\micro\meter}.
+\end{align}
+
+Realizing such a small elongation slowly and with high resolution requires a fine actuation step. The microstepping of the digital stepper driver is therefore set to its maximum of \num{25600} pulses per revolution, which yields a microstep size of:
+
+\begin{align} \label{eq:microstep}
+    \text{microstep size} = \frac{\text{travel per revolution}}{\text{pulses per revolution}} = \frac{\SI{5}{\milli\meter}}{\num{25600}} = \SI{195.3}{\nano\meter}.
+\end{align}
+
+Reaching the target elongation of \SI{24}{\micro\meter} therefore requires \num{123} microsteps, the smallest integer above the exact requirement of \num{122.9}. This results in an actual elongation of \SI{24.02}{\micro\meter}, or \SI{800.78}{\micro\strain}, which satisfies the requirement of at least \SI{800}{\micro\strain}.

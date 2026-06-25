@@ -1,0 +1,61 @@
+% Single-Sensor Response and Print Optimisation (Better name)?
+
+The development of the sensor began with a conductive TPU as the sensing material rather than the conductive PLA of the template. PLA is generally described as a stiff and brittle polymer with a low glass-transition temperature and a low elongation at break \cite{Farah2016}, and within additive-manufacturing practice it is commonly held that PLA becomes markedly more brittle below \SI{0}{\celsius} \cite{PLAlowtemp}. This raised the expectation that PLA would not function reliably toward the \SI{-20}{\celsius} end of the operating range, and a flexible conductive TPU was adopted first on the assumption that an elastomeric matrix would better tolerate low temperatures. The low-temperature behaviour of PLA is, however, not well documented, and this expectation rested on widely repeated practical guidance rather than on measurements of the conductive PLA used here. The assumption, together with the choice between the two materials, is revisited in \cref{Temperature Behaviour} once the temperature behaviour has been measured.
+ 
+Both materials were characterised by straining a single sensor and recording its resistance. The resistance at rest, before any strain is applied, is denoted as the baseline resistance $R_0$, and the response to strain is expressed as the relative change $\Delta R / R_0$, which removes the dependence on the absolute baseline so that sensors with different baseline resistances can be compared on the same scale. The sensor optimisation process was developed in stages, and the effect of each stage is shown for the conductive-TPU sensor in \cref{fig:opt_tpu} and for the conductive-PLA sensor in \cref{fig:opt_pla}, where the upper panel of each figure gives the resistance and the lower panel the relative change $\Delta R / R_0$, with one curve per stage.
+ 
+The first optimisation stage adjusted only the turn diameter and serves as the reference against which the later stages are compared. Adding the line depth produced a clear improvement and had the strongest effect of the additional settings. The line depth specifies how far the nozzle is lowered relative to the nominal sensing-layer height of \SI{0.2}{\milli\meter}, where a positive value brings the nozzle closer to the substrate and presses the deposited line more firmly while a negative value raises it, so that it sets the effective height and spread of the conductive line. It was found to have a particularly strong effect on the sensitivity in the small-strain regime.
+ 
+The two remaining stages targeted the deposition through the turns, where the over-extrusion that forms the contacts between adjacent turns most directly governs the sensitivity. Changing either the print speed or the flow rate through the turns alters the amount of over-extrusion that occurs. Increasing the speed moves the nozzle more quickly through the turn, so that less filament is deposited and the over-extrusion is reduced. Decreasing the flow rate has the same effect, since this likewise reduces the amount of filament extruded. Optimising each of these adjustments separately gave a similar improvement in the response, with the flow-rate change only about \SI{1}{\percent} better than the speed change. Combining the speed and flow-rate changes with the optimised turn diameter and line depth produced the best response of the five stages and was adopted as the final print configuration for each material.
+ 
+One further adjustment, Linear Advance, was attempted but is not shown in the figures because it did not improve the response. Linear Advance is a firmware feature reported by its developer to improve flow consistency during changes in print speed by compensating for the pressure that builds up in the nozzle \cite{Lin_adv}. While its recommended calibration appeared promising, as shown in \cref{app:LinearAdvance}, applying it to the custom-generated serpentine G-code did not improve the flow but instead made it worse, most likely because the feature is intended for conventionally sliced G-code rather than the custom toolpaths used here.
+ 
+The same five stages were applied to both materials, with the settings optimised for the conductive TPU carried over to the conductive PLA as a starting template and then re-optimised for that material. The two sensors behave similarly through the stages, differing mainly in that the TPU sensor sits at a higher baseline resistance and reaches a slightly lower $\Delta R / R_0$ than the PLA sensor. The conductive TPU also exhibited more severe over-extrusion at the points between the turns than the PLA when no speed or flow compensation was applied, so that the speed and flow-rate changes required to correct it were larger for the TPU than for the PLA. The final optimised parameters for both materials are listed in \cref{tab:opt_params}.
+
+\begin{table}[!tb]
+\centering
+\caption{Final optimised print parameters for the conductive-TPU and conductive-PLA sensors.}
+\label{tab:opt_params}
+\begin{tabular}{@{}l c c@{}}
+\toprule
+Parameter & TPU & PLA \\
+\midrule
+Turn diameter [\si{\micro\meter}]            & 510 & 490 \\
+Line depth [\si{\milli\meter}]               & 35 & 45 \\
+Print speed in turns [\si{\milli\meter\per\second}] & 25 & 20 \\
+Flow in turns [\si{\percent}]                & 90 & 98 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneSensorer_resistance}
+    \caption{Response of the conductive-TPU sensor after each of the five print-optimisation stages, from the turn-diameter-only configuration to the combined speed and flow adjustment. The upper panel shows the measured resistance and the lower panel the relative change $\Delta R/R_0$.}
+    \label{fig:opt_tpu}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneSensorer_resistance}
+    \caption{Response of the conductive-PLA sensor after the same five print-optimisation stages as in \cref{fig:opt_tpu}.}
+    \label{fig:opt_pla}
+\end{figure}
+
+% TPU SENSORS:
+% Initial sensor range: 
+% Turn diameter & line depth: 
+% Turn speed change: 
+% Turn flow change: 
+% Turn flow & speed change: 
+
+% PLA SENSORS:
+% Initial sensor range: 36-39
+% Turn diameter & line depth: 36-47
+% Turn speed change: 36-48
+% Turn flow change: 36-48.5
+% Turn flow & speed change: 36-50
+

@@ -1,33 +1,28 @@
 \subsection{Current Consumption Analysis}
-\cref{fig:cc_full} shows the measured current consumption of the full system 
+\Cref{fig:measurement} and \cref{fig:sleep} shows the measured current consumption of the full system 
 across a temperature range of \SI{-20}{\celsius} to \SI{+50}{\celsius} at constant 
 humidity. The two operating modes exhibit opposing temperature dependencies, each 
 governed by distinct physical mechanisms.
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}{0.48\textwidth}
-    \centering
-    \includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Plots/FullSystem_neg_deg_cc_meas}
+\includestandalone[mode=buildmissing]{Standalone/Plots/FullSystem_neg_deg_cc_meas}
     \caption{EM0 (run mode)}
     \label{fig:measurement}
-\end{subfigure}
-\hfill
-\begin{subfigure}{0.48\textwidth}
-    \centering
-    \includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Plots/FullSystem_neg_deg_cc_sleep}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/FullSystem_neg_deg_cc_sleep}
     \caption{EM4 (sleep mode)}
     \label{fig:sleep}
-\end{subfigure}
-\caption{Full system current consumption of EM0 (run mode) and EM4 (sleep mode).}
-\label{fig:cc_full}
 \end{figure}
 
 In EM0 (run mode), the average current consumption increases at lower temperatures,  from \SI{5.612}{\milli\ampere} at \SI{+50}{\celsius} to \SI{6.681}{\milli\ampere} at \SI{-20}{\celsius}, with a total average at \SI{5.886}{\milli\ampere} for the whole time period.This trend is opposite to the intrinsic MCU behavior characterized in the EFR32MG22E datasheet \cite{EFR32MG22E}, which shows EM0 supply current increasing with temperature when powered from a stable regulated supply. The reason for this reversal can be found in the temperature dependence of the EVE ER14250 Li-SOCl\textsubscript{2} battery. The output of the battery was measured as shown in \cref{fig:FS_bat}. Here the battery terminal voltage drops significantly at low temperatures with active-pulse voltages approaching \SI{2.6}{\volt} at \SI{-20}{\celsius}. 
 
 \begin{figure}[H]
 \centering
-\includestandalone[mode=buildmissing, width=0.75\textwidth]{Standalone/Plots/FullSystem_neg_deg_bat}
+\includestandalone[mode=buildmissing]{Standalone/Plots/FullSystem_neg_deg_bat}
     \caption{Battery voltage in varying enviromental conditions.}
     \label{fig:FS_bat}
 \end{figure}
@@ -102,33 +97,35 @@ In \cref{tab:charge_10y}, the average charge per cycle is used to determine the 
 \centering
 \caption{Estimated charge consumption over 10 years}
 \label{tab:charge_10y}
-\begin{tabular}{@{}crrrr@{}}
+\begin{tabular}{@{}crrrrr@{}}
 \toprule
 Readings/day &
 Temp. &
 $Q_{\mathrm{EM0}}$ &
 $Q_{\mathrm{EM4}}$ &
-$Q_{\mathrm{total}}$ \\
+$Q_{\mathrm{total}}$ &
+Battery usage \\
 Over 10 years  &
 (\si{\celsius}) &
 (\si{\milli\ampere\hour}) &
 (\si{\milli\ampere\hour}) &
-(\si{\milli\ampere\hour}) \\
+(\si{\milli\ampere\hour}) &
+(\%) \\
 \midrule
-1 & -20 & 15.24 & 15.05 & 30.29 \\
-1 & +50 & 18.12 & 67.23 & 85.35 \\
+1  & -20 & 15.24  & 15.05 & 30.29   & 2.80 \\
+1  & +50 & 18.12  & 67.23 & 85.35   & 7.90 \\
 \hline
-2 & -20 & 30.48 & 15.05 & 45.52 \\
-2 & +50 & 36.24 & 67.21 & 103.45 \\
+2  & -20 & 30.48  & 15.05 & 45.52   & 4.22 \\
+2  & +50 & 36.24  & 67.21 & 103.45  & 9.58 \\
 \hline
-5 & -20 & 76.19 & 15.04 & 91.22 \\
-5 & +50 & 90.61 & 67.15 & 157.75 \\
+5  & -20 & 76.19  & 15.04 & 91.22   & 8.45 \\
+5  & +50 & 90.61  & 67.15 & 157.75  & 14.61 \\
 \hline
-10 & -20 & 152.38 & 15.01 & 167.39 \\
-10 & +50 & 181.21 & 67.04 & 248.25 \\
+10 & -20 & 152.38 & 15.01 & 167.39  & 15.50 \\
+10 & +50 & 181.21 & 67.04 & 248.25  & 22.99 \\
 \hline
-55 & -20 & 838.07 & 14.80 & 852.87 \\
-55 & +50 & 996.67 & 66.10 & 1062.77 \\
+55 & -20 & 838.07 & 14.80 & 852.87  & 78.97 \\
+55 & +50 & 996.67 & 66.10 & 1062.77 & 98.40 \\
 \bottomrule
 \end{tabular}
 \end{table}

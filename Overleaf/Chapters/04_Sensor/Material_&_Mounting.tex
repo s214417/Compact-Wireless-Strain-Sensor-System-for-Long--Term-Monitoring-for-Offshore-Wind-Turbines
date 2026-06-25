@@ -1,0 +1,14 @@
+% Drift Behaviour (Better name?)
+
+The long-term stability of the sensor in constant environmental conditions was measured for the four combinations of conductor material and mounting surface shown in \cref{fig:2by2_drift}, recorded over more than two days. The two conductor materials are the conductive PLA and the conductive TPU, and the two mounting surfaces are the compliant TPU substrate used during characterisation and a steel plate representing the metallic surface of the nut on which the sensor is deployed.
+
+The conductor material has by far the larger effect on the drift. The conductive TPU, in the upper panels a and b of \cref{fig:2by2_drift}, drifts strongly and monotonically downward, by roughly \SI{3}{\percent} on the TPU substrate and roughly \SI{8}{\percent} on the steel plate over the measurement, which is consistent with viscoelastic relaxation of the elastomeric conductor as the contacts settle under the resting load. The conductive PLA, in the lower panels c and d, instead fluctuates only slightly about its mean, by about \SI{0.1}{\percent} on the TPU substrate and about \SI{0.5}{\percent} on the steel plate, without any sustained trend. The conductive PLA is therefore far more stable than the conductive TPU, and the mounting surface has only a secondary effect on the drift.
+ 
+As seen on \cref{fig:2by2_drift} the resistance also differs between the two mounting surfaces for a given conductor, the sensors on the TPU substrate sitting at a higher resistance than those on the steel plate. This follows from the break-in step described in \cref{Sensor Structure & the Small-Strain Operating Point}. On the compliant TPU substrate the sensor can be pre-cracked, separating the partially fused turns so that the current is forced through the full serpentine path and the resistance rises. On the rigid steel plate the sensor cannot be flexed enough to be pre-cracked, so the fused turns remain joined and the resistance stays lower.
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/2by2_drift}
+    \caption{Resistance drift in constant enviromental conditions of four sensors with different substrate–conductor combinations: a) conductive TPU on a TPU substrate, b) conductive TPU on a steel substrate, c) conductive PLA on a TPU substrate, and d) conductive PLA on a steel substrate.}
+    \label{fig:2by2_drift}
+\end{figure}

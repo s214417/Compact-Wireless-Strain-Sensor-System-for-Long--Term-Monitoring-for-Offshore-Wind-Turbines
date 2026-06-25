@@ -1,3 +1,10 @@
+\begin{figure}[!b]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Drawings/Firmware_architecture_overview.tex}
+    \caption{Firmware module architecture.}
+    \label{fig:fw_architecture}
+\end{figure}
+
 The firmware is developed in C using the Silicon Labs Simplicity Studio extension for Visual Studio Code, targeting the EFR32MG22E microcontroller with the Simplicity SDK (version 2025.12.1). The firmware runs bare-metal, without a real-time operating system.
 The SDK uses a cooperative super-loop execution model in which each iteration of the main loop first runs the internal SDK processing via \texttt{sl\_main\_process\_action()}, followed by the application tick function \texttt{app\_process\_action()}.
 This structure is sufficient because the firmware has a single, well-defined repeating cycle with no concurrent tasks that would require a scheduler.
@@ -9,15 +16,8 @@ The codebase is decomposed into four application-level modules, each with a clea
 \texttt{em4.c} owns the EM4 deep-sleep entry sequence, including BURTC wake-up configuration.
 All four modules are built on top of the Simplicity SDK, which provides the Zigbee stack, peripheral drivers (EMLIB), the sleep timer, and the energy management unit (EMU) interface.
 
-\begin{figure}[H]
-\centering
-\includestandalone[mode=buildmissing, width=0.92\textwidth]{Standalone/Drawings/Firmware_architecture_overview.tex}
-    \caption{Firmware module architecture.}
-    \label{fig:fw_architecture}
-\end{figure}
-
 The architectural driver behind this design is the battery lifetime requirement.
-The system must operate for more than ten years on a primary cell, which demands that both the active time per measurement cycle and the current consumption during deep sleep are minimised.
+The system must operate for more than ten years on a primary cell, which demands that both the active time per measurement cycle and the current consumption during deep sleep are minimized.
 The firmware therefore structures every cycle around three phases.
 The first is a brief active phase in which the Zigbee network is joined or verified, the Wheatstone bridge is sampled, and a ZCL report is transmitted.
 The second is a confirmation phase in which the firmware waits for the transmission callback before committing to sleep.

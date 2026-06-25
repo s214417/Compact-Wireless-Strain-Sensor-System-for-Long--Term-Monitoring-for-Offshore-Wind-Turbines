@@ -1,8 +1,8 @@
 \chapter{System Overview} \label{sec:System_overview}
 
-\begin{figure}[ht]
+\begin{figure}[!b]
 \centering
-\includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Drawings/SystemOverview_drawing}
+\includestandalone[mode=buildmissing]{Standalone/Drawings/SystemOverview_drawing}
     \caption{System concept: a) offshore wind turbine with bolted flange joints between the tower sections, b) cross-section of a flange joint with a sensor module mounted on the side face of a nut, and c) exploded view of the sensor node and it's contents, combining 3D printed strain sensors, a custom PCB, and a battery under a protective encapsulation.}
     \label{fig:System_concept}
 \end{figure}
@@ -19,9 +19,9 @@ To meet the ten-year lifetime requirement, the node spends nearly all of its tim
 
 The remainder of the report follows this architecture. \Cref{sec:Sensor} covers the design and characterization of the 3D printed sensor, while \Cref{sec:Hardware} treats the selection of the wireless solution together with the schematic and PCB design of the node electronics. \Cref{sec:Firmware_and_software} describes the firmware and the user-facing software, and \Cref{sec:Results} presents the experimental validation of the integrated prototype. The system is developed as a proof of concept, and design decisions are accordingly evaluated against the requirements above rather than against full qualification for offshore deployment.
 
-\begin{figure}[hb]
+\begin{figure}
 \centering
-\includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Drawings/SystemOverview_diagram}
+\includestandalone[mode=buildmissing]{Standalone/Drawings/SystemOverview_diagram}
     \caption{Functional architecture of a sensor node and the surrounding infrastructure. Solid arrows show the on-board signal path and dashed arrows the power supply and the wireless links. The references in parentheses indicate where each part is treated in the report.}
     \label{fig:System_blocks}
 \end{figure}

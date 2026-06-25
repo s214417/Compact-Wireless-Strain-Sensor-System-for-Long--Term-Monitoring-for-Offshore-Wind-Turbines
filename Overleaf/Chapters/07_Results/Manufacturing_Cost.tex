@@ -1,0 +1,119 @@
+% 2.23g NinjaTek 85A TPU
+% 0.80g NinjaTek eal conductive TPU
+\subsection{Manufacturing Cost}
+ 
+Manufacturing of the system includes three stages: sensor fabrication, PCB manufacturing and assembly, and encapsulation. The per-unit cost of each stage is estimated below, with all component prices reflecting volume pricing as of June 2026.
+ 
+\subsubsection*{Sensor Fabrication}
+ 
+Each sensor element consists of \SI{0.80}{\gram} of NinjaTek Eel conductive TPU~\cite{ninjatek_eel_filament}, priced at \SI{1150.27}{DKK\per\kilo\gram}, and \SI{2.23}{\gram} NinjaTek 85A TPU \cite{ninjatek_ninjaflex_2026}. The material cost per sensor is therefore
+ 
+\begin{equation}
+    \text{Cost per Sensor} = \SI{0.80}{\gram} \cdot \frac{\SI{1150.27}{DKK}}{\SI{1}{\kilo\gram}} + \SI{2.23}{\gram} \cdot \frac{\SI{671}{DKK}}{} \approx \SI{0.92}{DKK}.
+\end{equation}
+ 
+\noindent This figure reflects raw filament cost only. Overhead contributions from 3D printing, including machine wear and tear, energy consumption, and post-processing, are omitted as they are context-dependent.
+ 
+\subsubsection*{PCB Fabrication and Assembly}
+ 
+PCB manufacturing costs are strongly quantity-dependent. For a representative production run of 99{,}000 units, panelised as 1{,}000 panels of $9 \times 11$ boards, a JLCPCB quotation yields fabrication and shipping costs of \SI{47,700}{DKK} and \SI{13,500}{DKK} respectively, giving a per-unit fabrication cost of \SI{0.62}{DKK}.
+ 
+Assembly costs comprise fixed and variable contributions, as detailed in~\cref{tab:assembly_cost}. Fixed costs, covering setup, stencil preparation, and extended component loading fees, are spread across the full production run and become negligible at this quantity. The dominant variable costs are panel handling, Surface-Mount Technology (SMT) placement across 12{,}573{,}000 solder joints billed at \$0.0011 per joint, and mandatory X-ray inspection of the QFN-32 package, yielding a per-unit assembly cost of \SI{1.97}{DKK}.
+ 
+\begin{table}[!htbp]
+\centering
+\caption{Estimated JLCPCB Economic PCBA assembly cost for a production run of
+         99{,}000 units organised as 1{,}000 panels of $9 \times 11$ boards.
+         All 12{,}573{,}000 solder joints are billed at the lowest tier rate
+         (\$0.0011/joint) as the total exceeds 100{,}000. Pricing based on
+         JLCPCB published rates~\cite{jlcpcb_pcba_price_2025} as of June~2026.
+         USD converted at 6.582~DKK/USD.}
+\label{tab:assembly_cost}
+\small
+\setlength{\tabcolsep}{6pt}
+\begin{tabularx}{\textwidth}{@{} X r r r @{}}
+\toprule
+Cost Item & Unit Rate & Total (USD) & Total (DKK) \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Fixed costs (once per order)}} \\
+\midrule
+Setup fee                             & \$8.00 flat    & \$8.00         & 52.66        \\
+Stencil                               & \$1.50 flat    & \$1.50         & 9.87         \\
+Extended component loading (15 types) & \$3.00/type    & \$45.00        & 296.19       \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Variable costs (scale with quantity)}} \\
+\midrule
+Panel fee (1{,}000 panels)            & \$7.81/panel   & \$7{,}810.00   & 51{,}405.42  \\
+SMT assembly (12{,}573{,}000 joints)  & \$0.0011/joint & \$13{,}830.30  & 91{,}031.03  \\
+X-ray inspection, QFN-32 (99{,}000~units) & \$0.08/unit & \$7{,}920.00  & 52{,}129.44  \\
+\midrule
+\textbf{Total assembly cost}          &                & \textbf{\$29{,}614.80} & \textbf{194{,}924.61} \\
+\textbf{Per-unit assembly cost}       &                & \textbf{\$0.30}        & \textbf{1.97}         \\
+\bottomrule
+\end{tabularx}
+\end{table}
+ 
+\subsubsection*{Bill of Materials}
+ 
+The full Bill of Materials is provided in~\cref{BOM}, divided into PCB-mounted components and external components, the latter comprising the sensor interface cables, the lithium battery, and the battery holder. Component prices reflect volume pricing and were sourced from DigiKey, with the exception of the battery holder (RS Components), the lithium battery (NKON), and the EFR32MG22E SoC (Mouser). A summary is presented in~\cref{tab:bom_summary}. The final design yields a PCB component cost of \SI{27.03}{DKK} per unit and a total system cost of \SI{64.37}{DKK} including external components. The reduction relative to the initial design reflects the elimination of fourteen components following experimental validation, as described in \cref{sec:Final_Schem}.
+ 
+\begin{table}[!htbp]
+\centering
+\caption{Summary of PCB component and system costs for the initial and final
+         PCB designs. Prices in DKK, reflecting volume pricing.}
+\label{tab:bom_summary}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{} X r r @{}}
+\toprule
+ & Initial Design (DKK) & Final Design (DKK) \\
+\midrule
+PCB Components      & 34.20 & 27.03 \\
+External Components & 37.34 & 37.34 \\
+\midrule
+\textbf{Total}      & \textbf{71.54} & \textbf{64.37} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+ 
+\subsubsection*{Encapsulation}
+ 
+The PCB and sensor assembly are encapsulated in TermoPasty Silicone Potting Compound 011 \cite{termopasty_silicone_compound_011}, as described in \cref{encapsulation}. At a material cost of approximately \SI{1082}{DKK\per\kilo\gram} and a consumption of \SI{12}{\gram} per unit, encapsulation contributes \SI{12.98}{DKK} per unit. The compound selected here suits the prototype implementation, and a broader material survey may identify more cost-effective alternatives without compromising the required environmental protection.
+ 
+\subsubsection*{Total Unit Cost}
+ 
+The per-unit costs across all manufacturing stages are summarised in~\cref{tab:cost_summary}. External components, comprising the battery, battery holder, and cables, are listed separately to present the PCB manufacturing cost in isolation. Excluding external components, the manufactured unit cost is \SI{43.52}{DKK}, rising to \SI{80.86}{DKK} when all items are included.
+ 
+\begin{table}[!htbp]
+\centering
+\caption{Per-unit manufacturing cost summary for the final design at a
+         production volume of 99{,}000 units. External components are listed
+         separately as replaceable consumables. All prices in DKK.}
+\label{tab:cost_summary}
+\small
+\setlength{\tabcolsep}{6pt}
+\begin{tabularx}{\textwidth}{@{} X r @{}}
+\toprule
+Cost Item & Unit Cost (DKK) \\
+\midrule
+\multicolumn{2}{@{}l}{\textit{Manufacturing}} \\
+\midrule
+Sensor -- conductive TPU filament (\SI{0.80}{\gram})        & 0.92  \\
+PCB fabrication and shipping                                 & 0.62  \\
+PCB assembly (JLCPCB Economic PCBA)                         & 1.97  \\
+Encapsulation -- silicone potting compound (\SI{12}{\gram}) & 12.98 \\
+\midrule
+\multicolumn{2}{@{}l}{\textit{Components}} \\
+\midrule
+PCB components (volume pricing)                              & 27.03 \\
+\midrule
+\textbf{Subtotal (excl.\ external components)}               & \textbf{43.52} \\
+\midrule
+\multicolumn{2}{@{}l}{\textit{External components}} \\
+\midrule
+Battery, battery holder, and cables                          & 37.34 \\
+\midrule
+\textbf{Total per unit}                                      & \textbf{80.86} \\
+\bottomrule
+\end{tabularx}
+\end{table}

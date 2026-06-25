@@ -1,14 +1,112 @@
 \chapter{Sensor} \label{sec:Sensor}
 
-%Skriv kort om hvad FDM print og multimaterial er. Derefter: start coocking: lidt om sensoren den struktur og substrate og sådan, og noget med Full-control og alt det her med trail and error. Noget der ligger op til første test og dermed næste afsnit Experimental setup. 
+\section{Introduction \& Scope}\label{Introduction & Scope}
+% - One short paragraph recapping from System Overview:
+%   the node is mounted on the side face of an M48 nut, and the printed elements
+%   are arranged in a Wheatstone bridge feeding the IADC. Do NOT re-explain the system.
+% - State the task of this chapter: realise and characterise the printed sensing
+%   element that satisfies the strain-transfer and sensitivity sub-questions of the
+%   Problem Statement, within the regime of strain up to ~800 ue (= 0.08 %),
+%   a 30 x 30 mm footprint, and an operating range of -20 to +50 C.
+% - Contribution boundary: the element builds on the serpentine constriction-
+%   resistance sensor of \cite{G.O.A.T}; this chapter contributes the print-process
+%   optimisation, the characterisation in the small-strain / drift / temperature
+%   regime, and the temperature-compensated half-bridge realisation on the nut surface.
+% - Additive-manufacturing context (folded in here per your note, kept high-level):
+%   FFF/FDM and multi-material printing of a conductive trace (ProtoPasta conductive
+%   PLA) on a compliant carrier (NinjaFlex TPU). Mechanism itself deferred to Theory.
+% - Roadmap sentence.
+%
+% DECISION [material history]: recommend ONE roadmap line here, e.g. "the sensing
+% material was initially TPU and was later changed to PLA"; the full justification is
+% deferred to Baseline Single-Sensor Response / Temperature Behaviour /
+% Sensor Material Selection (TPU vs PLA). (Keeps the conclusion from pre-empting the evidence.)
+% Also talk here about why TPU was thought to be a better material than PLA (with "bad" sources)
 
-% Experimental setup
+As established in the system overview (\Cref{sec:System_overview}), each sensor node is mounted on the side face of an M48 nut, where the printed sensing elements are responsible for converting the deformation of the nut into a measurable electrical signal. This chapter develops and characterises that element, from its fabrication and mechanical structure through to the bridge configuration in which it is read out.
 
-%Måske et basic plot med en TPU sensor
+The sensor must turn the small surface strain of the nut into a resistance change that is both repeatable and large enough to be measured reliably, which is precisely the sub-question of accurate strain transfer and sensitivity posed in \cref{sec:ProblemStatement}. This behaviour must be preserved across the full deployment envelope, which spans an operating range of \SIrange{-20}{50}{\celsius} and a service life of more than ten years. The defining constraint is the magnitude of the measurand, since the system targets strains of at least \SI{800}{\micro\strain} across the \SI{30}{\milli\meter} nut face, a level more than an order of magnitude below the strains at which this type of printed sensor has previously been characterised \cite{G.O.A.T}. Obtaining usable sensitivity at this scale is the central difficulty treated in the remainder of the chapter.
 
-%Derefter TPUvsPLA. 
-%Drift test (2by2) plot der viser at PLA er klart at foretrække. Derefter temp test med TPUvsPLA, og dernæst PLA after-40 og +80 plot. 
+The sensor is produced by fused deposition modelling (FDM), an additive process in which a thermoplastic filament is melted and deposited layer by layer to build a part directly from a digital model. Two materials are combined in a single build through multi-material printing, where a conductive PLA filament forms the sensing trace and a flexible thermoplastic polyurethane (TPU) substrate provides the compliant base onto which the trace is deposited. Producing it in this manner allows its geometry and material layout to be altered rapidly and at low cost, which supports the iterative build-and-test methodology used throughout the project and the wider aim of a sensor inexpensive enough to be deployed across the many bolted joints of a turbine.
+ 
+The underlying sensing mechanism, together with the serpentine constriction-resistance sensor on which this work builds, is established in prior work \cite{G.O.A.T} and recalled in \cref{sec:Theory}, and is therefore not reproduced here. The contribution of the present chapter lies instead in optimising the print process for repeatability, in characterising the sensor under the small-strain, drift, and temperature conditions specific to this application, and in realising a temperature-compensated half-bridge suited to the nut-mounted geometry.
+ 
+The sensing material was initially TPU-based, on the expectation that PLA would not withstand the low-temperature end of the operating range, an assumption that is revisited once the supporting measurements have been presented. The chapter first describes the sensor structure and its small-strain operating point, then the experimental setup used for characterisation, followed by the drift and temperature behaviour that informs the choice of sensing material, and closes with the design of the Wheatstone half-bridge.
 
-%Derefter Wheatstone bridge med lidt om bias og valg af half bridge og sådan
+\section{Sensor Structure \& the Small-Strain Operating Point}\label{Sensor Structure & the Small-Strain Operating Point}
+\input{Chapters/04_Sensor/Sensor_Structure}
+% - Serpentine geometry and the parameters that can be controlled (turn diameter,
+%   traxel width, layer scheme) in 2-3 sentences; cite Theory for the constriction mechanism rather than re-deriving it.
+% - Process control as the lever on the operating point: FullControl G-code for the
+%   conductive trace, substrate ironing, and the post-print "break-in" that separates
+%   the fused turns. This is the "full-control / trial-and-error" narrative.
+% - CENTRAL ARGUMENT (small-strain sensitivity): the application sits at <= 0.08 %,
+%   far below the 5-10 % regime of \cite{G.O.A.T}. Usable sensitivity at 800 ue arises
+%   because the as-printed and broken-in contacts rest at the point of separation, so a
+%   small strain produces a large relative change in resistance.
+% - State the trade-off explicitly, since it threads the rest of the chapter together:
+%   the same near-separation resting state that yields high sensitivity also makes the
+%   baseline strongly dependent on drift and temperature, which both motivates the
+%   characterisation that follows and is the reason the bridge is needed.
+% - Strain transfer: bench tests use the element on a TPU substrate (and on a steel
+%   plate for the metal case). In the final node the substrate is removed entirely
+%   (printed directly on the bolt) or made as thin as feasible, since a thinner/absent
+%   carrier transfers more of the nut-surface strain into the trace. Forward-ref the
+%   surface comparison in Material \& Mounting-Surface Selection (Drift).
 
-%Hvad tænker du Hukas Samann Lchou?
+\section{Experimental Setup}\label{Experimental Setup}
+\input{Chapters/04_Sensor/Experimental_setup}
+
+\section{Baseline Single-Sensor Response}\label{Baseline Single-Sensor Response}
+\input{Chapters/04_Sensor/Baseline_Single_Sensor}
+% - Establish the raw response shape and fix terminology before any comparison.
+% - Start with a TPU-conductor sensor, then introduce a PLA-conductor sensor.
+%   [TODO: both baseline plots still to be produced.]
+% - Natural home for the material HISTORY: TPU was selected first because PLA was
+%   assumed unsuitable at the -20 C end of the range. That assumption is tested in
+%   Temperature Behaviour and resolved in Sensor Material Selection (TPU vs PLA).
+% - Light optimazation is shown here. More about which optimazations are gonna be made than the results of them.
+
+\section{Material \& Mounting-Surface Selection (Drift)}\label{Material & Mounting-Surface Selection (Drift)}
+\input{Chapters/04_Sensor/Material_&_Mounting}
+% - Fig 4.2 (2x2): conductor (PLA vs TPU) x mounting surface (steel vs TPU).
+%   Frame the steel substrate as the proxy for the M48 nut surface and the TPU as the
+%   compliant carrier, so the two axes map onto two real design choices.
+% - Result: the PLA conductor shows small random-walk drift (~0.1-0.6 %) while the TPU
+%   conductor shows large monotonic creep (~3-9 %); attribute the TPU creep to
+%   viscoelastic relaxation. Mounting surface is the secondary effect.
+% - Quantify each panel. The conclusion feeds the decision in Sensor Material Selection (TPU vs PLA).
+
+\section{Temperature Behaviour}\label{Temperature Behaviour}
+\input{Chapters/04_Sensor/Temperature_Behaviour}
+% - The -20 to +50 C operating range is the spec (Problem Statement).
+% - Fig 4.4: TPU vs PLA under temperature cycling, plus hysteresis vs temperature.
+%   Resistance roughly doubles across the range with clear hysteresis -> this is the
+%   single largest error source and the motivation for the bridge.
+% - This section also settles the question that drove the original TPU choice: PLA
+%   could not be shown to fail at low temperature.
+% - Fig 4.5: the strain response is largely preserved after -20...+80 C exposure
+%   -> thermal-history robustness.
+
+\section{Wheatstone Half-Bridge Design}\label{Wheatstone Half-Bridge Design}
+\input{Chapters/04_Sensor/Wheatstone}
+% - Bridge and gauge-factor THEORY live here (Ch.2 contains no such section):
+%     * gauge factor:           GF = (dR/R) / eps
+%     * half-bridge output:     Vout = Vexc * (Rb - Rs)/(Rb + Rs), balanced at zero
+%     * sensitivity:            ~ (Vexc/2)(dR/R), i.e. twice a single gauge
+% - Topology (your schematic): two strained gauges Rs in opposite arms and two
+%   unstrained reference gauges Rb; recap the bridge from System Overview
+%   by reference, then add the design detail.
+% - Temperature compensation rationale: with four nominally identical elements at the
+%   same temperature, the (1 + alpha*dT) factor is common-mode and cancels in Vout.
+%   Tie this back to Sensor Structure \& the Small-Strain Operating Point: the bridge
+%   is what makes the delicate near-separation operating point usable in the field.
+% - Practical difficulty: matching four 3D-printed elements (offset, imperfect
+%   cancellation); cite \cite{3DprintWheatstoneStrain}.
+% - Excitation: 1.8 V on the bench vs the 3 V regulated rail on the PCB; the mV/V
+%   normalisation in the lower panel of Fig 4.7 makes the two directly comparable.
+% - Component-level characterisation: Fig 4.6 (matching of the two active gauges,
+%   including the loading lag on sensor 1) and Fig 4.7 (bridge output vs strain).
+% - Defer to the Results chapter: the temperature-compensated bridge proof and the
+%   long-term hysteresis.
+

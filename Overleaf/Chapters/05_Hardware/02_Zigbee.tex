@@ -1,38 +1,38 @@
 \section{Wireless Communication and Network}
+ 
+Each sensor module transmits its measurements wirelessly to a central server application. In a wind turbine installation, comprising several thousand bolts and joints, each fitted with its own module, the network architecture must support a large number of devices while remaining robust under the challenging RF conditions imposed by the metallic structure of the turbine.
+ 
 \subsection{Wireless Communication Selection}
-Wireless communication will be used in the application to transmit information from each module to the user. In each wind turbine several thousand sensor modules will be needed, one for each bolt and joint, therefore an appropriate solution would be to use a mesh network structure protocol as zigbee. A zigbee mesh network structure is build up of three components: The coordinator, the routers and the end devices. The end devices are each sensor module, the routers helps to make bridges and carry on the signal between end devices, and the coordinator collects data from all end devices and transmits it to the server application. An advantage of the mesh network structure is that it is selfhealing, and can reach further than eg. a star formation, which only has communication between master and end device. A visual representation of a zigbee mesh network can be seen in \cref{fig:Zigbee_Network}.
+Zigbee was selected as the wireless protocol for this application, as its mesh network architecture supports a large number of devices and provides self-healing connectivity through multi-hop routing between nodes. A Zigbee mesh network consists of three node types: end devices, which correspond to the sensor modules; routers, which relay messages between nodes; and a coordinator, which manages the network and forwards collected data to the server application. The mesh topology is illustrated in \cref{fig:Zigbee_Network}.
 
 \begin{figure}
 \centering
-\includestandalone[mode=buildmissing, width=\linewidth]{Standalone/Drawings/wireless_com_selection-tikz}
-    \caption{Zigbee mesh network structure and star network structure.}
+\includestandalone[mode=buildmissing]{Standalone/Drawings/wireless_com_selection-tikz}
+    \caption{Zigbee mesh network structure.}
     \label{fig:Zigbee_Network}
 \end{figure}
 
-Compared to similar network protocols such as Bluetooth Low Energy (BLE) and thread, Zigbee is preferable for this application, because it can host many devices and has relatively low complexity \cite{Thread_vs_zigbee, Zigbee_alliance}. BLE is a network protocol designed for low-power, short-range applications, but is more suited for peer-to-peer communcation or to be used in a star formation. Thread is a IPv6-based mesh networking protocol built on IEEE 802.15.4 at 2.4 GHz, where each nodes receives it's own IP adress, which enables direct IP communication and simplified integration with cloud services. Eventhough this seems preferable it requires additional layers such as 6LoWPAN, UDP, and IPv6 header handling, which makes a more complicated process with increased stack complexity, memory usage, and firmware size.
+Among comparable \SI{2.4}{\giga\hertz} mesh protocols, Zigbee, Bluetooth Low Energy (BLE), and Thread are the primary candidates~\cite{Thread_vs_zigbee, Zigbee_alliance}. BLE is optimized for short-range peer-to-peer communication and is not well suited to large mesh deployments. Thread supports direct IP-based communication and simplified cloud integration, but introduces greater protocol stack complexity, which increases memory usage and firmware size relative to Zigbee.
+ 
+Zigbee uses a lightweight, purpose-built mesh networking layer that results in lower packet overhead and a simpler state machine for sleepy end devices, which is advantageous for modules that wake only once per reporting interval. Both Zigbee and Thread can run on the same class of \SI{2.4}{\giga\hertz} wireless microcontroller, but Zigbee stacks typically require less flash and RAM, permitting more compact and cost-effective hardware solutions.
+ 
+In an offshore wind turbine environment, metal structures and turbine geometry significantly attenuate and reflect \SI{2.4}{\giga\hertz} signals, and no protocol in this frequency band offers inherently superior RF penetration under these conditions. Protocol selection therefore prioritizes mesh reliability, implementation simplicity, and long-term operational stability. Zigbee satisfies these criteria through its mature ecosystem, established interoperability standards, and proven track record in industrial deployments, making it the most suitable choice for this application.
 
-Zigbee uses a purpose-built, lightweight mesh networking layer with 16-bit short addressing managed by a coordinator. This results in smaller packet overhead and a simpler state machine for sleepy end devices. For sensors that wake up only once per month, this simplicity improves predictability and reduces implementation risk, especially in harsh offshore environments where maintenance access is limited.
-
-From a hardware perspective, Zigbee and Thread can run on the same 802.15.4 SoCs. However, Zigbee stacks typically require slightly less flash and RAM, allowing the use of compact integrated solutions such as QFN packages around $5\times\SI{5}{\milli\meter}$ (e.g., EFR32MG22, CC2652R). Using an integrated Zigbee SoC avoids the need for larger module-based Thread solutions or more powerful MCUs, which may increase PCB size, power consumption and thereby cost. 
-
-In an offshore wind turbine environment, metal structures and turbine geometry can significantly attenuate and reflect RF signals, and no \SI{2.4}{\giga\hertz} protocol inherently provides superior RF penetration under these conditions. Consequently, protocol selection should prioritize mesh reliability, implementation complexity, ecosystem maturity, and long-term operational stability. For applications where a mature and widely deployed mesh networking solution is preferred, Zigbee offers a proven ecosystem, established interoperability, and a long track record of industrial deployments, making it a strong candidate for this environment.
-
-\subsection{Integrated vs. External Zigbee Module}
-Each module requires a wireless communication circuit, which can either be integrated directly onto the module PCB or implemented using a separate, pre-certified RF module. The primary advantage of using an external RF module is the reduced design complexity, as the RF circuitry and antenna matching are already optimized and validated by the manufacturer. This can reduce development effort and lower the risk of RF performance issues. Additionally, it allows for a wider selection of microcontrollers, since wireless functionality does not need to be integrated into the MCU itself.
-
-However, external RF modules generally increase both the cost and the physical size of the system. They may also introduce additional interfaces and integration considerations compared to a fully integrated solution.
-
-After evaluating these trade-offs, the RF functionality was integrated directly into the system design. This approach reduces both the overall cost and PCB footprint while providing a more compact and efficient solution for the final product.
+\subsection{Integrated versus External Zigbee Module}
+ 
+The wireless communication circuit can either be integrated directly onto the module PCB or implemented using a pre-certified external RF module. The primary advantage of an external module is reduced design complexity, as the RF circuitry and antenna matching are already optimized and validated by the manufacturer, lowering the risk of RF performance issues and broadening the choice of microcontroller. However, external modules increase both unit cost and PCB footprint, and may introduce additional integration considerations.
 
 \subsection{The Zigbee Network}
+\label{sec:zigbee_network}
 
-\begin{figure}[!t]
+The Zigbee network implemented in a wind turbine is illustrated in \cref{fig:WC_Overview}. The end devices, represented by yellow dots, are placed on each bolt of a flanged joint and transmit measurement data to the nearest router. The routers, represented by blue dots, are distributed throughout the turbine tower to provide coverage and relay data toward the coordinator. The coordinator, represented by the green dot, collects data from all end devices and forwards it to a server application via a WiFi connection.
+ 
+Each end device is equipped with a \SI{2.4}{\giga\hertz} antenna for communication with the routers. Routers must be mains-powered devices, as they remain active continuously to relay traffic; in practice they can be any permanently powered device with Zigbee support, such as smart outlets or similar infrastructure. In the prototype setup, a Sonoff Zigbee 3.0 USB Dongle Plus is used as the coordinator, connected to a computer running the open-source Linux distribution Ubuntu, which hosts the user-facing software described in \Cref{sec:Software_imp}. The router infrastructure is not explored further in the prototype.
+
+\begin{figure}[H]
 \centering
-\includestandalone[mode=buildmissing, width=0.85\linewidth]{Standalone/Drawings/WC_overview}
+\includestandalone[mode=buildmissing]{Standalone/Drawings/WC_overview}
     \caption{Conceptual layout of wireless communication modules distributed throughout a wind turbine.}
     \label{fig:WC_Overview}
 \end{figure}
-
-The Zigbee network implemented in a wind turbine is illustrated in
-\cref{fig:WC_Overview}. The yellow dots, representing the end devices, are to be placed on each nut of a bolted joint around the flange, sending information to the nearest router. The routers are symbolized by the blue dots, which are spaced evenly throughout the wind turbine tower. The green dot represents the coordinator, which works as a host, collecting information from the end devices and transfers the data to a WiFi connection. For proof of concept each end device will include a 2.4 GHz antenna which will be used to transmit data to the routers and onward to the coordinator. For the coordinator a Sonoff Gateway ZigBee 3.0 USB Dongle Plus will be connected to a computer, which has been configured to work as a home assistant platform using the open-source Linux based system UBUNTU. 
-The routers are often integrated into light bulbs or other analog outlets and will not be explored in the prototype setup.
+ 

@@ -1,6 +1,6 @@
 \section{Software Implementation (Graphical User Interface)} \label{sec:Software_imp}
 
-The user-facing layer of the system is implemented in Home Assistant, an open-source automation platform that runs locally on a server and requires no cloud connectivity. Home Assistant is chosen for the proof of concept because it provides three capabilities that would otherwise have to be developed from scratch. Home Assistant has a native Zigbee Home Automation (ZHA) integration that exposes the sensor node without any custom middleware, a built-in recorder that logs every measurement to a local time-series database, and a configurable dashboard framework for presenting the data. This allows the work to focus on the monitoring concept rather than on backend infrastructure, while keeping all data on-site, as is appropriate for an offshore installation served onshore.
+As introduced at the start of this chapter, the user-facing layer of the system is implemented in Home Assistant, an open-source automation platform that runs locally on a server and requires no cloud connectivity. Home Assistant is chosen for the proof of concept because it provides three capabilities that would otherwise have to be developed from scratch. Home Assistant has a native ZHA integration that exposes the sensor node without any custom middleware, a built-in recorder that logs every measurement to a local time-series database, and a configurable dashboard framework for presenting the data. This allows the work to focus on the monitoring concept rather than on backend infrastructure, while keeping all data on-site, as is appropriate for an offshore installation served onshore.
 
 When a node joins the network as described in \cref{sec:Zigbee_Network_Management}, ZHA enumerates it automatically and exposes each of its reported quantities as an individual Home Assistant \emph{entity}. The recorder stores the history of these entities and the dashboard reads their current state.
 
@@ -9,7 +9,7 @@ The dashboard is a Lovelace dashboard defined in YAML. Its layout deliberately m
 
 \begin{figure}[H]
 \centering
-\includestandalone[mode=buildmissing, width=\textwidth]{Standalone/Drawings/GUI_hierarchy}
+\includestandalone[mode=buildmissing]{Standalone/Drawings/GUI_hierarchy}
     \caption{Structure of the monitoring dashboard, which mirrors the physical installation as a tree, where T, F and N denote turbine, flange and nut.}
     \label{fig:gui_hierarchy}
 \end{figure}
