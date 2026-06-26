@@ -1,0 +1,34 @@
+The near-separation operating point established in \cref{Sensor Structure & the Small-Strain Operating Point} is what gives the sensor usable sensitivity at the small strains of this application, but the same resting state that yields this sensitivity also makes the baseline resistance strongly dependent on temperature, which \cref{Temperature Behaviour} showed to roughly double the resistance of a single element across the \SIrange{-20}{50}{\celsius} operating range. A change of this magnitude would dominate the strain signal entirely if the element were read out on its own, and the Wheatstone half-bridge introduced in \cref{sec:System_overview} is the mechanism by which this temperature dependence is suppressed.
+
+The bridge is assembled from four printed serpentine elements of nominally identical geometry and print parameters, arranged in the half-bridge configuration of \cref{eq:bridge}, where two elements are placed on the strained surface as the active arms of resistance $R_s$ and the remaining two are held unstrained as the passive reference arms of resistance $R_b$. The two active elements occupy opposite branches of the bridge so that their contributions add at the differential output, and the bridge balances at zero output when the active and passive arms are equal, which defines the zero-strain operating point. As strain is applied the active arms rise in resistance and the bridge deflects, with an output swing twice that of a single voltage divider as shown in \cref{sec:Wheatstone_theory}. 
+
+The advantage of this arrangement over a single element follows directly from the temperature compensation derived in \cref{eq:bridge_comp}. Because all four elements are printed from the same conductive PLA and held at the same temperature, the strong temperature dependence of \cref{Temperature Behaviour} appears equally in every arm and cancels in the differential output, introducing only a minor scaling of the sensitivity rather than an offset.
+
+In practice the cancellation is limited by how closely the four arms can be matched. The temperature compensation of \cref{eq:bridge_comp} assumes nominally identical elements, whereas the print-to-print variation inherent to the deposition of the conductive traxel leaves the elements differing slightly in both baseline resistance and temperature coefficient, so the bridge does not balance to exactly zero at rest and a finite offset voltage remains. Imperfect matching of this kind is a recognised difficulty when assembling Wheatstone bridges from 3D printed elements \cite{3DprintWheatstoneStrain}, and it sets the achievable common-mode rejection at a level determined by the degree of mismatch rather than by the topology alone. 
+
+The two active elements were characterised individually before assembly, with their resistance against applied strain shown in \cref{fig:Wheatstone_sensorer}. Both are printed to the same serpentine design and rest at the near-separation operating point, so each shows the steep rise in resistance with strain that this point produces, and the two responses track one another closely enough for the bridge to balance about a small offset. The clearest difference between them is a lag on sensor~1 during loading, where its resistance trails the applied strain before catching up. This lag is attributed to viscoelastic relaxation in the substrate and represents a small dynamic mismatch between the two active arms.
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneSensorer_resistance}
+    \caption{Resistance of two PLA sensors, designed to a wheatstone configurangement, exposed to strain.}
+    \label{fig:Wheatstone_sensorer}
+\end{figure}
+
+The output of the assembled bridge is shown in \cref{fig:Wheatstone1}, where the upper panel gives the measured output voltage at an excitation of \SI{1.8}{\volt} and the lower panel normalises this output to the excitation voltage and expresses it in millivolts per volt. The normalised representation removes the dependence on the absolute excitation level, so that the measurement is directly comparable with data acquired under different excitations. The output increases monotonically with strain, confirming that the bridge deflects in a consistent direction, but the characteristic is markedly linear. 
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneBasic}
+    \caption{Voltage of a wheatstone bridge configurangement, top plot with measured output, and bottom plot with relation to excitation voltage of 1.8 V.}
+    \label{fig:Wheatstone1}
+\end{figure}
+
+The stability of the balanced bridge under constant environmental conditions is shown in \cref{fig:Wheatstone_drift}, recorded over an extended period with no strain applied. A slight drift is present at the start of the measurement while the assembly settles, after which the output stabilises and no appreciable drift is observed for the remainder of the test. A quantitative demonstration of the temperature-compensated bridge under controlled thermal cycling, together with a longer assessment of this stability, is deferred to \cref{ch:results}, where the bench characterisation reported here is extended to conditions representative of field deployment.
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneDrift}
+    \caption{Voltage drift in constant enviromental conditions of wheatstone bridge.}
+    \label{fig:Wheatstone_drift}
+\end{figure}

@@ -1,0 +1,120 @@
+\section{Hardware}
+The hardware results consist of signal strength tests, integrated temperature sensor precision tests and a current consumption analysis.
+
+\subsection{Signal Strength}
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/FullSystem_neg_deg_RF}
+    \caption{Signal strength of recieved signal in varying enviromental conditions.}
+    \label{fig:FS_RSSI}
+\end{figure}
+
+\subsection{Integrated Temperature Sensor}
+
+The strain sensors have demonstrated temperature sensitivity when the Wheatstone bridge
+is not fully balanced, as discussed in \cref{Temperature Behaviour}.
+A potential mitigation strategy is to mathematically compensate the measured sensor
+output as a function of temperature, for which a reliable on-board temperature reference
+is required.
+The on-die temperature sensor of the EFR32MG22E is therefore evaluated to determine its
+suitability for this purpose.
+The sensor is embedded within the silicon die of the Energy Management Unit (EMU) and
+reports absolute temperature with a nominal resolution of \SI{0.25}{\celsius} and a
+specified single-measurement noise floor of \SI{0.6}{\celsius}\,RMS \cite{EFR32MG22E}.
+The datasheet further specifies a typical mean temperature offset of \SI{3.14}{\celsius}
+relative to ambient, attributable to self-heating of the die under normal operating
+conditions.
+
+To characterise the sensor's performance, the PCB was subjected to a controlled thermal
+profile in a climate chamber spanning \SIrange{-20}{50}{\celsius} at a constant relative
+humidity of \SI{50}{\percent}.
+\Cref{fig:FS_temp} shows the chamber reference temperature alongside the on-die sensor
+reading over the full test duration.
+The mean signed deviation between the on-die measurement and the ambient reference was
+found to be \SI{+3.41}{\celsius}, consistent with the datasheet-specified offset.
+
+\begin{figure}[H]
+    \centering
+    \includestandalone[mode=buildmissing]{Standalone/Plots/FullSystem_neg_deg_temp}
+    \caption{On-die temperature sensor measurement under varying environmental conditions
+             (\SIrange{-20}{50}{\celsius}, \SI{50}{\percent} relative humidity).}
+    \label{fig:FS_temp}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includestandalone[mode=buildmissing]{Standalone/Plots/MCUtemp_vs_AmbientTemp}
+    \caption{Instantaneous difference between the on-die and ambient reference temperature
+             over the full climate-chamber test.}
+    \label{fig:temp_diff}
+\end{figure}
+
+Of greater significance for the intended compensation scheme is the standard deviation of
+the offset, which was found to be $\sigma = \SI{1.89}{\celsius}$ across the full test
+profile.
+A purely static offset would manifest as a near-zero standard deviation, so the elevated
+value observed over the complete profile is attributed to a thermal lag effect, whereby
+the thermal mass of the IC package introduces a delay in the die temperature response
+relative to changes in the ambient temperature, causing the instantaneous offset to vary
+systematically during temperature ramps, as illustrated in \cref{fig:temp_diff}.
+
+\begin{figure}[H]
+    \centering
+    \includestandalone[mode=buildmissing]{Standalone/Plots/MCUtemp_vs_AmbientTemp_correlation}
+    \caption{Scatter plot of the on-die measured temperature against the ambient reference
+             temperature over the full climate-chamber test.}
+    \label{fig:temp_scatter}
+\end{figure}
+
+\Cref{fig:temp_scatter} shows a scatter plot of the on-die measured temperature against
+the chamber reference temperature.
+A linear regression yields
+\begin{equation}
+    T_{\mathrm{MCU}} = 0.978\,T_{\mathrm{amb}} + \SI{3.92}{\celsius}
+    \label{eq:temp_fit}
+\end{equation}
+with a coefficient of determination $R^2 = 0.994$.
+The slope of $0.978$ deviates from unity by only \SI{2.2}{\percent}, and the The intercept of \SI{3.92}{\celsius} represents the predicted on-die reading when the
+ambient temperature is \SI{0}{\celsius} and captures the combined effect of the
+systematic self-heating offset and the slope deviation from unity.
+The high $R^2$ confirms a strong linear relationship between the two measurements
+throughout the tested temperature range.
+
+The largest deviations are observed during temperature ramps, as the die temperature lags
+behind the chamber air temperature due to the thermal mass of the package.
+To isolate the sensor's steady-state noise performance, the standard deviation of the
+on-die reading was evaluated separately during periods in which the chamber temperature
+was held constant.
+The results are summarised in \cref{tab:std_table}.
+Under thermally settled conditions, the standard deviation ranged from
+\SIrange{0.66}{0.80}{\celsius}, which is in close agreement with the specified
+single-measurement noise of \SI{0.6}{\celsius}\,RMS \cite{EFR32MG22E}.
+The slight excess above the datasheet figure is expected, as the specification represents
+a best-case value obtained under tightly controlled conditions.
+Noise can be reduced further through the hardware averaging function provided by the EMU
+peripheral, which supports 16- and 64-sample burst averaging and reduces the RMS noise to
+\SI{0.17}{\celsius} and \SI{0.12}{\celsius}, respectively \cite{EFR32MG22E}.
+On this basis, the on-die temperature sensor is considered adequate for the proposed
+compensation scheme, provided that corrections are applied under thermally settled
+conditions.
+
+\begin{table}[H]
+\centering
+\caption{Standard deviation of the on-die temperature sensor deviation from the ambient reference during periods of constant chamber temperature.}
+\label{tab:std_table}
+\begin{tabular}{S[table-format=+2.0] S[table-format=2.1] S[table-format=1.2]}
+\toprule
+{Chamber Temp. (\si{\celsius})} & {Time Interval (h)} & {Std. Dev. $\sigma$ (\si{\celsius})} \\
+\midrule
++25 & {0.0 -- 2.0}   & 0.66 \\
++25 & {17.5 -- 19.5} & 0.78 \\
++50 & {3.3 -- 5.3}   & 0.80 \\
++50 & {14.3 -- 16.3} & 0.80 \\
+-20 & {8.9 -- 10.9}  & 0.68 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\input{Chapters/07_Results/Current_Consumption}
+

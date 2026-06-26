@@ -2,7 +2,7 @@
 The PCB design is based on Silicon Labs' Layout Design Guide 'AN928.2: EFR32 Series 2 Layout Design Guide' \cite{Layout_guide}. Compared to the layout design guide some alterations were be made to make for an easier assembly and modification, such as increased component distance and larger soldering pads. The initial design presented in \Cref{sec:Initial_PCB} was ordered from \textit{JLCPCB} and modification where later made to match the final schematic circuitry.
 
 \subsection{Initial PCB Design} \label{sec:Initial_PCB}
-Based on the EFR32MG22E pin-out shown in \cref{fig:MCU_pin}, the component placement was arranged according to a function oriented layout around the MCU. The main power section was positioned to the north, the ADC measurement interface to the west, the debug connector to the east, and the RF section to the south of the MCU.
+Based on the EFR32MG22E pin-out shown in \cref{fig:MCU_pin}, the component placement was arranged according to a function oriented layout around the MCU. The main power section was positioned to the north, the IADC measurement interface to the west, the debug connector to the east, and the RF section to the south of the MCU.
 
 %Prøv version 2, ude nu!
 
@@ -57,7 +57,7 @@ RFVDD (pin 10) and PAVDD (pin 13) are situated on the southern side of the MCU p
  
 Two trace widths are used throughout the design. Signal traces are set to \SI{0.25}{\milli\meter} and power traces to \SI{0.3}{\milli\meter}, with the exception of the differential pair. While additional width classes could further optimize current handling, the added design complexity and potential increase in manufacturing cost were considered unwarranted, given the low current levels in this design.
  
-\subsubsection{Sensor Interface and ADC Measurement}
+\subsubsection{Sensor Interface and IADC Measurement}
 Capacitors C12 and C13 are placed in close proximity to the sensor power switch IC1 and to connector J2, minimizing the parasitic loop area and inductance on the switched supply path. This ensures stable switching behavior and limits inrush current during sensor power-on.
  
 The differential measurement signals ADC+ and ADC- are routed as a matched differential pair from the MCU to connector J2. The two traces are length-matched and maintained at equal spacing throughout, so that both signals experience the same propagation delay and electrical environment. This preserves differential signal balance and improves rejection of common-mode noise picked up along the routing path.
@@ -133,7 +133,7 @@ The antenna is positioned at the center of the board edge, as required by the re
 \subsection{Final PCB Design} \label{sec:final_pcb}
 The PCB was assembled manually using T5 solder paste, with components placed by hand and reflowed in a T962A reflow oven. Heat-sensitive components, including the connector headers, were subsequently soldered by hand.
  
-Following assembly, the modifications described in \cref{sec:Final_Schem} were implemented as board-level reworks, visible in \cref{fig:PCB_IRL}. The LDO was bypassed by fitting a \SI{0}{\ohm} jumper resistor across its pads, connecting the MCU supply directly to the battery rail. The ferrite beads FB1 and FB3 were similarly replaced with \SI{0}{\ohm} jumpers. The PMOS circuit was bypassed by shorting its connections with a jumper, creating a direct path between the GPIO output and the sensor supply input. To reassign AVDD from the battery rail to the \SI{1.8}{\volt} DC-DC output, the trace connecting AVDD to the battery rail was cut and AVDD was instead shorted to the adjacent DVDD pin, which carries the \SI{1.8}{\volt} rail from the DC-DC converter. In total, 14 components were removed without compromising noise performance or ADC measurement precision.
+Following assembly, the modifications described in \cref{sec:Final_Schem} were implemented as board-level reworks, visible in \cref{fig:PCB_IRL}. The LDO was bypassed by fitting a \SI{0}{\ohm} jumper resistor across its pads, connecting the MCU supply directly to the battery rail. The ferrite beads FB1 and FB3 were similarly replaced with \SI{0}{\ohm} jumpers. The PMOS circuit was bypassed by shorting its connections with a jumper, creating a direct path between the GPIO output and the sensor supply input. To reassign AVDD from the battery rail to the \SI{1.8}{\volt} DC-DC output, the trace connecting AVDD to the battery rail was cut and AVDD was instead shorted to the adjacent DVDD pin, which carries the \SI{1.8}{\volt} rail from the DC-DC converter. In total, 14 components were removed without compromising noise performance or IADC measurement precision.
 
 \begin{figure}[H]
     \centering

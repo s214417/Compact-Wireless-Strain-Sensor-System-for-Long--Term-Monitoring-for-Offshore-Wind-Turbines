@@ -66,14 +66,14 @@ arrow/.style={
 \node (upq)     [decision]                    at (0, -5.4) {Network\\up?};
 \node (measure) [box]                         at (0, -7.4) {Take measurement};
 \node (report)  [box]                         at (0, -9.2) {Send ZCL reports\\(temp + ADC)};
-\node (txq)     [decision]                    at (0, -11.2){TX callback\\OK?};
+\node (txq)     [decision]                    at (0, -11.2){TX callback};
 \node (em4req)  [box]                         at (0, -13.1){Request EM4\\(``publish'')};
 \node (okq)     [decision]                    at (0, -15.1){OK to\\sleep?};
-\node (em4)     [box]                         at (0, -17.1){Enter EM4 Shutoff};
+\node (em4)     [box]                         at (0, -17.1){Enter EM4 shutoff};
 \node (wake)    [box]                         at (0, -18.9){BURTC wake};
 % ===== Side nodes =====
 % TX failure -> retry (right side)
-\node (retry)   [box]                         at (4.0, -11.2){Schedule 1\,s\\publish retry};
+\node (retry)   [box]                         at (4.0, -11.2){Schedule \\publish retry};
 % Watchdog (left side)
 \node (wdog)    [box]                         at (-4.3, -5.4){No-progress\\watchdog\\(60\,s)};
 \node (em4w)    [box]                         at (-4.3, -13.1){Request EM4\\(``watchdog'')};
@@ -84,7 +84,7 @@ arrow/.style={
 \draw [arrow] (upq)     -- node[right] {yes} (measure);
 \draw [arrow] (measure) -- (report);
 \draw [arrow] (report)  -- (txq);
-\draw [arrow] (txq)     -- node[right] {yes} (em4req);
+\draw [arrow] (txq)     -- node[right] {success} (em4req);
 \draw [arrow] (em4req)  -- (okq);
 \draw [arrow] (okq)     -- node[right] {yes} (em4);
 \draw [arrow] (em4)     -- (wake);
@@ -97,7 +97,7 @@ arrow/.style={
 \draw [arrow] (okq.south east) to[out=-30, in=30, looseness=6.9]
       node[pos=0.5, right] {no, wait} (okq.north east);
 % TX failure -> retry -> back to report after 1 s
-\draw [arrow] (txq.east)   -- node[above] {no} (retry.west);
+\draw [arrow] (txq.east)   -- node[above] {fail} (retry.west);
 \draw [arrow] (retry.north) |- node[pos=0.25, right] {after 1\,s} (report.east);
 % Watchdog: stuck anywhere in active phase -> request EM4 (watchdog) -> EM4
 \draw [arrow] (wdog) -- node[left] {expired} (em4w);

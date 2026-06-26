@@ -4,7 +4,7 @@ Two mechanisms address this, namely a per-cycle retry for failed transmissions a
 
 The first mechanism handles the common case in which a single report is not delivered, for example because the network is not yet ready or because a transmission is interrupted or corrupted.
 When the tracked transmission-complete callback reports a failure, the firmware does not enter sleep but instead schedules a short retry after a fixed interval of one second, after which the report is attempted again.
-This turns a transient delivery failure into a brief, bounded retry loop rather than a lost measurement, and because each attempt is inexpensive the device recovers automatically once the link becomes available.
+This turns a transient delivery failure into a brief, bounded retry loop rather than a lost measurement, and because each attempt is inexpensive, the device recovers automatically once the link becomes available.
 
 The second mechanism protects against the more serious case in which the active phase never completes at all, for example if a network join or the ZHA interview stalls and the device would otherwise stay awake waiting forever.
 A no-progress watchdog records a deadline at start-up and the state machine checks on every iteration whether that deadline has passed.

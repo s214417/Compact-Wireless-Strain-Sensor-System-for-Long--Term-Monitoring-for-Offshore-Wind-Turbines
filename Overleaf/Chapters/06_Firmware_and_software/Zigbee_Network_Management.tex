@@ -8,15 +8,15 @@ If no stored network is present, the module treats the bring-up as a fresh join 
 
 When a stored network is present but does not come up within the restore timeout, the module does not give up immediately but instead escalates through a defined sequence.
 It first attempts a single secure rejoin of the stored network, and only if that rejoin also fails to bring the network up does it leave the stored network and restart Network Steering to join a fresh network.
-This staged fallback, where a quiet restore is preferred first, a secure rejoin is attempted second, and a full leave and re-steer is used only as a last resort, avoids the cost of a full rejoin in the common case where the stored network is still present while still recovering automatically if the original network has become permanently unreachable.
+This staged fallback prefers a quiet restore first, attempts a secure rejoin second, and resorts to a full leave and re-steer only as a last resort. It thereby avoids the cost of a full rejoin in the common case where the stored network is still present, while still recovering automatically if the original network has become permanently unreachable.
 
-For a Sleepy End Device, joining the network is not by itself enough to make the device usable by Home Assistant.
+For a \texttt{Sleepy End Device}, joining the network is not by itself enough to make the device usable by Home Assistant.
 When a device first joins, the ZHA integration performs an interview in which it reads the device's attributes and clusters, and for a sleepy device these interview frames are queued at the parent and only delivered when the device polls for them.
 If the device were to enter deep sleep immediately after joining, the interview frames would not be collected and the device would not be correctly registered.
 To prevent this, a fresh join opens a short fast-poll window during which the device is forced to stay awake and polls its parent at a fixed interval, so that the queued interview traffic is drained before the first sleep.
 This stay-awake behaviour is applied only after a genuine fresh join, since a restored stored network has already completed its interview in a previous session and can return to normal low-power polling immediately.
 
 The application interacts with the module through two query functions that together form the interface between the network layer and the application state machine.
-The first, \texttt{zigbee\_is\_network\_up()}, reports whether the device is joined and the security state is established, where a valid security context rather than mere association is treated as the point at which application traffic may begin, since the network can be associated before the network key is installed.
+The first, \texttt{zigbee\_is\_network\_up()}, reports whether the device is joined and the security state is established, where a valid security context, rather than association alone, is treated as the point at which application traffic may begin, since the network can be associated before the network key is installed.
 The second, \texttt{zigbee\_ok\_to\_sleep()}, reports whether it is safe to enter EM4, returning false while the interview poll window is active or while the stack indicates that polling should continue because traffic is still pending.
 To prevent a deadlock in which the coordinator keeps traffic pending indefinitely, the second function blocks sleep only for a bounded interval, after which the device is allowed to proceed into its EM4 reset cycle regardless, so that forward progress is always guaranteed.
