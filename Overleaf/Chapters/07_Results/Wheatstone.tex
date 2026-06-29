@@ -24,21 +24,64 @@ the Wheatstone bridge print-optimization used in \cref{Wheatstone Half-Bridge De
 
 \begin{figure}[H]
 \centering
-\includestandalone[mode=buildmissing]{Standalone/Plots/SlowStrainOverWeekend_slope}
+\includestandalone[mode=buildmissing]{Standalone/Plots/SlowStrain_slope_uncontrolled}
     \caption{Output voltage and strain over a long period with uncontrolled environmental conditions.}
     \label{fig:Slow_strain_i_lab_slope}
 \end{figure}
 
 \begin{figure}[H]
+%Den her skal nok ikke bruges
 \centering
-\includestandalone[mode=buildmissing]{Standalone/Plots/SlowStrainOverWeekend_steps}
+\includestandalone[mode=buildmissing]{Standalone/Plots/SlowStrain_steps_uncontrolled}
     \caption{Output voltage and strain over a long period with uncontrolled environmental conditions.}
     \label{fig:Slow_strain_i_lab_steps}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includestandalone[mode=buildmissing]{Standalone/Plots/SlowStrainClimateChamber}
+\includestandalone[mode=buildmissing]{Standalone/Plots/SlowStrain_steps}
     \caption{Output voltage and strain over a long period in constant environmental conditions.}
     \label{fig:Slow_steps_i_klima_kammer}
+\end{figure}
+
+The stability of the balanced bridge under constant environmental conditions is shown in \cref{fig:Wheatstone_drift}, recorded over an extended period with no strain applied. A slight drift is present at the start of the measurement while the assembly settles, after which the output stabilises and no appreciable drift is observed for the remainder of the test. A quantitative demonstration of the temperature-compensated bridge under controlled thermal cycling, together with a longer assessment of this stability, is deferred to \cref{ch:results}, where the bench characterisation reported here is extended to conditions representative of field deployment.
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneDrift}
+    \caption{Voltage drift in constant enviromental conditions of wheatstone bridge.}
+    \label{fig:Wheatstone_drift}
+\end{figure}
+
+The bridge characterised here was assembled from two markedly mismatched active elements, shown in \cref{fig:finalWheatstoneSensorer}, where active sensor~1 spans roughly three times the relative resistance change of active sensor~2, approximately \SI{60}{\percent} against \SI{20}{\percent} over the \SI{800}{\micro\strain} range, in contrast to the closely matched pair of \cref{fig:Wheatstone_sensorer}. Because the half-bridge output is the difference of two independent voltage dividers, each arm contributes its swing separately and the maximum swing of \cref{eq:swing_max} generalises to the sum of the two per-arm contributions, so the achievable swing is set by the sum of the arm ranges rather than by their equality. The mismatch therefore does not suppress the signal, since the wide arm simply supplies most of the swing, while the unequal baselines add only a constant offset that the bias removes.
+
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneSensor_resistance2}
+    \caption{.}
+    \label{fig:finalWheatstoneSensorer}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/SlowStrain_slope}
+    \caption{.}
+    \label{fig:Slope1}
+\end{figure}
+
+Consistent with this, the bridge output tracks the applied strain monotonically over the long slow-strain run of \cref{fig:Slope1}. The mismatch instead degrades the temperature compensation of \cref{eq:bridge_comp}, whose cancellation assumes that the differenced elements share the same relative temperature response. Elements resting at different operating points carry different temperature coefficients, so the common-mode term is no longer fully rejected, and the residual environmental sensitivity contributes to the slow cycle-to-cycle drift seen in \cref{fig:Slope2}. The closely matched bridge, by contrast, holds its balance under constant conditions (\cref{fig:Wheatstone_drift}).
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/SlowStrain_slope_drift_ADCogVout}
+    \caption{.}
+    \label{fig:Slope2}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/SlowStrain_slope_varying}
+    \caption{.}
+    \label{fig:sidsteTest}
 \end{figure}

@@ -2,15 +2,57 @@
 The hardware results consist of signal strength tests, integrated temperature sensor precision tests and a current consumption analysis.
 
 \subsection{Signal Strength}
+The RF performance of the custom PCB was evaluated by measuring the Received Signal Strength Indicator (RSSI) at varying temperature and distance between the end device and the Zigbee coordinator. RSSI is reported in dBm and provides a logarithmic measure of the received power at the antenna port of the receiver.
+The EFR32MG22E transceiver reports RSSI with a resolution of \SI{0.25}{dBm} and an accuracy of \SI{\pm 6}{dBm} in the linear operating region, as defined by the EFR32MG22E datasheet \cite{EFR32MG22E}.
+The relevant lower bound for link evaluation is the receiver sensitivity of the EFR32MG22E, which is specified at \SI{-102.3}{dBm}. Any measured RSSI above this threshold confirms that the received signal is within the demodulation capability of the hardware.
+As a practical operational reference, the IEEE 802.15.4-2024 standard specifies a minimum
+receiver sensitivity requirement of \SI{-85}{dBm} for compliant devices, which represents
+a conservative link margin target under which reliable communication is expected across
+a broad range of deployments \cite{IEEE8021542024}.
+
+In a full-system test in the climate chamber, the RSSI was measured for a transmit power of \SI{3}{\dBm}, with the receiver placed outside the chamber behind two \SI{5}{\centi\meter} insulation sheets. The result is presented in \Cref{fig:FS_RSSI} and shows a mean of \SI{-47}{\dBm}, with a minimum of \SI{-54}{\dBm} and a maximum of \SI{-43}{\dBm}. The standard deviation across the full \SIrange{-20}{50}{\celsius} sweep is only \SI{1.8}{\decibel}, which is well within the \SI{\pm6}{\decibel} RSSI accuracy of the transceiver. The link strength therefore shows no clear dependence on temperature, the observed variation being comparable to the measurement uncertainty.
 
 \begin{figure}[H]
 \centering
 \includestandalone[mode=buildmissing]{Standalone/Plots/FullSystem_neg_deg_RF}
-    \caption{Signal strength of recieved signal in varying enviromental conditions.}
+    \caption{Received signal strength (RSSI) as a function of temperature over the \SIrange{-20}{50}{\celsius} range at \SI{30}{\percent} relative humidity.}
     \label{fig:FS_RSSI}
 \end{figure}
 
-\subsection{Integrated Temperature Sensor}
+A distance test was performed to measure the received signal strength (RSSI) of both the encapsulated and the non-encapsulated module. The test could not be conducted in free air, as a connection to the Wi-Fi network was required, and was therefore carried out along a long hallway in an office building. Each prototype was measured from \SI{0}{\meter} to \SI{30}{\meter} in \SI{5}{\meter} intervals, at three transmit power levels of \SI{0}{\dBm}, \SI{3}{\dBm} and \SI{6}{\dBm}. The results are shown in \Cref{fig:DistanceTest}.
+ 
+Across all distances and power levels, the encapsulated module reads consistently weaker than the bare module, by an average of approximately \SI{3}{\decibel}, which is attributed to attenuation of the signal by the silicone encapsulant. Taking the reference sensitivity of \SI{-85}{\dBm} as the minimum acceptable received level, this loss reduces the usable range by one \SI{5}{\meter} interval at each power setting, as summarized in \Cref{tab:DistanceRange}. The bare module maintains an acceptable link out to \SI{15}{\meter}, \SI{20}{\meter} and \SI{25}{\meter} at \SI{0}{\dBm}, \SI{3}{\dBm} and \SI{6}{\dBm} respectively, while the encapsulated module reaches \SI{10}{\meter}, \SI{15}{\meter} and \SI{20}{\meter} at the same settings. Each \SI{3}{\dBm} increase in transmit power recovers one interval of range, so the attenuation introduced by the encapsulant can be fully compensated by operating one power step higher. At the maximum tested power of \SI{6}{\dBm}, the encapsulated module sustains a reliable link out to \SI{20}{\meter}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Maximum range at which the received signal remains at or above the \SI{-85}{\dBm} acceptability threshold, for the bare and encapsulated modules at each transmit power.}
+    \label{tab:DistanceRange}
+    \begin{tabular}{ccc}
+        \toprule
+        Transmit power [\si{\dBm}] & Bare module [\si{\meter}] & Encapsulated module [\si{\meter}] \\
+        \midrule
+        0 & 15 & 10 \\
+        3 & 20 & 15 \\
+        6 & 25 & 20 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+ 
+
+% Normal PCB (no silicone)							
+%  	0m	5m	10m	15m	20m	25m	30m
+% 0 dBm	-33	-70	-81	-85	-92	-94	-101
+% 3 dBm	-30	-66	-77	-80	-84	-89	-95
+% 6dBm	-25	-63	-73	-76	-80	-84	-90
+
+% Encapsulated PCB (with silicone)							
+% 	0m	5m	10m	15m	20m	25m	30m
+% 0 dBm	-36	-77	-82	-86	-93	-96	-104
+% 3 dBm	-32	-70	-80	-82	-89	-94	-99
+% 6dBm	-28	-67	-75	-79	-85	-89	-93
+
+
+\subsection{Integrated Temperature Sensor} \label{sec:temp_sensor}
 
 The strain sensors have demonstrated temperature sensitivity when the Wheatstone bridge
 is not fully balanced, as discussed in \cref{Temperature Behaviour}.
@@ -28,17 +70,17 @@ conditions.
 
 To characterise the sensor's performance, the PCB was subjected to a controlled thermal
 profile in a climate chamber spanning \SIrange{-20}{50}{\celsius} at a constant relative
-humidity of \SI{50}{\percent}.
+humidity of \SI{30}{\percent}.
 \Cref{fig:FS_temp} shows the chamber reference temperature alongside the on-die sensor
 reading over the full test duration.
 The mean signed deviation between the on-die measurement and the ambient reference was
-found to be \SI{+3.41}{\celsius}, consistent with the datasheet-specified offset.
+found to be \SI{+3.42}{\celsius}, consistent with the datasheet-specified offset.
 
 \begin{figure}[H]
     \centering
     \includestandalone[mode=buildmissing]{Standalone/Plots/FullSystem_neg_deg_temp}
     \caption{On-die temperature sensor measurement under varying environmental conditions
-             (\SIrange{-20}{50}{\celsius}, \SI{50}{\percent} relative humidity).}
+             (\SIrange{-20}{50}{\celsius}, \SI{30}{\percent} relative humidity).}
     \label{fig:FS_temp}
 \end{figure}
 
@@ -67,19 +109,12 @@ systematically during temperature ramps, as illustrated in \cref{fig:temp_diff}.
     \label{fig:temp_scatter}
 \end{figure}
 
-\Cref{fig:temp_scatter} shows a scatter plot of the on-die measured temperature against
-the chamber reference temperature.
-A linear regression yields
+The relationship between the on-die measured temperature and the chamber reference temperature is shown as a scatter plot in \Cref{fig:temp_scatter}. A linear regression yields
 \begin{equation}
     T_{\mathrm{MCU}} = 0.978\,T_{\mathrm{amb}} + \SI{3.92}{\celsius}
     \label{eq:temp_fit}
 \end{equation}
-with a coefficient of determination $R^2 = 0.994$.
-The slope of $0.978$ deviates from unity by only \SI{2.2}{\percent}, and the The intercept of \SI{3.92}{\celsius} represents the predicted on-die reading when the
-ambient temperature is \SI{0}{\celsius} and captures the combined effect of the
-systematic self-heating offset and the slope deviation from unity.
-The high $R^2$ confirms a strong linear relationship between the two measurements
-throughout the tested temperature range.
+with a coefficient of determination $R^2 = 0.994$, indicating an excellent linear fit throughout the tested temperature range. The slope of $0.978$ deviates from unity by only \SI{2.2}{\percent}, and the intercept of \SI{3.92}{\celsius} represents the predicted on-die reading when the ambient temperature is \SI{0}{\celsius} and captures the combined effect of the systematic self-heating offset and the slope deviation from unity. %The high linearity described by $R^2$ confirms a strong linear relationship between the two measurements throughout the tested temperature range.
 
 The largest deviations are observed during temperature ramps, as the die temperature lags
 behind the chamber air temperature due to the thermal mass of the package.
@@ -101,7 +136,7 @@ conditions.
 
 \begin{table}[H]
 \centering
-\caption{Standard deviation of the on-die temperature sensor deviation from the ambient reference during periods of constant chamber temperature.}
+\caption{Standard deviation of the on-die temperature reading during periods of constant chamber temperature.}
 \label{tab:std_table}
 \begin{tabular}{S[table-format=+2.0] S[table-format=2.1] S[table-format=1.2]}
 \toprule

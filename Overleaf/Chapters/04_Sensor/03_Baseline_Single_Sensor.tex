@@ -1,41 +1,41 @@
-The development of the sensor began with a conductive TPU as the sensing material rather than the conductive PLA of the template. The selected conductive TPU (NinjaTek EEL) is a flexible elastomer with a Shore hardness of 90A \cite{ninjatek_ninjaflex_2026}. In contrast, conductive PLA is based on a PLA matrix, a material generally described as stiff and brittle, with a low glass-transition temperature and limited elongation at break \cite{Farah2016,protopasta_conductive_pla}. Within additive-manufacturing practice it is commonly held that PLA becomes markedly more brittle below \SI{0}{\celsius} \cite{PLAlowtemp}. This raised the expectation that PLA would not function reliably toward the \SI{-20}{\celsius} end of the operating range, and a flexible conductive TPU was adopted first on the assumption that an elastomeric matrix would better tolerate low temperatures. The low-temperature behaviour of PLA is however not well documented, and this expectation rested on widely repeated practical guidance rather than on measurements of the conductive PLA used here. The assumption, together with the choice between the two materials, is revisited in \cref{Temperature Behaviour} once the temperature behaviour has been measured.
+The development of the sensor began with conductive TPU as the sensing material rather than the conductive PLA of the template. Conductive PLA was in fact the preferred starting point, since the template sensor on which the present design is based was realized and characterized in conductive PLA, so that its sensing behavior was already established and reusing the same material would have carried that behavior over with the least uncertainty. PLA is generally described as stiff and brittle, with a low glass-transition temperature and limited elongation at break \cite{Farah2016,protopasta_conductive_pla}, and within additive-manufacturing practice it is commonly held that PLA becomes markedly more brittle below \SI{0}{\celsius} \cite{PLAlowtemp}. This raised the concern that PLA would not function reliably toward the \SI{-20}{\celsius} end of the operating range. To avoid carrying that risk into the rest of the work, a flexible conductive TPU (NinjaTek EEL) was adopted first, an elastomer with a Shore hardness of 90A \cite{ninjatek_ninjaflex_2026} whose elastomeric matrix was expected to better tolerate low temperatures. The low-temperature behavior of PLA is however not well documented, and this concern rested on widely repeated practical guidance rather than on measurements of the conductive PLA used here. The assumption, together with the choice between the two materials, is revisited in \Cref{Temperature Behaviour} once the temperature behavior has been measured.
 
-%Both materials were characterised by straining a single sensor and recording its resistance. The resistance at rest, before any strain is applied, is denoted as the baseline resistance $R_0$, and the response to strain is expressed as the relative change $\Delta R / R_0$, which removes the dependence on the absolute baseline so that sensors with different baseline resistances can be compared on the same scale. The sensor optimisation process was developed in stages, and the effect of each stage is shown for the conductive-TPU sensor in \cref{fig:opt_tpu} and for the conductive-PLA sensor in \cref{fig:opt_pla}, where the upper panel of each figure gives the resistance and the lower panel the relative change $\Delta R / R_0$, with one curve per stage.
-
-Both materials were characterised by straining a single sensor and recording its resistance. The resistance at rest, before any strain is applied, is denoted the baseline resistance $R_0$, and the response to strain is expressed as the relative change $\Delta R / R_0$, which removes the dependence on the absolute baseline so that sensors with different baseline resistances can be compared on the same scale. The sensitivity of a single element is summarised by its gauge factor, defined as the relative resistance change per unit strain,
+Both materials were characterized by straining a single sensor and recording its resistance. The resistance at rest, before any strain is applied, is denoted the baseline resistance $R_0$, and the response to strain is expressed as the relative change $\Delta R / R_0$, which removes the dependence on the absolute baseline so that sensors with different baseline resistances can be compared on the same scale. The sensitivity of a single element is summarized by its gauge factor, defined as the relative resistance change per unit strain,
 
 \begin{align}\label{eq:gauge_factor}
     \mathit{GF} = \frac{\Delta R / R_0}{\varepsilon}.
 \end{align}
 
-Within the small-strain operating range of this application the response is approximately linear, as seen for the optimised conductive-PLA element in \cref{fig:opt_pla}, so the gauge factor is effectively constant over this range and can be read directly as the slope of $\Delta R / R_0$ against $\varepsilon$. The optimised sensor reaches a relative resistance change of about \num{0.4} at the full \SI{800}{\micro\strain} of the operating range, which corresponds to a gauge factor of approximately \num{500}. This is more than two orders of magnitude larger than the value of about 2, typical of metallic foil gauges.
+Within the small-strain operating range of this application the response is approximately linear, as seen for the optimized conductive-PLA element in \cref{fig:opt_pla}, so the gauge factor is effectively constant over this range and can be read directly as the slope of $\Delta R / R_0$ against $\varepsilon$. The optimized sensor reaches a relative resistance change of about \num{0.4} at the full \SI{800}{\micro\strain} of the operating range, which corresponds to a gauge factor of approximately \num{500}. This is far larger than the gauge factor of about \num{2} that is typical of metallic foil strain gauges \cite{metal_gauge}.
 % NOTE: GF approx 500 is derived from Delta R / R0 approx 0.4 at 800 micro-strain (the optimised PLA range of 36--50 kOhm). Confirm against the exact measured peak before finalising.
 
-The sensor optimisation process was developed in stages, and the effect of each stage is shown for the conductive-TPU sensor in \cref{fig:opt_tpu} and for the conductive-PLA sensor in \cref{fig:opt_pla}, where the upper panel of each figure gives the resistance and the lower panel the relative change $\Delta R / R_0$, with one curve per stage.
- 
-The first optimisation stage adjusted only the turn diameter and serves as the reference against which the later stages are compared. Adding the line depth produced a clear improvement and had the strongest effect of the additional settings. The line depth specifies how far the nozzle is lowered relative to the nominal sensing-layer height of \SI{0.2}{\milli\meter}, where a positive value brings the nozzle closer to the substrate and presses the deposited line more firmly while a negative value raises it, so that it sets the effective height and spread of the conductive line. The line-depth was found to have a particularly strong effect on the sensitivity in the small-strain regime.
+The sensor optimization process was developed in stages, and the effect of each stage is shown for the conductive-TPU sensor in \cref{fig:opt_tpu} and for the conductive-PLA sensor in \cref{fig:opt_pla}, where the upper panel of each figure gives the resistance and the lower panel the relative change $\Delta R / R_0$, with one curve per stage.
 
-The two remaining stages targeted the deposition through the turns, where the over-extrusion that forms the contacts between adjacent turns most directly governs the sensitivity. Changing either the print speed or the flow rate through the turns alters the amount of over-extrusion that occurs. Increasing the speed moves the nozzle more quickly through the turn, so that less filament is deposited and the over-extrusion is reduced. Decreasing the flow rate has the same effect, since this likewise reduces the amount of filament extruded. Optimising each of these adjustments separately gave a similar improvement in the response, with the flow-rate change giving only about \SI{1}{\percent} more relative resistance change than the speed change. Combining the speed and flow-rate changes with the optimised turn diameter and line depth produced the best response of the five stages and was adopted as the final print configuration for each material.
+
+ 
+The first optimization stage adjusted only the turn diameter and serves as the reference against which the later stages are compared. Adding the line depth produced a clear improvement and had the strongest effect of the additional settings. The line depth specifies how far the nozzle is lowered relative to the nominal sensing-layer height of \SI{0.2}{\milli\meter}, where a positive value brings the nozzle closer to the substrate and presses the deposited line more firmly while a negative value raises it, so that it sets the effective height and spread of the conductive line. The line-depth was found to have a particularly strong effect on the sensitivity in the small-strain regime.
+
+The two remaining stages targeted the deposition through the turns, where the over-extrusion that forms the contacts between adjacent turns most directly governs the sensitivity. Changing either the print speed or the flow rate through the turns, alters the amount of over-extrusion that occurs. Increasing the speed moves the nozzle more quickly through the turn, so that less filament is deposited and the over-extrusion is reduced. Decreasing the flow rate has the same effect, since this likewise reduces the amount of filament extruded. Optimizing each of these adjustments separately gave a similar improvement in the response, with the flow-rate change giving only about \SI{1}{\percent} more relative resistance change than the speed change. Combining the speed and flow-rate changes with the optimized turn diameter and line depth produced the best response of the five stages and was adopted as the final print configuration for each material.
 
 \begin{figure}[H]
 \centering
-\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneSensorer_resistance}
-    \caption{Response of the conductive-TPU sensor after each of the five print-optimisation stages, from the turn-diameter-only configuration to the combined speed and flow adjustment. The upper panel shows the measured resistance and the lower panel the relative change $\Delta R/R_0$.}
+\includestandalone[mode=buildmissing]{Standalone/Plots/TPU_optimized_sensors}
+    \caption{Response of the conductive-TPU sensor after each of the five print-optimization stages, from the turn-diameter-only configuration to the combined speed and flow adjustment. The upper panel shows the measured resistance and the lower panel the relative change $\Delta R/R_0$.}
     \label{fig:opt_tpu}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneSensorer_resistance}
-    \caption{Response of the conductive-PLA sensor after the same five print-optimisation stages as in \cref{fig:opt_tpu}.}
+\includestandalone[mode=buildmissing]{Standalone/Plots/PLA_optimized_sensors}
+    \caption{Response of the conductive-PLA sensor after the same five print-optimization stages as in \cref{fig:opt_tpu}.}
     \label{fig:opt_pla}
 \end{figure}
  
-The same five stages were applied to both materials, with the settings optimised for the conductive TPU carried over to the conductive PLA as a starting template and then re-optimised for that material. The two sensors behave similarly through the stages, differing mainly in that the TPU sensor sits at a higher baseline resistance and reaches a slightly lower $\Delta R / R_0$ than the PLA sensor. The conductive TPU also exhibited more severe over-extrusion at the points between the turns than the PLA when no speed or flow compensation was applied, so that the speed and flow-rate changes required to correct it were larger for the TPU than for the PLA. The final optimised parameters for both materials are listed in \cref{tab:opt_params}.
+The same five stages were applied to both materials, with the settings optimized for the conductive TPU carried over to the conductive PLA as a starting template and then re-optimized for that material. The two sensors behave similarly through the stages, differing mainly in that the TPU sensor sits at a higher baseline resistance and reaches a lower $\Delta R / R_0$ than the PLA sensor. The conductive TPU also exhibited more severe over-extrusion at the points between the turns than the PLA when no speed or flow compensation was applied, so that the speed and flow-rate changes required to correct it were larger for the TPU than for the PLA. The final optimized parameters for both materials are listed in \cref{tab:opt_params}.
 
 \begin{table}[!tb]
 \centering
-\caption{Final optimised print parameters for the conductive-TPU and conductive-PLA sensors.}
+\caption{Final optimized print parameters for the conductive-TPU and conductive-PLA sensors.}
 \label{tab:opt_params}
 \begin{tabular}{@{}l c c@{}}
 \toprule
@@ -61,6 +61,8 @@ One further adjustment, Linear Advance, was attempted but is not shown in the fi
 % Turn flow change: 
 % Turn flow & speed change: 
 
+% Lav tabel eller bare snak om det
+
 % PLA SENSORS:
 % Initial sensor range: 36-39
 % Turn diameter & line depth: 36-47
@@ -68,3 +70,4 @@ One further adjustment, Linear Advance, was attempted but is not shown in the fi
 % Turn flow change: 36-48.5
 % Turn flow & speed change: 36-50
 
+% Den er færdig og hedder 'lukas'

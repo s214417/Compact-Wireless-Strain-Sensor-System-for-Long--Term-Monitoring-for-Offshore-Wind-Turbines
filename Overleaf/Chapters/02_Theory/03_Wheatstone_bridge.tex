@@ -25,7 +25,8 @@ Using this advantage, two voltage dividers of opposite configurations can be com
 
 Since the two dividers respond in opposite directions, the output swing of the half-bridge is twice that of a single voltage divider. Replacing the two bias resistors with two additional sensing elements responding in the opposite direction yields the full-bridge configuration, which ideally doubles the output swing once more, maximizing the sensitivity, and in addition renders the output linear in the relative resistance change.
 
-Replacing the fixed bias resistors with matched sensing elements offers a further, independent benefit. Environmental drift is now suppressed because these elements respond to the environment identically to the active sensors. Resistance changes induced by environmental effects appear equally in both bridge arms and cancel in the differential output. This temperature compensation is present whether the opposing arms are active, as in the full bridge, or passive elements that experience the environment but not the applied strain. Let the active and passive sensor resistances be modelled as:
+Replacing the fixed bias resistors with matched sensing elements offers a further benefit, namely the suppression of environmental drift. As these elements respond to the environment identically to the active sensors, resistance changes induced by environmental effects appear equally in both bridge arms and cancel in the differential output. 
+Such temperature compensation is obtained whether the opposing arms are active, as in the full bridge, or passive elements that experience the environment but not the applied strain. Let the active and passive sensor resistances be modelled as:
 
 \begin{align}
     R_{\mathit{act}}&=R_0\left(1+\Delta_T+\Delta_\varepsilon\right), \label{eq:R_active}\\
