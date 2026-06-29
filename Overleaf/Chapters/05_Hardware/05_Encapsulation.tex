@@ -1,0 +1,61 @@
+\section{Encapsulation} \label{encapsulation}
+The module is intended for operation in harsh environments where exposure to water, oil, grease, and other contaminants may occur. Dedicated protective enclosures and encapsulation solutions have therefore been developed for both the electronics and the sensor assembly to ensure reliable long-term operation under these conditions.
+
+\subsection{PCB Encapsulation}
+The PCB is encapsulated using a two-part silicone potting compound from \textit{TermoPasty} \cite{termopasty_silicone_compound_011}, mixed at a weight ratio of 100:8 of compound to catalyst. Unlike epoxy-based alternatives, which cure into a rigid solid, the silicone compound forms a flexible, rubber-like material after curing. This flexibility is advantageous over the expected operating temperature range, as it allows the encapsulant to accommodate thermal expansion and contraction of the PCB and components, reducing mechanical stress and improving long-term reliability.
+ 
+The two parts were measured separately before being thoroughly mixed and poured over the PCB, which was placed in a 3D printed enclosure serving as a casting mold. The mixing process is shown in \cref{fig:silicone} and the cured assembly in \cref{fig:pcb_silicone}.
+% \begin{figure}[H]
+%     \centering
+%     \begin{subfigure}{0.48\linewidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{Pictures/Silicone_potting.jpeg}
+%         \caption{Preparation of potting silicone.}
+%         \label{fig:silicone}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}{0.48\linewidth}
+%         \centering
+%         \includegraphics[width=1.22\linewidth]{Pictures/silicon_sideview_nobg.png}
+%         \caption{Cured PCB assembly.}
+%         \label{fig:pcb_silicone}
+%     \end{subfigure}
+
+%     \caption{Silicone potting process and result.}
+%     \label{fig:potting_comparison}
+% \end{figure}
+
+\begin{figure}[!b]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[height=5.76cm]{Pictures/Silicone_potting.jpeg}
+        \caption{Preparation of potting silicone.}
+        \label{fig:silicone}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[height=5.76cm]{Pictures/silicon_sideview_nobg.png}
+        \caption{Cured PCB assembly.}
+        \label{fig:pcb_silicone}
+    \end{subfigure}
+    \caption{Silicone potting process and result.}
+    \label{fig:potting_comparison}
+\end{figure}
+
+\subsection{Sensor Encapsulation}
+The sensor is exposed to the same harsh environment as the electronics and was therefore encapsulated using the same two-part silicone potting compound as the PCB. The flexibility of the cured silicone is particularly important here, as the sensor must remain free to deform under strain for it to operate, so a rigid encapsulant such as epoxy could constrain the sensing structure and suppress its response. The more flexible silicone instead conforms to the deformation of the sensor while still sealing it against water, oil, grease, and other contaminants. The sensor is potted using the same technique as for the PCB, with a 3D printed mold seen in %\cref{}.
+
+% TODO: insert picture of the potted sensor
+
+To verify that the encapsulation does not degrade the sensor, the same sensor was characterized on the test bench both before and after potting. The two responses are compared in \cref{fig:sensorEncapsulation}.
+
+The two responses are not exactly identical. This is expected, since the test bench was built to characterize bare, unpotted sensors and does not account for the added silicone layer, which alters how the imposed elongation is coupled into the sensing structure. A one-to-one match between the potted and unpotted measurements can therefore not be expected from this setup. Despite this, the potted sensor clearly continues to function. It faithfully tracks the applied strain profile, and its relative resistance change spans essentially the same range as before potting. The encapsulation thus protects the sensor without compromising its sensing behavior.
+
+\begin{figure}[H]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/sensorEncapsulation}
+    \caption{Response of the same sensor before and after silicone potting, subjected to the identical strain profile on the test bench.}
+    \label{fig:sensorEncapsulation}
+\end{figure}
