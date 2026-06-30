@@ -1,0 +1,20 @@
+Once a measurement has been taken, the result is delivered to Home Assistant using the ZCL.
+Each measurement cycle reports two quantities, namely the ADC value measured from the Wheatstone bridge and the on-die temperature of the microcontroller, where the latter is read from the always-on EMU temperature sensor and is included as a diagnostic of the operating conditions rather than as an external ambient measurement.
+Both quantities are sent to the coordinator as ZCL Report Attributes commands by \texttt{send\_report()} in the same cycle.
+
+The two quantities are mapped onto two standard ZCL clusters so that they are interpreted correctly by Home Assistant without a custom integration.
+The temperature is reported on the Temperature Measurement cluster (0x0402) as the signed \texttt{MeasuredValue} attribute, expressed in hundredths of a degree Celsius, while the ADC value is reported on the Electrical Measurement cluster (0x0B04) as the unsigned RMS Voltage attribute.
+The current version of the ZCL does not define a unitless attribute or any attribute that naturally fits a raw ADC value, and defining a custom attribute for this purpose proved problematic to integrate cleanly with the ZHA interview within the available timeframe, so reusing the existing RMS Voltage attribute was judged an acceptable compromise.
+The two reports are sent as two separate Report Attributes commands because a single Report Attributes command can carry attributes from only one cluster.
+
+Both reported quantities require a conversion before they can be placed in their attributes.
+The ADC value returned by \texttt{wheatstone\_read()} is a signed 32-bit result, whereas the RMS Voltage attribute is an unsigned 16-bit value, so the signed result is reinterpreted as a 16-bit unsigned quantity before transmission, where the sign and magnitude are preserved in the transmitted bit pattern and recovered on the Home Assistant side, by interpreting the received value as signed.
+The temperature is read from the on-die sensor in degrees Celsius and scaled up by a factor of one hundred to the hundredths of a degree expected by the signed \texttt{MeasuredValue} attribute, after which Home Assistant scales it back down from hundredths of a degree to degrees Celsius for display.
+
+The two reports are not treated identically, since only one of them needs to be confirmed before the device may sleep.
+The temperature report is sent without waiting for confirmation and its completion is routed to a dedicated do-nothing callback, so that it never influences the sleep decision.
+The ADC report is instead tracked, where its \texttt{transmission-complete} callback latches the outcome that the application state machine uses to decide whether the cycle has succeeded and the device may enter EM4, as described in \Cref{sec:Measure-Report-Sleep_Cycle}.
+Separating the two completion paths in this way ensures that the temperature report cannot produce a false completion for the tracked ADC report, which would otherwise risk the device sleeping before its measurement had actually been delivered.
+This division reflects the relative importance of the two quantities, where delivering the ADC value is the essential purpose of each cycle, while the on-die temperature is at present only supplementary data that may be of use later, so it does not warrant holding the device awake to confirm.
+Because the device must wait for this tracked callback before it can sleep, any delay in it keeps the device awake at active current.
+By default the application support sublayer may retry the command and run route discovery, which can hold the callback back by several seconds, so these slow recovery options are removed from the report before it is sent, allowing the callback to return quickly and the device to enter EM4 without an unnecessary delay.
