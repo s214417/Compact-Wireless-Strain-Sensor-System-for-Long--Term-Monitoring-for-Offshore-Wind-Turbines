@@ -13,8 +13,8 @@ The codebase is decomposed into four application-level modules, each with a clea
 The module \code{app.c} owns the top-level state machine and coordinates all other modules.
 \code{zigbee.c} handles Zigbee network bring-up, including initial join, stored-network restore, and rejoin fallback.
 \code{wheatstone.c} manages the analog front end by controlling bridge excitation through a GPIO output and performing differential IADC sampling.
-\code{em4.c} owns the EM4 deep-sleep entry sequence, including BURTC wake-up configuration.
-All four modules are built on top of the Simplicity SDK, which provides the Zigbee stack, peripheral drivers (EMLIB), the sleep timer, and the energy management unit (EMU) interface.
+\code{em4.c} owns the EM4 deep-sleep entry sequence, including Backup Real-Time Counter (BURTC) wake-up configuration.
+All four modules are built on top of the Simplicity SDK, which provides the Zigbee stack, peripheral driver library (EMLIB), the sleep timer, and the Energy Management Unit (EMU) interface.
 
 The architectural driver behind this design is the battery lifetime requirement.
 The system must operate for more than ten years on a primary cell, which demands that both the active time per measurement cycle and the current consumption during deep sleep are minimized.

@@ -8,7 +8,7 @@
     \label{fig:Wheatstone}
 \end{figure}
 
-The sensing principle described in the previous section transduces mechanical deformation into a change in electrical resistance. However, resistance cannot be measured directly by an analog-to-digital converter (ADC), and must first be converted into a voltage. The most common conversion circuit is the voltage divider, where the sensor is connected in series with a known bias resistor between the excitation voltage and ground, and the voltage at the node between the two components is measured. 
+The sensing principle described in the previous section transduces mechanical deformation into a change in electrical resistance. However, resistance cannot be measured directly by an Analog-to-Digital Converter (ADC), and must first be converted into a voltage. The most common conversion circuit is the voltage divider, where the sensor is connected in series with a known bias resistor between the excitation voltage and ground, and the voltage at the node between the two components is measured ~\cite{metal_gauge}.
 With the sensor connected between the measurement node and ground, as in the left circuit of \cref{fig:Wheatstone}~a), the output voltage is given by:
 
 \begin{align} \label{eq:divider}
@@ -25,7 +25,7 @@ Using this advantage, two voltage dividers of opposite configurations can be com
 
 Since the two dividers respond in opposite directions, the output swing of the half-bridge is twice that of a single voltage divider. Replacing the two bias resistors with two additional sensing elements responding in the opposite direction yields the full-bridge configuration, which ideally doubles the output swing once more, maximizing the sensitivity, and in addition renders the output linear in the relative resistance change.
 
-Replacing the fixed bias resistors with matched sensing elements has the benefit of suppressing environmental drift. As these elements respond to the environment identically to the active sensors, resistance changes induced by environmental effects appear equally in both bridge arms and cancel in the differential output. 
+Replacing the fixed bias resistors with matched sensing elements offers a further benefit, namely the suppression of environmental drift. As these elements respond to the environment identically to the active sensors, resistance changes induced by environmental effects appear equally in both bridge arms and cancel in the differential output. 
 Such temperature compensation is obtained whether the opposing arms are active, as in the full bridge, or passive elements that experience the environment but not the applied strain. Let the active and passive sensor resistances be modelled as:
 
 \begin{align}
@@ -43,8 +43,6 @@ Inserting \cref{eq:R_active,eq:R_passive} into the half-bridge of \cref{eq:bridg
 
 The temperature term cancels in the numerator, such that the output remains zero in the absence of strain, irrespective of $\Delta_T$. Environmental effects therefore introduce no offset error, only a minor scaling of the sensitivity through the denominator. The same temperature compensation applies to a single voltage divider composed of one active and one passive element.
 It should be noted that this compensation assumes perfectly matched elements experiencing identical environmental conditions.
-
-
 
 When fixed bias resistors are used, their value strongly affects the achievable output swing. For a sensor whose resistance varies between $R_{\mathit{min}}$ and $R_{\mathit{max}}$ over the measurement range, the output swing of the bridge in \cref{eq:bridge} is:
 
