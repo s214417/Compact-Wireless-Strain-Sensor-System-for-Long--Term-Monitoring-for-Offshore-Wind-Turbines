@@ -1,5 +1,5 @@
 Once a measurement has been taken, the result is delivered to Home Assistant using the ZCL.
-Each measurement cycle reports two quantities, namely the ADC value measured from the Wheatstone bridge and the on-die temperature of the microcontroller, where the latter is read from the always-on EMU temperature sensor and is included as a diagnostic of the operating conditions rather than as an external ambient measurement.
+Each measurement cycle reports two quantities, namely the ADC value measured from the Wheatstone bridge and the on-die temperature of the MCU, where the latter is read from the always-on EMU temperature sensor and is included as a diagnostic of the operating conditions rather than as an external ambient measurement.
 Both quantities are sent to the coordinator as ZCL Report Attributes commands by \texttt{send\_report()} in the same cycle.
 
 The two quantities are mapped onto two standard ZCL clusters so that they are interpreted correctly by Home Assistant without a custom integration.

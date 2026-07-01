@@ -2,7 +2,7 @@
 
 This chapter covers the firmware implementation, followed by the software configuration and data handling.
 The software implementation of the system spans two distinct layers that together close the path from raw sensor measurement to user-accessible data.
-The firmware, running on the EFR32MG22E microcontroller, is responsible for sensor excitation, signal acquisition, and wireless transmission of measurement data over Zigbee. 
+The firmware, running on the EFR32MG22E MCU, is responsible for sensor excitation, signal acquisition, and wireless transmission of measurement data over Zigbee. 
 The software layer is built on Home Assistant, an open-source platform that runs on the host acting as the network coordinator, and receives the transmitted data through the Zigbee Home Automation (ZHA) integration, where it is logged, processed, and made available for monitoring and analysis.
 Although the two layers run on separate platforms, they are tightly coupled through the Zigbee cluster definitions and attribute mapping agreed upon during firmware development.
 

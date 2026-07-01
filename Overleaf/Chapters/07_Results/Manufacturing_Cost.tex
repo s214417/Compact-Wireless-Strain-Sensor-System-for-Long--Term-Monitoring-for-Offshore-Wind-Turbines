@@ -1,12 +1,12 @@
 % 2.23g NinjaTek 85A TPU
 % 0.80g NinjaTek eal conductive TPU
-\subsection{Manufacturing Cost}
+\subsection{Manufacturing Cost} \label{sec:manufacturing_cost}
  
 Manufacturing of the system includes three stages: sensor fabrication, PCB manufacturing and assembly, and encapsulation. The per-unit cost of each stage is estimated below, with all component prices reflecting volume pricing as of June 2026.
  
 \subsubsection*{Sensor Fabrication}
  
-Each sensor element consists of \SI{0.80}{\gram} of Protopasta Conductive PLA \cite{protopasta_conductive_pla}, priced at \SI{592.31}{DKK\per\kilo\gram}, and \SI{2.23}{\gram} NinjaTek 85A TPU \cite{ninjatek_ninjaflex_2026}, priced at \SI{674.39}{DKK\per\kilo\gram}. The material cost per sensor is therefore
+Each sensor element consists of \SI{0.80}{\gram} of Protopasta Conductive PLA~\cite{protopasta_conductive_pla}, priced at \SI{592.31}{DKK\per\kilo\gram}, and \SI{2.23}{\gram} NinjaTek 85A TPU~\cite{ninjatek_ninjaflex_2026}, priced at \SI{674.39}{DKK\per\kilo\gram}. The material cost per sensor is therefore
  
 \begin{equation}
     \text{Cost per Sensor} = \SI{0.80}{\gram} \cdot \frac{\SI{592.31}{DKK}}{\SI{1}{\kilo\gram}} + \SI{2.23}{\gram} \cdot \frac{\SI{674.39}{DKK}}{\SI{1}{\kilo\gram}} \approx \SI{1.98}{DKK}.
@@ -23,7 +23,7 @@ Assembly costs comprise fixed and variable contributions, as detailed in~\cref{t
 \begin{table}[!htbp]
 \centering
 \caption{Estimated JLCPCB Economic PCBA assembly cost for a production run of
-         99{,}000 units organised as 1{,}000 panels of $9 \times 11$ boards.
+         99{,}000 units organized as 1{,}000 panels of $9 \times 11$ boards.
          All 12{,}573{,}000 solder joints are billed at the lowest tier rate
          (\$0.0011/joint) as the total exceeds 100{,}000. Pricing based on
          JLCPCB published rates~\cite{jlcpcb_pcba_price_2025} as of June~2026.
@@ -55,7 +55,7 @@ X-ray inspection, QFN-32 (99{,}000~units) & \$0.08/unit & \$7{,}920.00  & 52{,}1
  
 \subsubsection*{Bill of Materials}
  
-The full Bill of Materials is provided in~\cref{BOM}, divided into PCB-mounted components and external components, the latter comprising the sensor interface cables, the lithium battery, and the battery holder. Component prices reflect volume pricing and were sourced from DigiKey, with the exception of the battery holder (RS Components), the lithium battery (NKON), and the EFR32MG22E SoC (Mouser). A summary is presented in~\cref{tab:bom_summary}. The final design yields a PCB component cost of \SI{27.03}{DKK} per unit and a total system cost of \SI{64.37}{DKK} including external components. The reduction relative to the initial design reflects the elimination of fourteen components following experimental validation, as described in \cref{sec:Final_Schem}.
+The full Bill of Materials is provided in~\cref{app:BOM}, divided into PCB-mounted components and external components, the latter comprising the sensor interface cables, the lithium battery, and the battery holder. Component prices reflect volume pricing and were sourced from DigiKey, with the exception of the battery holder (RS Components), the lithium battery (NKON), and the EFR32MG22E SoC (Mouser). A summary is presented in~\cref{tab:bom_summary}. The final design yields a PCB component cost of \SI{27.03}{DKK} per unit and a total system cost of \SI{64.37}{DKK} including external components. The reduction relative to the initial design reflects the elimination of fourteen components following experimental validation, as described in \cref{sec:Final_Schem}.
  
 \begin{table}[!htbp]
 \centering
@@ -78,11 +78,11 @@ External Components & 37.34 & 37.34 \\
  
 \subsubsection*{Encapsulation}
  
-The PCB and sensor assembly are encapsulated in TermoPasty Silicone Potting Compound 011 \cite{termopasty_silicone_compound_011}, as described in \cref{encapsulation}. At a material cost of approximately \SI{1082}{DKK\per\kilo\gram} and a consumption of \SI{12}{\gram} per unit, encapsulation contributes \SI{12.98}{DKK} per unit. The compound selected here suits the prototype implementation, and a broader material survey may identify more cost-effective alternatives without compromising the required environmental protection.
+The PCB and sensor assembly are encapsulated in TermoPasty Silicone Potting Compound 011~\cite{termopasty_silicone_compound_011}, as described in \cref{encapsulation}. At a material cost of approximately \SI{1082}{DKK\per\kilo\gram} and a consumption of \SI{12}{\gram} per unit, encapsulation contributes \SI{12.98}{DKK} per unit. The compound selected here suits the prototype implementation, and a broader material survey may identify more cost-effective alternatives without compromising the required environmental protection.
  
 \subsubsection*{Total Unit Cost}
  
-The per-unit costs across all manufacturing stages are summarised in~\cref{tab:cost_summary}. External components, comprising the battery, battery holder, and cables, are listed separately to present the PCB manufacturing cost in isolation. Excluding external components, the manufactured unit cost is \SI{43.52}{DKK}, rising to \SI{80.86}{DKK} when all items are included.
+The per-unit costs across all manufacturing stages are summarized in \cref{tab:cost_summary}. External components, comprising the battery, battery holder, and cables, are listed separately to present the PCB manufacturing cost in isolation. Excluding external components, the manufactured unit cost is \SI{43.52}{DKK}, rising to \SI{80.86}{DKK} when all items are included.
  
 \begin{table}[!htbp]
 \centering

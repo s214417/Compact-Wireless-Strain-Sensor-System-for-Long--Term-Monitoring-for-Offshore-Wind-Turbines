@@ -1,13 +1,13 @@
 \section{Software Implementation} \label{sec:Software_imp}
 
-The user-facing layer of the system is implemented in Home Assistant, an open-source automation platform that runs locally on a server and requires no cloud connectivity. Home Assistant is chosen for the proof of concept because it provides three capabilities that would otherwise have to be developed from scratch. Home Assistant has a native ZHA integration that exposes the sensor node without any custom middleware, a built-in recorder that logs every measurement to a local time-series database, and a configurable dashboard framework for presenting the data. This allows development efforts to focus on the monitoring concept rather than on backend infrastructure, while keeping all data on-site, as is appropriate for an offshore installation served onshore.
+The user-facing layer of the system is implemented in Home Assistant, an open-source automation platform that runs locally on a server and requires no cloud connectivity. Home Assistant is chosen for the proof of concept because it provides three capabilities that would otherwise have to be developed from scratch. Home Assistant has a native ZHA integration that exposes the sensor module readings without any custom middleware, a built-in recorder that logs every measurement to a local time-series database, and a configurable dashboard framework for presenting the data. This allows development efforts to focus on the monitoring concept rather than on backend infrastructure, while keeping all data on-site, as is appropriate for an offshore installation served onshore.
 
-When a node joins the network as described in \cref{sec:Zigbee_Network_Management}, ZHA enumerates it automatically and exposes each of its reported quantities as an individual Home Assistant entity. The recorder stores the history of these entities and the dashboard reads their current state.
+When a module joins the network as described in \Cref{sec:Zigbee_Network_Management}, ZHA enumerates it automatically and exposes each of its reported quantities as an individual Home Assistant entity. The recorder stores the history of these entities and the dashboard reads their current state.
 
 \subsection{Dashboard Structure}
-The dashboard is a Lovelace dashboard, from the Home Assistant Community Store (HACS), defined in YAML. Its layout deliberately mirrors the physical hierarchy of the installation, so that the on-screen structure matches the way an operator navigates and interprets the park. The front page is a park overview containing several turbines, each turbine has a number of bolted flange joints, and each flange is secured by a ring of nuts, with one sensor node per monitored bolt. This four-level hierarchy is illustrated in \cref{fig:gui_hierarchy}.
+The dashboard is a native Lovelace dashboard defined in YAML. Its layout deliberately mirrors the physical hierarchy of the installation, so that the on-screen structure matches the way an operator navigates and interprets the park. The front page is a park overview containing several turbines, each turbine has a number of bolted flange joints, and each flange is secured by a ring of nuts, with one sensor module per monitored bolt. This four-level hierarchy is illustrated in \cref{fig:gui_hierarchy}.
 
-\begin{figure}
+\begin{figure}[!b]
 \centering
 \includestandalone[mode=buildmissing]{Standalone/Drawings/GUI_hierarchy}
     \caption{Structure of the monitoring dashboard, which mirrors the physical installation as a tree, where T, F and N denote turbine, flange and nut.}
@@ -16,37 +16,43 @@ The dashboard is a Lovelace dashboard, from the Home Assistant Community Store (
 
 Navigation proceeds level by level through this hierarchy. Tapping a turbine opens a sub-view showing its flanges, and tapping a flange opens a sub-view showing its individual nuts. The operator therefore starts from a single park-level overview and descends only into the branch that requires attention, rather than being presented with every sensor at once.
 
-\subsection{Status Visualisation}
-Each card is colour-coded as a traffic light to communicate condition at a glance. A card compares its value against two thresholds, a warning level and a critical level, and is rendered green, yellow, or red accordingly.
+\subsection{Status Visualization}
+Each card is color-coded as a traffic light to communicate condition at a glance. A card compares its value against two thresholds, a warning level and a critical level, and is rendered green, yellow, or red accordingly. The warning and critical levels are parameters of the card template, and the values used in this prototype are illustrative, since establishing the strain thresholds that correspond to a meaningful loss of preload would require calibration against a known load and is beyond the scope of this project.
 
-The essential feature of the dashboard is that every parent card shows a worst-case roll-up of the sensors beneath it. A turbine card takes the most severe reading among all nuts on all of its flanges, and a flange card the most severe among its own nuts. A single nut entering the critical range therefore turns its flange and its turbine red as well, so the condition is visible already on the park overview, and the colour trail guides the operator down to the affected nut. This keeps the park view informative even for a large number of nodes, where individual readings could not all be shown at once.
+The essential feature of the dashboard is that every parent card shows a worst-case roll-up of the sensors beneath it. A turbine card takes the most severe reading among all nuts on all of its flanges, and a flange card the most severe among its own nuts. A single nut entering the critical range therefore turns its flange and its turbine red as well, so the condition is visible already on the park overview, and the color trail guides the operator down to the affected nut. This keeps the park view informative even for a large number of modules, where individual readings could not all be shown at once.
 
-The dashboard is built from two community custom cards. The \texttt{button-card} renders the individual cards and evaluates the threshold and roll-up logic, while the \texttt{layout-card} arranges them in responsive grids that reflow for narrower screens. Shared styling and logic are factored into a small set of \texttt{button-card} templates (\texttt{shm\_base}, \texttt{shm\_turbine}, \texttt{shm\_flange}, and \texttt{shm\_nut}). 
-For this proof-of-concept implementation, the few available sensor entities are repeated across the cards to populate the modelled park.
-In a full-scale deployment, where every bolt carries its own dedicated node, the configuration would instead be generated programmatically. Because every card is an instance of the same parameterised template and differs only in the entity it points at, the entire view hierarchy can be emitted automatically from the list of commissioned nodes, by a short script or templating step, rather than written by hand, so the same dashboard scales to an arbitrary number of bolts without additional manual effort.
-The complete dashboard configuration, by the YAML-file, is provided in Appendix~B.
+The dashboard is built from two community custom cards from the Home Assistant Community Store (HACS). The \texttt{button-card} renders the individual cards and evaluates the threshold and roll-up logic, while the \texttt{layout-card} arranges them in responsive grids that reflow for narrower screens. Shared styling and logic are factored into a small set of \texttt{button-card} templates (\texttt{shm\_base}, \texttt{shm\_turbine}, \texttt{shm\_flange}, and \texttt{shm\_nut}). 
+For this proof-of-concept implementation, the few available sensor entities are repeated across the cards to populate the modeled park, so that the interface can be demonstrated at a realistic scale.
+In a full-scale deployment, where every bolt carries its own dedicated module, the configuration would instead be generated programmatically. Because every card is an instance of the same parameterized template and differs only in the entity it points at, the entire view hierarchy can be emitted automatically from the list of commissioned modules, by a short script or templating step, rather than written by hand, so the same dashboard scales to an arbitrary number of bolts without additional manual effort.
+The complete dashboard configuration, by the YAML-file, is provided in \Cref{app:git}.
 
-Besides the strain reading, each nut card surfaces basic node-health information to support maintenance of a wireless, battery-powered network. Underneath the strain reading is the on-board temperature, which the node already includes in its report. Besides, the radio signal strength (RSSI) and the time since the node last reported, updated or changed, is both obtained directly from Home Assistant, and displayed in the nut card.
-Battery state is not currently available, as the on-node battery monitoring would require a change to the PCB and is therefore treated as a future improvement in \cref{sec:Discussion}.
+Besides the strain reading, each nut card surfaces basic module-health information to support maintenance of a wireless, battery-powered network. Underneath the strain reading is the on-board temperature, which the module already includes in its report. In addition, the radio signal strength (RSSI) and the time since the module last reported its measurement, are both obtained directly from Home Assistant, and displayed in the nut card.
+Battery state is not currently available, as the battery monitoring would require a change to the PCB and is therefore treated as a future improvement in \Cref{sec:Discussion}.
 
-As the prototype comprises a small number of physical nodes, its entities are reused across the modelled park to populate the turbines, flanges, and nuts, so that the interface can be demonstrated at a realistic scale. Screenshots of the GUI dashboard is seen in \cref{fig:GUI}.
+The three navigable levels of the dashboard are shown in \cref{fig:GUI}. On the park overview (\cref{fig:GUI_overview}) a turbine in the critical range is immediately visible. Selecting it opens the flange view (\cref{fig:GUI_flange}), where one flange joint is critical and another in warning, and selecting a flange opens the nut view (\cref{fig:GUI_nut}), which resolves the condition down to the individual modules, each annotated with its strain reading, on-board temperature, and signal strength. The color trail thus leads the operator from the park level down to the affected bolt. Beyond this live view, every measurement is retained by the Home Assistant recorder, so the full history of each module remains available for later trend analysis, which lies outside the scope of this proof of concept.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
-    \begin{subfigure}{0.3\linewidth}
+    \begin{subfigure}{0.8\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{Pictures/GUI/GUI1.png}
+        \includegraphics[width=\linewidth]{Pictures/GUI/turbine.png}
+        \caption{Park overview, with one card per turbine.}
+        \label{fig:GUI_overview}
     \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.3\linewidth}
+    \\[1ex]
+    \begin{subfigure}{0.8\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{Pictures/GUI/GUI2.png}
+        \includegraphics[width=\linewidth]{Pictures/GUI/flange.png}
+        \caption{Flange view of a selected turbine.}
+        \label{fig:GUI_flange}
     \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.3\linewidth}
+    \\[1ex]
+    \begin{subfigure}{0.8\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{Pictures/GUI/GUI3.png}
+        \includegraphics[width=\linewidth]{Pictures/GUI/nuts.png}
+        \caption{Nut view of a selected flange.}
+        \label{fig:GUI_nut}
     \end{subfigure}
-    \caption{Placeholder}
+    \caption{Screenshots of the monitoring dashboard at its three navigable levels. Each card is color-coded as a traffic light and shows the worst-case roll-up of the nodes beneath it. In the nut view, each node also reports its on-board temperature, radio signal strength, and time since its last update.}
     \label{fig:GUI}
 \end{figure}

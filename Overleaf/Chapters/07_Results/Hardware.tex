@@ -1,16 +1,13 @@
-\section{Hardware}
-The hardware results consist of signal strength tests, integrated temperature sensor precision tests and a current consumption analysis.
-
 \subsection{Signal Strength} \label{sec:signal_strength}
-The RF performance of the custom PCB was evaluated by measuring the Received Signal Strength Indicator (RSSI) at varying temperature and distance between the end device and the Zigbee coordinator. RSSI is reported in dBm and provides a logarithmic measure of the received power at the antenna port of the receiver.
-The EFR32MG22E transceiver reports RSSI with a resolution of \SI{0.25}{dBm} and an accuracy of \SI{\pm 6}{dBm} in the linear operating region, as defined by the EFR32MG22E datasheet \cite{EFR32MG22E}.
+The RF performance of the custom PCB was evaluated by measuring the Received Signal Strength Indicator (RSSI) at varying temperature and distance between the end device and the Zigbee coordinator. RSSI is reported in \si{\dBm}, a logarithmic measure of power referenced to \SI{1}{\milli\watt}, and represents the received power at the antenna port of the receiver.
+The EFR32MG22E transceiver reports RSSI with a resolution of \SI{0.25}{dBm} and an accuracy of \SI{\pm 6}{\decibel} in the linear operating region, as defined by the EFR32MG22E datasheet~\cite{EFR32MG22E}.
 The relevant lower bound for link evaluation is the receiver sensitivity of the EFR32MG22E, which is specified at \SI{-102.3}{dBm}. Any measured RSSI above this threshold confirms that the received signal is within the demodulation capability of the hardware.
 As a practical operational reference, the IEEE 802.15.4-2024 standard specifies a minimum
 receiver sensitivity requirement of \SI{-85}{dBm} for compliant devices, which represents
 a conservative link margin target under which reliable communication is expected across
-a broad range of deployments \cite{IEEE8021542024}.
+a broad range of deployments~\cite{IEEE8021542024}.
 
-In a full-system test in the climate chamber, the RSSI was measured for a transmit power of \SI{3}{\dBm}, with the receiver placed outside the chamber behind two \SI{5}{\centi\meter} insulation sheets. The result is presented in \Cref{fig:FS_RSSI} and shows a mean of \SI{-47}{\dBm}, with a minimum of \SI{-54}{\dBm} and a maximum of \SI{-43}{\dBm}. The standard deviation across the full \SIrange{-20}{50}{\celsius} sweep is only \SI{1.8}{\decibel}, which is well within the \SI{\pm6}{\decibel} RSSI accuracy of the transceiver. The link strength therefore shows no clear dependence on temperature, the observed variation being comparable to the measurement uncertainty.
+In a full-system test in the climate chamber, the RSSI was measured for a transmit power of \SI{3}{\dBm}, with the receiver placed outside the chamber behind two \SI{5}{\centi\meter} rubber insulation sheets. The result is presented in \Cref{fig:FS_RSSI} and shows a mean of \SI{-47}{\dBm}, with a minimum of \SI{-54}{\dBm} and a maximum of \SI{-43}{\dBm}. The standard deviation across the full \SIrange{-20}{50}{\celsius} sweep is only \SI{1.8}{\decibel}, which is well within the \SI{\pm6}{\decibel} RSSI accuracy of the transceiver. The link strength therefore shows no clear dependence on temperature, the observed variation being comparable to the measurement uncertainty.
 
 \begin{figure}[H]
 \centering
@@ -19,12 +16,12 @@ In a full-system test in the climate chamber, the RSSI was measured for a transm
     \label{fig:FS_RSSI}
 \end{figure}
 
-A distance test was performed to measure the received signal strength (RSSI) of both the encapsulated and the non-encapsulated module. The test could not be conducted in free air, as a connection to the Wi-Fi network was required, and was therefore carried out along a long hallway in an office building. Each prototype was measured from \SI{0}{\meter} to \SI{30}{\meter} in \SI{5}{\meter} intervals, at three transmit power levels of \SI{0}{\dBm}, \SI{3}{\dBm} and \SI{6}{\dBm}. The results are shown in \Cref{fig:DistanceTest}.
+A distance test was performed to measure the received signal strength (RSSI) of both the encapsulated and the non-encapsulated module. The test could not be conducted in free air, as a connection to the WiFi network was required, and was therefore carried out along a long hallway in an office building. Each prototype was measured from \SI{0}{\meter} to \SI{30}{\meter} in \SI{5}{\meter} intervals, at three transmit power levels of \SI{0}{\dBm}, \SI{3}{\dBm} and \SI{6}{\dBm}. The results are shown in \Cref{fig:DistanceTest}.
 
 \begin{figure}[H]
 \centering
 \includestandalone[mode=buildmissing]{Standalone/Plots/signalStrength}
-    \caption{.}
+    \caption{Signal strength (RSSI) as a function of module distance from the coordinator.}
     \label{fig:DistanceTest}
 \end{figure}
  
@@ -64,7 +61,7 @@ Across all distances and power levels, the encapsulated module reads consistentl
 The strain sensors have demonstrated temperature sensitivity when the Wheatstone bridge is not fully balanced, as discussed in \cref{Temperature Behaviour}. A potential mitigation strategy is to mathematically compensate the measured sensor output as a function of temperature, for which a reliable on-board temperature reference
 is required. The on-die temperature sensor of the EFR32MG22E is therefore evaluated to determine its
 suitability for this purpose. The sensor is embedded within the silicon die of the Energy Management Unit (EMU) and reports absolute temperature with a nominal resolution of \SI{0.25}{\celsius} and a
-specified single-measurement noise floor of \SI{0.6}{\celsius}\,RMS \cite{EFR32MG22E}.
+specified single-measurement noise floor of \SI{0.6}{\celsius}\,RMS~\cite{EFR32MG22E}.
 The datasheet further specifies a typical mean temperature offset of \SI{3.14}{\celsius}
 relative to ambient, attributable to self-heating of the die under normal operating
 conditions.
@@ -88,8 +85,7 @@ found to be \SI{+3.42}{\celsius}, consistent with the datasheet-specified offset
 \begin{figure}[H]
     \centering
     \includestandalone[mode=buildmissing]{Standalone/Plots/MCUtemp_vs_AmbientTemp}
-    \caption{Instantaneous difference between the on-die and ambient reference temperature
-             over the full climate-chamber test.}
+    \caption{Temperature offset, defined as the difference between the on-die and the ambient reference temperature, over the full climate-chamber test.}
     \label{fig:temp_diff}
 \end{figure}
 
@@ -99,7 +95,7 @@ profile.
 A purely static offset would manifest as a near-zero standard deviation, so the elevated
 value observed over the complete profile is attributed to a thermal lag effect, whereby
 the thermal mass of the IC package introduces a delay in the die temperature response
-relative to changes in the ambient temperature, causing the instantaneous offset to vary
+relative to changes in the ambient temperature, causing the offset to vary
 systematically during temperature ramps, as illustrated in \cref{fig:temp_diff}.
 
 \begin{figure}[H]
@@ -125,12 +121,12 @@ was held constant.
 The results are summarised in \cref{tab:std_table}.
 Under thermally settled conditions, the standard deviation ranged from
 \SIrange{0.66}{0.80}{\celsius}, which is in close agreement with the specified
-single-measurement noise of \SI{0.6}{\celsius}\,RMS \cite{EFR32MG22E}.
+single-measurement noise of \SI{0.6}{\celsius}\,RMS~\cite{EFR32MG22E}.
 The slight excess above the datasheet figure is expected, as the specification represents
 a best-case value obtained under tightly controlled conditions.
 Noise can be reduced further through the hardware averaging function provided by the EMU
 peripheral, which supports 16- and 64-sample burst averaging and reduces the RMS noise to
-\SI{0.17}{\celsius} and \SI{0.12}{\celsius}, respectively \cite{EFR32MG22E}.
+\SI{0.17}{\celsius} and \SI{0.12}{\celsius}, respectively~\cite{EFR32MG22E}.
 On this basis, the on-die temperature sensor is considered adequate for the proposed
 compensation scheme, provided that corrections are applied under thermally settled
 conditions.

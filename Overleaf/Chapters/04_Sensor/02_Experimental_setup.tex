@@ -10,7 +10,7 @@ To test and evaluate the strain sensors, an experimental setup was build. \cref{
 \toprule
 Equipment & Model name & Details & \cref{fig:setup} reference\\
 \midrule
-Microcontroller & Arduino Uno & Controls motor and synchronization & 1 \\
+Microcontroller Board & Arduino Uno & Controls motor and synchronization & 1 \\
 Digital Stepper Driver & DM542T & 25600 pulse per revolution & 2 \\
 Stepper Motor & 57BYGH56 & \SI{3}{\ampere}, \SI{0.9}{\newton\meter} & 3 \\
 Linear Stage Actuator & EBX1605-200 & \SI{5}{\milli\meter} travel per revolution & 4 \\
@@ -65,8 +65,8 @@ DC Power Supply & DP832 & Multi-channel power supply & 6 \\
     \label{fig:setup}
 \end{figure}
 
-The microcontroller (Arduino Uno, item~1 in \cref{fig:setup}) is the central controller of the test bench, coordinating both the actuation and the measurement. It drives the digital stepper driver (item~2), which steps the stepper motor (item~3), then rotating the lead screw of the linear stage (item~4), and generating the linear travel that strains the device under test (DUT).
-To synchronize the measurements with this motion, the microcontroller sends a digital trigger to the I/O port of the source meter (Keithley 2450, item~5), so that each measurement starts at a known motor position and time stamp. The DC power supply (item~6) powers the motor through the stepper driver and can additionally supply the excitation voltage for a Wheatstone bridge.
+The microcontroller board (Arduino Uno, item~1 in \cref{fig:setup}) is the central controller of the test bench, coordinating both the actuation and the measurement. It drives the digital stepper driver (item~2), which steps the stepper motor (item~3), then rotating the lead screw of the linear stage (item~4), and generating the linear travel that strains the device under test (DUT).
+To synchronize the measurements with this motion, the microcontroller board sends a digital trigger to the I/O port of the source meter (Keithley 2450, item~5), so that each measurement starts at a known motor position and time stamp. The DC power supply (item~6) powers the motor through the stepper driver and can additionally supply the excitation voltage for a Wheatstone bridge.
 
 The problem statement (\Cref{sec:ProblemStatement}) requires the sensor to be able to measure strains of at least \SI{800}{\micro\strain} over a square surface with a side length of \SI{30}{\milli\meter}. To produce this strain on the test bench, the required elongation follows from the definition of strain (\cref{eq:strain definition}, \Cref{sec:Strain}):
 

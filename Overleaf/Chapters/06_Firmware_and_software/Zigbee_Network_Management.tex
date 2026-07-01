@@ -14,7 +14,7 @@ For a \texttt{Sleepy End Device}, joining the network is not by itself enough to
 When a device first joins, the ZHA integration performs an interview in which it reads the device's attributes and clusters, and for a sleepy device these interview frames are queued at the parent and only delivered when the device polls for them.
 If the device were to enter deep sleep immediately after joining, the interview frames would not be collected and the device would not be correctly registered.
 To prevent this, a fresh join opens a short fast-poll window during which the device is forced to stay awake and polls its parent at a fixed interval, so that the queued interview traffic is drained before the first sleep.
-This stay-awake behaviour is applied only after a genuine fresh join, since a restored stored network has already completed its interview in a previous session and can return to normal low-power polling immediately.
+This stay-awake behavior is applied only after a genuine fresh join, since a restored stored network has already completed its interview in a previous session and can return to normal low-power polling immediately.
 
 The application interacts with the module through two query functions that together form the interface between the network layer and the application state machine.
 The first, \texttt{zigbee\_is\_network\_up()}, reports whether the device is joined and the security state is established, where a valid security context, rather than association alone, is treated as the point at which application traffic may begin, since the network can be associated before the network key is installed.
