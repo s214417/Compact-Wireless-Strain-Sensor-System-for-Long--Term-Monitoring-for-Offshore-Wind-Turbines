@@ -1,0 +1,103 @@
+\documentclass[tikz,border=2mm]{standalone}
+\input{Setup/StandalonePreamble}
+
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage[siunitx,american]{circuitikz}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{tikz-3dplot}
+
+\usetikzlibrary{decorations.pathmorphing,patterns}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
+\usepgfplotslibrary{units}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+ 
+\ctikzset{tripoles/mos style/arrows}
+
+\definecolor{IBM1}{HTML}{648fff}%blå
+\definecolor{IBM2}{HTML}{785ef0}%blå
+\definecolor{IBM3}{HTML}{dc267f}%rød
+\definecolor{IBM4}{HTML}{fe6100}%orange
+\definecolor{IBM5}{HTML}{ffb000}%gul
+\definecolor{IBM6}{HTML}{d55e00}%orange-brun
+\definecolor{IBM7}{HTML}{cc79a7}%lilla
+\definecolor{IBM8}{HTML}{0072b2}%blågrøn
+\definecolor{IBM9}{HTML}{f0e442}%gul
+\definecolor{IBM10}{HTML}{009e73}%grøn
+
+
+
+\begin{document}
+
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=1 by 2, vertical sep=1.3cm},
+    width=18cm,
+    height=6cm,
+    grid=both,
+    xmin=0,
+    xmax=47.34378
+]
+
+\nextgroupplot[
+    ylabel={Resistance},
+    y unit={\si{\kilo\ohm}},
+    ymin=80, ymax=170,
+    xticklabels=\empty,
+    legend style={at={(0.5,-0.15)}, anchor=center, legend columns=3}
+]
+\addplot[IBM5, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{5}}] {CSV/preStretchTest.csv};
+\addplot[IBM3, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{3}}] {CSV/preStretchTest.csv};
+\addplot[IBM10, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{9}}] {CSV/preStretchTest.csv};
+\addplot[IBM2, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{7}}] {CSV/preStretchTest.csv};
+\addplot[IBM1, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/preStretchTest.csv};
+\legend{pre-stretched $\SI{48}{\micro\meter}$, pre-compressed $\SI{48}{\micro\meter}$, no prerequisites, pre-stretched $\SI{24}{\micro\meter}$, pre-compressed $\SI{24}{\micro\meter}$}
+
+\addplot[red, dashed, thin] coordinates {(3.114,80) (3.114,170)};
+\addplot[red, dashed, thin] coordinates {(6.407,80) (6.407,170)};
+\addplot[red, dashed, thin] coordinates {(9.699,80) (9.699,170)};
+\addplot[red, dashed, thin] coordinates {(25.045,80) (25.045,170)};
+\addplot[black, dashed, thin] coordinates {(3.404,80) (3.404,170)};
+\addplot[black, dashed, thin] coordinates {(6.696,80) (6.696,170)};
+\addplot[black, dashed, thin] coordinates {(22.042,80) (22.042,170)};
+\addplot[black, dashed, thin] coordinates {(37.389,80) (37.389,170)};
+
+\nextgroupplot[
+    xlabel={Time},
+    x unit={\si{\second}},
+    ylabel={Change from baseline},
+    y unit={\si{\percent}},
+    ymin=-5, ymax=20,
+]
+\addplot[IBM1, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}}] {CSV/preStretchTest.csv};
+\addplot[IBM3, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{4}}] {CSV/preStretchTest.csv};
+\addplot[IBM5, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{6}}] {CSV/preStretchTest.csv};
+\addplot[IBM2, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{8}}] {CSV/preStretchTest.csv};
+\addplot[IBM10, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{10}}] {CSV/preStretchTest.csv};
+
+\addplot[red, dashed, thin] coordinates {(3.114,-5) (3.114,20)};
+\addplot[red, dashed, thin] coordinates {(6.407,-5) (6.407,20)};
+\addplot[red, dashed, thin] coordinates {(9.699,-5) (9.699,20)};
+\addplot[red, dashed, thin] coordinates {(25.045,-5) (25.045,20)};
+\addplot[black, dashed, thin] coordinates {(3.404,-5) (3.404,20)};
+\addplot[black, dashed, thin] coordinates {(6.696,-5) (6.696,20)};
+\addplot[black, dashed, thin] coordinates {(22.042,-5) (22.042,20)};
+\addplot[black, dashed, thin] coordinates {(37.389,-5) (37.389,20)};
+
+\end{groupplot}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,65 @@
+\documentclass[11pt,tikz,border=2mm]{standalone}
+\input{Setup/StandalonePreamble}
+
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage[siunitx,american]{circuitikz}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+
+\usetikzlibrary{decorations.pathmorphing,patterns}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{positioning}
+\usepgfplotslibrary{units}
+\pgfplotsset{compat=1.18}
+
+\definecolor{IBM1}{HTML}{648fff}%blå
+\definecolor{IBM3}{HTML}{dc267f}%rød
+\definecolor{IBM10}{HTML}{009e73}%grøn
+
+\tikzstyle{dashed}=          [dash pattern=on 3pt off 3pt]
+\tikzstyle{densely dashed}=  [dash pattern=on 3pt off 2pt]
+\tikzstyle{dotted}=          [dash pattern=on \pgflinewidth off 2pt]
+
+\newcommand{\MeanDeltaT}{3.416}
+
+\providecommand{\PlotFont}{\normalsize}
+\providecommand{\PlotWidth}{13.5cm}
+\providecommand{\PlotHeight}{6cm}
+\pgfplotsset{every axis/.append style={font=\PlotFont, width=\PlotWidth, height=\PlotHeight}}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+\begin{axis}[
+    grid=both,
+    xmin=0, xmax=70400,
+    ymin=-2.5, ymax=10,
+    ytick={-2,0,2,...,10},
+    xtick={{60*60*2},{60*60*4},...,{60*60*20}},
+    xticklabels={2,4,...,20},
+    scaled x ticks=false,
+    xlabel={Time},
+    x unit={\si{\hour}},
+    ylabel={Temperature offset $\Delta T$},
+    y unit={\si{\degreeCelsius}},
+    tick pos=left,
+    legend cell align=left,
+    legend style={
+        at={(0.5,1.03)}, anchor=south,
+        font=\footnotesize, /tikz/every even column/.append style={column sep=0.6cm},
+    },
+]
+
+\addplot[IBM1, thick]
+    table[col sep=comma, skip first n=1, x index=0, y index=1] {CSV/FullSystem_neg_deg_deltaT_latex.csv};
+\addlegendentry{$\Delta T = T_\mathrm{MCU} - T_\mathrm{ambient}$}
+
+\addplot[IBM3, densely dashed, thick, domain=0:70400, samples=2, forget plot] {\MeanDeltaT};
+\node[anchor=north, color=IBM3, font=\footnotesize, inner sep=2pt]
+    at (axis cs:25690,\MeanDeltaT) {Mean $= 3.42$};
+\end{axis}
+
+\end{tikzpicture}
+\end{document}
