@@ -1,0 +1,72 @@
+\documentclass[tikz,border=2mm]{standalone}
+\input{Setup/StandalonePreamble}
+
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage[siunitx,american]{circuitikz}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{tikz-3dplot}
+
+\usetikzlibrary{decorations.pathmorphing,patterns}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
+\usepgfplotslibrary{units}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{colormaps}
+\pgfplotsset{compat=1.18}
+
+\ctikzset{tripoles/mos style/arrows}
+
+\definecolor{IBM1}{HTML}{648fff}%blå
+\definecolor{IBM2}{HTML}{785ef0}%blå
+\definecolor{IBM3}{HTML}{dc267f}%rød
+\definecolor{IBM4}{HTML}{fe6100}%orange
+\definecolor{IBM5}{HTML}{ffb000}%gul
+\definecolor{IBM6}{HTML}{d55e00}%orange-brun
+\definecolor{IBM7}{HTML}{cc79a7}%lilla
+\definecolor{IBM8}{HTML}{0072b2}%blågrøn
+\definecolor{IBM9}{HTML}{f0e442}%gul
+\definecolor{IBM10}{HTML}{009e73}%grøn
+
+\begin{document}
+
+\begin{tikzpicture}
+
+\begin{axis}[
+    name=hystaxis,
+    width=9cm,
+    height=8cm,
+    xmin=-25, xmax=55,
+    ymin=50, ymax=115,
+    grid=both,
+    xlabel={Temperature ambient},
+    x unit={\si{\degreeCelsius}},
+    ylabel={PLA resistance},
+    y unit={\si{\kilo\ohm}},
+    colorbar,
+    colorbar style={
+        width=0.35cm,
+        height=6cm,
+        xshift=4pt,
+        ytick={4,8,12,16},
+        yticklabels={4\,h,8\,h,12\,h,16\,h},
+    },
+    colormap/viridis,
+    point meta min=0,
+    point meta max=19.53,
+    unbounded coords=discard,
+    filter discard warning=false,
+]
+\addplot[
+    scatter,
+    only marks,
+    mark size=0.8pt,
+    point meta={\thisrowno{0}/3600},
+] table[col sep=comma, skip first n=1, x index=2, y index=1]
+    {CSV/TPUvsPLA_neg_deg_hysteresis.csv};
+\end{axis}
+
+\end{tikzpicture}
+\end{document}

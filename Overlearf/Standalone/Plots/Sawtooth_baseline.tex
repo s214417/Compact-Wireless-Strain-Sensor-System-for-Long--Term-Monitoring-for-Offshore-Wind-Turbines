@@ -1,0 +1,157 @@
+\documentclass[11pt,tikz,border=2mm]{standalone}
+\input{Setup/StandalonePreamble}
+
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage[siunitx,american]{circuitikz}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{tikz-3dplot}
+
+\usetikzlibrary{decorations.pathmorphing,patterns}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
+\usepgfplotslibrary{units}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{colormaps}
+\pgfplotsset{compat=1.18}
+
+\ctikzset{tripoles/mos style/arrows}
+
+\definecolor{IBM1}{HTML}{648fff}%blue
+\definecolor{IBM2}{HTML}{785ef0}%blue
+\definecolor{IBM3}{HTML}{dc267f}%red
+\definecolor{IBM4}{HTML}{fe6100}%orange
+\definecolor{IBM5}{HTML}{ffb000}%yellow
+\definecolor{IBM6}{HTML}{d55e00}%orange-brown
+\definecolor{IBM7}{HTML}{cc79a7}%purple
+\definecolor{IBM8}{HTML}{0072b2}%blue-green
+\definecolor{IBM9}{HTML}{f0e442}%yellow
+\definecolor{IBM10}{HTML}{009e73}%green
+
+\providecommand{\PlotFont}{\normalsize}
+\pgfplotsset{every axis/.append style={font=\PlotFont}}
+
+\begin{document}
+
+\begin{tikzpicture}
+\def\XMin{0}
+\def\XMax{77.09539474}
+\def\PlotWidth{11.25cm}
+\def\PlotHeight{4.5cm}
+\def\RawYMin{-233}
+\def\RawYMax{200}
+\def\Vexc{1.8}
+\pgfmathsetmacro{\NormYMin}{\RawYMin/\Vexc}
+\pgfmathsetmacro{\NormYMax}{\RawYMax/\Vexc}
+\def\StrainYMin{-0.01}
+\def\StrainYMax{0.09}
+
+\def\StrainCoords{
+	(0,0) (1,0)
+	(13.528,{0.01627604167*5}) (26.056,0)
+	(36.078,{0.01627604167*4}) (46.101,0)
+	(53.618,{0.01627604167*3}) (61.135,0)
+	(66.146,{0.01627604167*2}) (71.158,0)
+	(73.665,{0.01627604167*1}) (76.170,0)
+	(\XMax,0)
+}
+
+\begin{groupplot}[
+	group style={group size=1 by 1, vertical sep=0.5cm, group name=dual,
+		xticklabels at=edge bottom},
+	width=\PlotWidth,
+	height=\PlotHeight,
+	xmin=\XMin,
+	xmax=\XMax,
+	grid=both,
+	y unit={\si{\milli\volt}},
+	unbounded coords=discard,
+	filter discard warning=false
+]
+
+\nextgroupplot[
+	ymin=\NormYMin,
+	ymax=\NormYMax,
+	xlabel={Time},
+	x unit={\si{\second}},
+	ylabel = $\dfrac{V_{out}}{V_{exc}}$,
+	ylabel style = {rotate=-90,},
+	y unit={\si[per-mode=fraction]{\milli\volt\per\volt}},
+	legend style={at={(0.5,1.15)}, anchor=center, legend columns=4},
+]
+\addplot[draw=none, forget plot] coordinates {(\XMin,\NormYMin)};
+\addlegendimage{ultra thick}\addlegendentry{Strain}
+\addlegendimage{IBM1, ultra thick}\addlegendentry{$V_{out}$}
+
+\end{groupplot}
+
+\begin{axis}[
+	width=\PlotWidth, height=\PlotHeight,
+	at={(dual c1r1.south west)}, anchor=south west,
+	xmin=\XMin, xmax=\XMax,
+	ymin=\StrainYMin, ymax=\StrainYMax,
+	axis x line=none,
+	axis y line*=right,
+	ytick={0,0.04,0.08}, yticklabels={0,0.04,0.08}, scaled y ticks=false,
+	ylabel={Strain}, y unit={\si{\percent}},
+	grid=none,
+	unbounded coords=discard, filter discard warning=false,
+]
+\addplot[ultra thick] coordinates {\StrainCoords};
+\end{axis}
+
+\begin{axis}[
+	width=\PlotWidth, height=\PlotHeight,
+	at={(dual c1r1.south west)}, anchor=south west,
+	xmin=\XMin, xmax=\XMax,
+	ymin=\NormYMin, ymax=\NormYMax,
+	hide axis,
+	unbounded coords=discard, filter discard warning=false,
+]
+\addplot[IBM1, ultra thick]
+	table[col sep=comma, skip first n=1, x index=0, y expr={(-1)*\thisrowno{1}/\Vexc}] {CSV/Sawtooth_baseline_latex.csv};
+\end{axis}
+
+\begin{axis}[
+	name=hystaxis,
+	at={(dual c1r1.south west)},
+	anchor=north west,
+	xshift=3.1cm,
+    yshift=-1.5cm,
+	width=5cm,
+	height=5cm,
+	xmin=\StrainYMin, xmax=\StrainYMax,
+	ymin=\NormYMin, ymax=\NormYMax,
+	grid=both,
+	xlabel={Strain},
+	x unit={\si{\percent}},
+	ylabel = $\dfrac{V_{out}}{V_{exc}}$,
+	ylabel style = {rotate=-90,},
+	y unit={\si[per-mode=fraction]{\milli\volt\per\volt}},
+	xtick={0,0.04,0.08},
+	xticklabels={0,0.04,0.08},
+	scaled x ticks=false,
+	colorbar,
+	colorbar style={
+		width=0.35cm,
+		height=3.44cm,
+		xshift=4pt,     
+		yshift=0pt,     
+		ytick={20,40,60},
+		yticklabels={20\,s,40\,s,60\,s},
+	},
+	colormap/viridis,
+	point meta min=\XMin,
+	point meta max=\XMax,
+	unbounded coords=discard,
+	filter discard warning=false,
+]
+\addplot[mesh, point meta=\thisrowno{0}, ultra thick]
+	table[col sep=comma, skip first n=1, x expr={-\thisrowno{3}}, y expr={(-1)*\thisrowno{1}/\Vexc}]
+	{CSV/Sawtooth_baseline_hysteresis.csv};
+\end{axis}
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,190 @@
+\documentclass[11pt,tikz,border=2mm]{standalone}
+\input{Setup/StandalonePreamble}
+
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage[siunitx,american]{circuitikz}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{tikz-3dplot}
+
+\usetikzlibrary{decorations.pathmorphing,patterns}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
+\usepgfplotslibrary{units}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+\pgfplotsset{set layers}
+ 
+\ctikzset{tripoles/mos style/arrows}
+
+\definecolor{IBM1}{HTML}{648fff}%blue
+\definecolor{IBM2}{HTML}{785ef0}%blue
+\definecolor{IBM3}{HTML}{dc267f}%red
+\definecolor{IBM4}{HTML}{fe6100}%orange
+\definecolor{IBM5}{HTML}{ffb000}%yellow
+\definecolor{IBM6}{HTML}{d55e00}%orange-brown
+\definecolor{IBM7}{HTML}{cc79a7}%purple
+\definecolor{IBM8}{HTML}{0072b2}%blue-green
+\definecolor{IBM9}{HTML}{f0e442}%yellow
+\definecolor{IBM10}{HTML}{009e73}%green
+
+\providecommand{\PlotFont}{\normalsize}
+\pgfplotsset{every axis/.append style={font=\PlotFont}}
+
+\begin{document}
+
+\begin{tikzpicture}
+\def\XMin{0}
+%\def\XMax{66780.06103936}
+\def\XMax{66000}
+\def\PlotWidth{12.5cm}
+\def\PlotHeight{4.5cm}
+\def\RawYMin{-220}
+\def\RawYMax{265}
+\def\Vexc{1.8}
+\pgfmathsetmacro{\NormYMin}{\RawYMin/\Vexc}
+\pgfmathsetmacro{\NormYMax}{\RawYMax/\Vexc}
+\def\StrainYMin{-0.015}
+\def\StrainYMax{0.1}
+
+\begin{groupplot}[
+	group style={group size=1 by 1, vertical sep=0.5cm, group name=dual},
+	width=\PlotWidth,
+	height=\PlotHeight,
+	grid=none,
+	xmin=\XMin,
+	xmax=\XMax,
+	ymin=\StrainYMin,
+	ymax=\StrainYMax,
+	axis y line*=right,
+	axis x line=none,
+	ytick={0,0.04,0.08},
+	yticklabels={0,0.04,0.08},
+	scaled y ticks=false,
+	xtick=\empty,
+	xticklabels=\empty,
+	unbounded coords=discard,
+	filter discard warning=false
+]
+
+\nextgroupplot[
+	ylabel={Strain},
+	y unit={\si{\percent}},
+]
+\addplot[ultra thick] coordinates {
+	(0,0)
+	({60*60*2*0.25},0)
+    ({60*60*2*0.25},{0.01627604167*1})
+    ({60*60*4*0.25},{0.01627604167*1})
+    ({60*60*4*0.25},{0.01627604167*2})
+    ({60*60*6*0.25},{0.01627604167*2})
+    ({60*60*6*0.25},{0.01627604167*3})
+    ({60*60*8*0.25},{0.01627604167*3})
+    ({60*60*8*0.25},{0.01627604167*4})
+    ({60*60*10*0.25},{0.01627604167*4})
+    ({60*60*10*0.25},{0.01627604167*5})
+    ({60*60*12*0.25},{0.01627604167*5})
+    ({60*60*12*0.25},{0.01627604167*0})
+    ({60*60*14*0.25},{0.01627604167*0})
+    ({60*60*14*0.25},{0.01627604167*1})
+    ({60*60*16*0.25},{0.01627604167*1})
+    ({60*60*16*0.25},{0.01627604167*2})
+    ({60*60*18*0.25},{0.01627604167*2})
+    ({60*60*18*0.25},{0.01627604167*3})
+    ({60*60*20*0.25},{0.01627604167*3})
+    ({60*60*20*0.25},{0.01627604167*4})
+    ({60*60*22*0.25},{0.01627604167*4})
+    ({60*60*22*0.25},{0.01627604167*5})
+    ({60*60*24*0.25},{0.01627604167*5})
+    ({60*60*24*0.25},{0.01627604167*0})
+    ({60*60*26*0.25},{0.01627604167*0})
+    ({60*60*26*0.25},{0.01627604167*1})
+    ({60*60*28*0.25},{0.01627604167*1})
+    ({60*60*28*0.25},{0.01627604167*2})
+    ({60*60*30*0.25},{0.01627604167*2})
+    ({60*60*30*0.25},{0.01627604167*3})
+    ({60*60*32*0.25},{0.01627604167*3})
+    ({60*60*32*0.25},{0.01627604167*4})
+    ({60*60*34*0.25},{0.01627604167*4})
+    ({60*60*34*0.25},{0.01627604167*5})
+    ({60*60*36*0.25},{0.01627604167*5})
+    ({60*60*36*0.25},{0.01627604167*0})
+    ({60*60*38*0.25},{0.01627604167*0})
+    ({60*60*38*0.25},{0.01627604167*1})
+    ({60*60*40*0.25},{0.01627604167*1})
+    ({60*60*40*0.25},{0.01627604167*2})
+    ({60*60*42*0.25},{0.01627604167*2})
+    ({60*60*42*0.25},{0.01627604167*3})
+    ({60*60*44*0.25},{0.01627604167*3})
+    ({60*60*44*0.25},{0.01627604167*4})
+    ({60*60*46*0.25},{0.01627604167*4})
+    ({60*60*46*0.25},{0.01627604167*5})
+    ({60*60*48*0.25},{0.01627604167*5})
+    ({60*60*48*0.25},{0.01627604167*0})
+    ({60*60*50*0.25},{0.01627604167*0})
+    ({60*60*50*0.25},{0.01627604167*1})
+    ({60*60*52*0.25},{0.01627604167*1})
+    ({60*60*52*0.25},{0.01627604167*2})
+    ({60*60*54*0.25},{0.01627604167*2})
+    ({60*60*54*0.25},{0.01627604167*3})
+    ({60*60*56*0.25},{0.01627604167*3})
+    ({60*60*56*0.25},{0.01627604167*4})
+    ({60*60*58*0.25},{0.01627604167*4})
+    ({60*60*58*0.25},{0.01627604167*5})
+    ({60*60*60*0.25},{0.01627604167*5})
+    ({60*60*60*0.25},{0.01627604167*0})
+    ({60*60*62*0.25},{0.01627604167*0})
+    ({60*60*62*0.25},{0.01627604167*1})
+    ({60*60*64*0.25},{0.01627604167*1})
+    ({60*60*64*0.25},{0.01627604167*2})
+    ({60*60*66*0.25},{0.01627604167*2})
+    ({60*60*66*0.25},{0.01627604167*3})
+    ({60*60*68*0.25},{0.01627604167*3})
+    ({60*60*68*0.25},{0.01627604167*4})
+    ({60*60*70*0.25},{0.01627604167*4})
+    ({60*60*70*0.25},{0.01627604167*5})
+    ({60*60*72*0.25},{0.01627604167*5})
+    ({60*60*72*0.25},{0.01627604167*0})
+	(\XMax,0)
+};
+
+\end{groupplot}
+
+\begin{axis}[
+	width=\PlotWidth,
+	height=\PlotHeight,
+	at={(dual c1r1.south west)},
+	anchor=south west,
+	xmin=\XMin,
+	xmax=\XMax,
+    xtick={0,{60*60*3},...,{60*60*18}},
+    xticklabels={0,3,...,18},
+    minor x tick num=5,
+    scaled x ticks=false,
+    xlabel={Time},
+    x unit={\si{\hour}},
+	ymin=\NormYMin,
+	ymax=\NormYMax,
+	axis on top=false,
+	grid=both,
+	xlabel={Time},
+	x unit={\si{\hour}},
+	ylabel = $\dfrac{V_{out}}{V_{exc}}$,
+	ylabel style = {rotate=-90,},
+	y unit={\si[per-mode=fraction]{\milli\volt\per\volt}},
+	legend style={at={(0.5,1.15)}, anchor=center, legend columns=4},
+	unbounded coords=discard,
+	filter discard warning=false
+]
+\addlegendimage{ultra thick}
+\addlegendentry{Strain}
+\addplot[IBM1, ultra thick]
+	table[col sep=comma, skip first n=1, x index=0, y expr={(-1)*\thisrowno{1}/\Vexc}] {CSV/SlowStrainClimateChamber_latex.csv};
+\addlegendentry{$V_{out}$}
+
+\end{axis}
+
+\end{tikzpicture}
+\end{document}

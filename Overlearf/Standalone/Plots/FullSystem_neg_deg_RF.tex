@@ -1,0 +1,160 @@
+\documentclass[11pt,tikz,border=2mm]{standalone}
+\input{Setup/StandalonePreamble}
+
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage[siunitx,american]{circuitikz}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{tikz-3dplot}
+
+\usetikzlibrary{decorations.pathmorphing,patterns}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
+\usetikzlibrary {datavisualization.formats.functions}
+\usepgfplotslibrary{units}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+ 
+\ctikzset{tripoles/mos style/arrows}
+
+\definecolor{IBM1}{HTML}{648fff}%blå
+\definecolor{IBM2}{HTML}{785ef0}%blå
+\definecolor{IBM3}{HTML}{dc267f}%rød
+\definecolor{IBM4}{HTML}{fe6100}%orange
+\definecolor{IBM5}{HTML}{ffb000}%gul
+\definecolor{IBM6}{HTML}{d55e00}%orange-brun
+\definecolor{IBM7}{HTML}{cc79a7}%lilla
+\definecolor{IBM8}{HTML}{0072b2}%blågrøn
+\definecolor{IBM9}{HTML}{f0e442}%gul
+\definecolor{IBM10}{HTML}{009e73}%grøn
+
+\tikzstyle{solid}=                   [dash pattern=]
+\tikzstyle{dotted}=                  [dash pattern=on \pgflinewidth off 2pt]
+\tikzstyle{densely dotted}=          [dash pattern=on \pgflinewidth off 1pt]
+\tikzstyle{loosely dotted}=          [dash pattern=on \pgflinewidth off 4pt]
+\tikzstyle{dashed}=                  [dash pattern=on 3pt off 3pt]
+\tikzstyle{densely dashed}=          [dash pattern=on 3pt off 2pt]
+\tikzstyle{loosely dashed}=          [dash pattern=on 3pt off 6pt]
+\tikzstyle{dashdotted}=              [dash pattern=on 3pt off 2pt on \the\pgflinewidth off 2pt]
+\tikzstyle{densely dashdotted}=      [dash pattern=on 3pt off 1pt on \the\pgflinewidth off 1pt]
+\tikzstyle{loosely dashdotted}=      [dash pattern=on 3pt off 4pt on \the\pgflinewidth off 4pt]
+
+\providecommand{\PlotFont}{\normalsize}
+\providecommand{\PlotWidth}{11.5cm}
+\providecommand{\PlotHeight}{6.5cm}
+\pgfplotsset{every axis/.append style={font=\PlotFont, width=\PlotWidth, height=\PlotHeight}}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+\begin{axis}[
+    name=left,
+    grid=both,
+    xmin=0, xmax=70000,
+    xtick={{60*60*2},{60*60*4},...,{60*60*18}},
+    scaled x ticks=false,
+    axis line style={opacity=0},
+    tick style={opacity=0},
+    ticklabel style={opacity=0},
+]
+\addplot[draw=none]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/FullSystem_neg_deg_latex.csv};
+\end{axis}
+
+\begin{axis}[
+    at={(left.west)},
+    anchor=west,
+    axis background/.style={fill=none},
+    axis y line*=right,
+    axis x line=none,
+    xmin=0, xmax=70000,
+    ylabel={Humidity},
+    y unit={\si{\percent}},
+    ytick={0,30,...,90},
+    y axis line style={color=IBM10, xshift=15mm, thick},
+    yticklabel style={color=IBM10, xshift=15mm},
+    ytick style={color=IBM10, xshift=15mm, thick},
+    ylabel style={color=IBM10},
+]
+\addplot[IBM10, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{5}}] {CSV/FullSystem_neg_deg_latex.csv};
+    \addplot[IBM10, dashed]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{6}}] {CSV/FullSystem_neg_deg_latex.csv};
+\end{axis}
+
+\begin{axis}[
+    at={(left.west)},
+    anchor=west,
+    axis background/.style={fill=none},
+    axis y line*=right,
+    axis x line=none,
+    xmin=0, xmax=70000,
+    ytick={-20,0,25,50},
+    yticklabels={-20,0,25,50},
+    ylabel={Temperature},
+    y unit={\si{\degreeCelsius}},
+    y axis line style={color=IBM3, thick},
+    yticklabel style={color=IBM3},
+    ytick style={color=IBM3, thick},
+    ylabel style={color=IBM3, yshift=2mm},
+]
+\addplot[IBM3, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{3}}] {CSV/FullSystem_neg_deg_latex.csv};
+    \addplot[IBM3, dashed]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{4}}] {CSV/FullSystem_neg_deg_latex.csv};
+\end{axis}
+
+\begin{axis}[
+    at={(left.west)},
+    anchor=west,
+    axis background/.style={fill=none},
+    xmin=0, xmax=70000,
+    xtick={{60*60*2},{60*60*4},...,{60*60*18}},
+    xticklabels={2, 4,...,18},
+    scaled x ticks=false,
+    xlabel={Time},
+    x unit={\si{\hour}},
+    ylabel={RSSI},
+    y unit={dBm},
+    axis y line*=left,
+    y axis line style={color=IBM1, thick},
+    yticklabel style={color=IBM1},
+    ytick style={color=IBM1, thick},
+    ylabel style={color=IBM1},
+    tick pos=left,
+]
+\addplot[IBM1, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/FullSystem_neg_deg_RSSI_latex.csv};
+\end{axis}
+
+\begin{axis}[
+    hide axis,
+    axis x line=none,
+    xmin=0, xmax=1,
+    ymin=0, ymax=1,
+    legend to name=combinedlegend,
+    legend columns=3,
+    legend style={
+        /tikz/every even column/.append style={column sep=0.5cm},
+    },
+]
+\addlegendimage{IBM1, thick}
+\addlegendentry{RSSI}
+\addlegendimage{IBM3, thick}
+\addlegendentry{Temp. ambient}
+\addlegendimage{IBM10, thick}
+\addlegendentry{Humidity ambient}
+\addlegendimage{empty legend}
+\addlegendentry{}
+\addlegendimage{IBM3, dashed}
+\addlegendentry{Temp. target}
+\addlegendimage{IBM10, dashed}
+\addlegendentry{Humidity target}
+\end{axis}
+\node[anchor=north, yshift=15mm, font=\footnotesize] at (left.north) {\pgfplotslegendfromname{combinedlegend}};
+
+\end{tikzpicture}
+\end{document}
