@@ -1,0 +1,72 @@
+\pagebreak
+\section{Wheatstone bridge} \label{sec:Wheatstone_theory}
+
+\begin{figure}[!b]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Drawings/Wheatstone}
+    \caption{Resistive readout circuits: a) The two voltage divider configurations, b) Wheatstone bridge in the half-bridge configuration. $V_{exc}$ is the excitation voltage, $V_{out}$ the measured output voltage, $R_b$ the bias resistor and $R_s$ the sensor resistance.}
+    \label{fig:Wheatstone}
+\end{figure}
+
+The sensing principle described in the previous section transduces mechanical deformation into a change in electrical resistance. However, resistance cannot be measured directly by an Analog-to-Digital Converter (ADC), and must first be converted into a voltage. The most common conversion circuit is the voltage divider, where the sensor is connected in series with a known bias resistor between the excitation voltage and ground, and the voltage at the node between the two components is measured ~\cite{metal_gauge}.
+With the sensor connected between the measurement node and ground, as in the left circuit of \Cref{fig:Wheatstone}~a), the output voltage is given by:
+
+\begin{align} \label{eq:divider}
+    V_{out}=V_{exc}\,\frac{R_s}{R_s+R_b},
+\end{align}
+
+which increases with increasing sensor resistance. Interchanging the sensor and the bias resistor, as in the right circuit of \Cref{fig:Wheatstone}~a), instead yields $V_{out}=V_{exc}\,R_b/\left(R_s+R_b\right)$, which decreases with increasing sensor resistance. The polarity of the response can thus be selected through the placement of the sensor.
+
+Using this advantage, two voltage dividers of opposite configurations can be combined into a Wheatstone bridge in the half-bridge configuration shown in \Cref{fig:Wheatstone}~b), where the output is then taken differentially between the two branch nodes:
+
+\begin{align} \label{eq:bridge}
+    V_{out}=V_{+}-V_{-}=V_{exc}\left(\frac{R_b}{R_s+R_b}-\frac{R_s}{R_s+R_b}\right)=V_{exc}\,\frac{R_b-R_s}{R_b+R_s}.
+\end{align}
+
+Since the two dividers respond in opposite directions, the output swing of the half-bridge is twice that of a single voltage divider. Replacing the two bias resistors with two additional sensing elements responding in the opposite direction yields the full-bridge configuration, which ideally doubles the output swing once more, maximizing the sensitivity, and in addition renders the output linear in the relative resistance change.
+
+Replacing the fixed bias resistors with matched sensing elements offers a further benefit, namely the suppression of environmental drift. As these elements respond to the environment identically to the active sensors, resistance changes induced by environmental effects appear equally in both bridge arms and cancel in the differential output. 
+Such temperature compensation is obtained whether the opposing arms are active, as in the full bridge, or passive elements that experience the environment but not the applied strain. Let the active and passive sensor resistances be modelled as:
+
+\begin{align}
+    R_{\mathit{act}}&=R_0\left(1+\Delta_T+\Delta_\varepsilon\right), \label{eq:R_active}\\
+    R_{\mathit{pas}}&=R_0\left(1+\Delta_T\right) \label{eq:R_passive},
+\end{align}
+
+where $R_0$ is the nominal sensor resistance, $\Delta_T$ is the relative resistance change caused by environmental influences, primarily temperature, and $\Delta_\varepsilon$ is the relative change caused by the applied strain.
+Inserting \Cref{eq:R_active,eq:R_passive} into the half-bridge of \Cref{eq:bridge} gives:
+
+\begin{align} \label{eq:bridge_comp}
+    V_{out}=V_{exc}\,\frac{R_{\mathit{pas}}-R_{\mathit{act}}}{R_{\mathit{pas}}+R_{\mathit{act}}}
+    =-V_{exc}\,\frac{\Delta_\varepsilon}{2\left(1+\Delta_T\right)+\Delta_\varepsilon}.
+\end{align}
+
+The temperature term cancels in the numerator, such that the output remains zero in the absence of strain, irrespective of $\Delta_T$. Environmental effects therefore introduce no offset error, only a minor scaling of the sensitivity through the denominator. The same temperature compensation applies to a single voltage divider composed of one active and one passive element.
+It should be noted that this compensation assumes perfectly matched elements experiencing identical environmental conditions.
+
+When fixed bias resistors are used, their value strongly affects the achievable output swing. For a sensor whose resistance varies between $R_{\mathit{min}}$ and $R_{\mathit{max}}$ over the measurement range, the output swing of the bridge in \Cref{eq:bridge} is:
+
+\begin{align} \label{eq:bridge_swing}
+    \Delta V_{out}=V_{exc}\left(\frac{R_b-R_{\mathit{min}}}{R_b+R_{\mathit{min}}}-\frac{R_b-R_{\mathit{max}}}{R_b+R_{\mathit{max}}}\right).
+\end{align}
+
+A small bias resistance compresses both output extremes toward $-V_{exc}$, while a large one compresses them toward $V_{exc}$, and in both limits the swing vanishes. Maximizing the voltage swing with respect to the bias resistance yields the geometric midpoint of the sensor range:
+
+\begin{align} \label{eq:Rb_opt}
+    R_b=\sqrt{R_{\mathit{min}}\,R_{\mathit{max}}}
+    \qquad\Leftrightarrow\qquad
+    \frac{R_{\mathit{max}}}{R_b}=\frac{R_b}{R_{\mathit{min}}}.
+\end{align}
+
+This places the bias value at an equal resistance ratio to both extremes. Inserting \Cref{eq:Rb_opt} into \Cref{eq:bridge_swing} gives the maximum achievable swing:
+
+\begin{align} \label{eq:swing_max}
+    \Delta V_{out}=2\,V_{exc}\,\frac{\sqrt{R_{\mathit{max}}}-\sqrt{R_{\mathit{min}}}}{\sqrt{R_{\mathit{max}}}+\sqrt{R_{\mathit{min}}}},
+\end{align}
+
+with the two extreme output levels lying symmetrically around zero, as the bridge balances, $V_{out}=0$, at the geometric midpoint of the measurement range. The same optimum applies to the single voltage divider, for which the maximum swing is half of \Cref{eq:swing_max} and centered about $V_{exc}/2$. The geometric midpoint is preferable to the arithmetic midpoint $\left(R_{\mathit{min}}+R_{\mathit{max}}\right)/2$ because the output depends on the ratio between the sensor and bias resistances rather than on their difference. The two midpoints coincide for narrow sensor ranges, while for wide ranges the arithmetic midpoint shifts the output window off-center and reduces the achievable swing.
+
+In summary, the Wheatstone bridge holds several advantages over the single voltage divider. The divider output rides on a static offset of approximately $V_{exc}/2$, which occupies most of the ADC input range and limits the gain that can be applied to the signal. The bridge output is differential and close to zero at balance, so the input range, and any amplification, is applied to the strain-induced signal alone.
+Disturbances that couple equally into both branches, such as noise on the excitation rail or electromagnetic interference, appear as common-mode contributions which are rejected by the differential measurement.
+Drift of the excitation voltage is suppressed in the same manner. In the bridge of \Cref{eq:bridge}, the output is the product of $V_{exc}$ and the relative unbalance $\left(R_b-R_s\right)/\left(R_b+R_s\right)$, a term that approaches zero as the bridge nears balance.. A drift in $V_{exc}$ therefore only scales this small differential signal, which constitutes a minor gain error. In the single divider, by contrast, the output is a fraction of $V_{exc}$, so the same drift shifts the operating point and appears directly as an offset error.
+This residual gain error can be removed as well by deriving the ADC reference voltage from the excitation voltage. The output and the reference then drift together, so their ratio, and hence the converted reading, no longer depends on $V_{exc}$. The measurement is then fully ratiometric.

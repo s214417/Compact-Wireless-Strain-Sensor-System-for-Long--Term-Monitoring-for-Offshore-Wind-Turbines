@@ -1,0 +1,40 @@
+\chapter{Introduction} \label{sec:Introduction}
+Offshore wind energy has become a central component in the transition to low-carbon power generation~\cite{Wen_role_of_offshore_wind}. As turbine size and construction complexity continue to increase~\cite{McCoy2024OW}, so does the importance of maintaining the structural integrity of critical components.
+
+Bolted ring-flange connections are commonly used to assemble the tubular steel towers that support wind turbines. These connections are exposed to moisture, vibration, temperature variation, and cyclic loading, all of which can gradually reduce preload over time~\cite{imperfections_review}. A loss of preload increases the stress fluctuations carried by the bolts and resulting in accumulated fatigue damage~\cite{Effects_of_preload_deficiency}, and the resulting decrease in fatigue strength has been identified as a primary cause of wind turbine tower collapse~\cite{fatigue_assessment}.
+ 
+This degradation is difficult to monitor continuously, and current approaches rely on periodic manual inspection. Such inspection is particularly limited and expensive for offshore turbines, where operation and maintenance can account for more than \SI{30}{\percent} of the lifetime cost~\cite{zhang_fowt_inspection_2024}. Although various inspection and monitoring methods exist, they are either intermittent or rely on costly, proprietary hardware that does not scale to every joint. There is therefore a need for a continuous monitoring solution that is low-cost, scalable to a large number of joints, and capable of long-term autonomous operation, so that early signs of degradation can be detected and condition-based maintenance can be applied.
+ 
+A compact, permanently installed sensor can address these needs by providing joint-level structural health information. Such a device must, however, satisfy several strict requirements, including a limited mounting area, low power consumption, a long autonomous lifetime, environmental robustness, and scalability to a large number of monitored joints.
+
+Recent advances in additive manufacturing offer new opportunities for novel sensing technologies. In particular, conductive 3D printing materials enable the fabrication of integrated electromechanical components, such as strain sensors, with a high degree of geometric flexibility and low production cost~\cite{G.O.A.T}. These properties make 3D-printed sensors an attractive alternative to conventional strain gauges, especially where scalability, low cost, and long-term deployment are essential.
+ 
+This thesis investigates a compact wireless strain-sensing system designed specifically for the long-term monitoring of offshore bolted joints. The work combines sensor development, low-power electronics, and system-level integration to advance the concept from initial idea to verification prototype.
+
+\section{Problem Statement}\label{sec:ProblemStatement}
+The main objective of this thesis is therefore to address the following research question:
+How can a compact, wireless, strain sensor system be designed and validated to reliably measure strains up to at least \SI{800}{\micro\strain} of elongation on an M48 steel nut under offshore environmental conditions for more than 10 years of operation?\\
+To answer this, the thesis addresses the following sub-questions:
+
+\begin{itemize}
+    \item[-] How can 3D-printed sensor characteristics be optimized for accurate strain transfer and sensitivity?
+    \item[-] How can strain measurement systems be integrated within a $30\times\SI{30}{\milli\meter}$ metallic surface?
+    \item[-] How can wireless communication be implemented in a compact system suitable for acquiring data across numerous bolted joints in a wind turbine?
+    \item[-] How can ultra-low-power electronics support long-term autonomous operation for more than 10 years?
+    \item[-] How does system performance vary across relevant operating temperatures and long-term use conditions?
+    \item[-] How can encapsulation be implemented to resist water, oil, and grease while maintaining strain transfer?
+\end{itemize}
+
+\section{Methodology \& Scope}
+The project follows an iterative experimental engineering process. It begins with a literature study and requirement analysis to clarify the constraints imposed by offshore use, bolt geometry, autonomous operation, and environmental exposure. These requirements are then translated into design targets for the sensor, electronics, encapsulation, and wireless communication.
+
+The sensing concept is developed through repeated cycles of additive manufacturing and bench testing. 3D printing is used to rapidly vary geometry and material parameters, while measurements are used to evaluate sensitivity, repeatability, and strain transfer. This allows the design to be refined without relying on expensive tooling or long fabrication loops.
+
+The electronic system is developed in parallel using a modular embedded design approach. Firmware, acquisition circuitry, and wireless communication are designed and simulated as separate blocks before integration. A similar build-test-refine cycle is used for power management, calibration, and signal processing, where the objective is to balance measurement quality with ultra-low-power operation.
+
+Verification is based on controlled experiments rather than purely theoretical analysis. The sensor response is evaluated under known loading conditions, and the prototype is tested in representative environmental and mechanical scenarios to assess robustness, drift, and practical feasibility. Due to the limited time frame of a master's thesis, the scope is limited to demonstrating a working prototype and quantifying its performance, rather than carrying out full-life qualification for offshore deployment.
+
+\section{Previous Work} \label{sec:previous_work}
+Wireless strain sensing for structural health monitoring has been demonstrated in several studies~\cite{SHM_bog, wireless_strain_sensor}, and offshore monitoring has been widely investigated~\cite{offshore_sensor_solutions, WindTurbineStrainSensor, StrainBand}. For bolted connections specifically, several monitoring methods have been developed. Ultrasonic techniques can measure bolt stress directly but require manual probe access to each bolt~\cite{mills_bolt_inspection_2024}, and inspection using unmanned multi-rotor aerial vehicles has been proposed to reduce the cost of physical access, though it remains an intermittent survey method~\cite{zhang_fowt_inspection_2024}. Continuous monitoring is offered commercially through instrumented load-cell washers~\cite{boltsafe_load_cells} and wireless smart bolts with integrated preload sensors~\cite{strainlabs_system}, but these depend on proprietary hardware that is costly to install on every joint and constrained in bolt size and operating lifetime. Conventional strain-gauge-based systems, meanwhile, still require significant signal conditioning, which increases complexity, power consumption, and physical footprint~\cite{MetalFoilStrain}, making them difficult to integrate into compact, autonomous solutions.
+ 
+At the same time, 3D printed conductive materials have emerged as a promising alternative for custom sensing applications, as they enable rapid prototyping, geometric optimization, and low-cost fabrication~\cite{G.O.A.T, 3DprintStrain, 3DprintWheatstoneStrain}. Such sensors can be printed directly into a structure and have been demonstrated for strain measurement using carbon-based conductive filament on a Polylactic Acid (PLA) base~\cite{munasinghe_3dprinted_strain_2020}. These approaches are particularly relevant in applications where sensor shape, installation space, and integration constraints are tightly coupled. Even so, the combination of compact packaging, low-power operation, environmental sealing, and long-term offshore deployment remains insufficiently addressed in the literature.

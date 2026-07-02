@@ -1,0 +1,230 @@
+\section{PCB Design}
+The PCB design is based on Silicon Labs' layout design guide AN928.2~\cite{Layout_guide} and follows the manufacturer specifications of JLCPCB~\cite{jlcpcb_capabilities}. Some alterations were made relative to the guide in order to ease assembly and rework, such as increased component spacing and larger solder pads. The initial design presented in \Cref{sec:Initial_PCB} was ordered from JLCPCB and assembled, after which board-level modifications were made to match the final schematic circuitry. These modifications were subsequently incorporated into the final PCB design presented in \Cref{sec:final_pcb}.
+
+\subsection{Initial PCB Design} \label{sec:Initial_PCB}
+Based on the EFR32MG22E pin-out shown in \Cref{fig:MCU_pin}, the component placement was arranged according to a function-oriented layout around the MCU. The main power section was positioned to the north, the IADC measurement interface to the west, the debug connector to the east, and the RF section to the south of the MCU.
+
+\begin{figure}
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Drawings/MCU_Pinout_tikz2.tex}
+    \caption{EFR32MG22E QFN32 Pinout including pin name and function.}
+    \label{fig:MCU_pin}
+\end{figure}
+
+2D and 3D views of the top and bottom of the initial PCB design made using Altium Designer Professional is shown in \Cref{fig:PCB_REV4_VIEWS}. The PCB measures \SI{26.92}{\milli\meter} horizontally, \SI{22.86}{\milli\meter} vertically and \SI{4.53}{\milli\meter} in height.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{Pictures/REV4/Master_Rev4_½AA_PCB_TOP_2D.pdf}
+        \caption{2D Top View.}
+        \label{fig:PCB_2D_TOP}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{Pictures/REV4/Master_Rev4_½AA_PCB_BOT_2D.pdf}
+        \caption{2D Bottom View.}
+        \label{fig:PCB_2D_BOT}
+    \end{subfigure}
+    \vspace{0.5em}
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{Pictures/REV4/Master_Rev4_½AA_PCB_TOP_3D.pdf}
+        \caption{3D Top View.}
+        \label{fig:PCB_3D_TOP}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{Pictures/REV4/Master_Rev4_½AA_PCB_BOT_3D.pdf}
+        \caption{3D Bottom View.}
+        \label{fig:PCB_3D_BOT}
+    \end{subfigure}
+    \caption{Initial PCB design showing 2D and 3D views from the top and bottom sides.}
+    \label{fig:PCB_REV4_VIEWS}
+\end{figure}
+
+\subsubsection{Power Section}
+Passive components in the power section are sized 0603 or 0805, as these are widely available, cost-effective, and present a practical balance between compactness and ease of manual assembly. Decoupling capacitors are placed as close as possible to the power pins of the MCU to suppress both high- and low-frequency supply noise. The ferrite bead and resistor network further attenuates conducted electromagnetic interference and stabilizes the supply, while short trace lengths and tight component placement minimize parasitic inductance and resistance, preserving power integrity across the board.
+
+\texttt{RFVDD} and \texttt{PAVDD} are situated on the southern side of the MCU package. Bottom-layer traces were therefore used to route the \SI{1.8}{\volt} \texttt{VDCDC} rail to the ferrite beads FB1 and FB2 without crossing the dense routing on the top layer. Bottom traces were also used to route \texttt{VMCU} across the upper portion of the board, and to connect \texttt{nRESET} to the debug connector.
+
+Two trace widths are used across the design, with signal traces set to \SI{0.25}{\milli\meter} and power traces to \SI{0.3}{\milli\meter}. The current-carrying capacity of a trace is determined primarily by its cross-section and the permissible temperature rise. For \SI{1}{oz} copper, a \SI{0.25}{\milli\meter} trace can carry approximately \SI{1}{\ampere}~\cite{waseem_trace_width_current_2025}, whereas the largest current in this design is the \SI{8.2}{\milli\ampere} drawn during a radio transmission. This represents a margin of more than two orders of magnitude, which holds throughout the \SIrange{-20}{50}{\celsius} operating range, so ampacity does not constrain either width. The two widths are instead a manufacturability choice, with both meeting or exceeding the \SI{0.2}{\milli\meter} minimum recommended by JLCPCB for multilayer boards~\cite{jlcpcb_capabilities}. The power traces are made slightly wider than the signal traces as a precaution, reducing the series resistance and inductance of the supply rails and thereby limiting the voltage drop and switching noise on the distribution, even though the larger cross-section is not required for current handling. The radio-frequency trace and the sensor lines deviate from these general widths, for reasons of impedance matching and common-mode rejection respectively.
+
+\subsubsection{Sensor Interface and IADC Measurement}
+Capacitors C12 and C13 are placed in close proximity to the sensor power switch IC1 and to connector J2, minimizing the parasitic loop area and inductance on the switched supply path. This ensures stable switching behavior and limits inrush current during sensor power-on.
+ 
+The differential measurement signals \texttt{ADC+} and \texttt{ADC-} are routed as a matched differential pair from the MCU to connector J2. The two traces are length-matched and maintained at equal spacing throughout, so that both signals experience the same propagation delay and electrical environment. This preserves differential signal balance and improves rejection of common-mode noise picked up along the routing path.
+
+\subsubsection{PCB Stackup}
+The PCB uses a four-layer stackup in the order signal, ground, ground, signal. Placing the two inner layers as dedicated ground planes minimizes the distance between the outer signal layers and their adjacent reference planes, which reduces loop inductance, improves return current paths, and lowers electromagnetic emissions. The two outer layers are available for both signal and power routing, with the bottom layer used to route traces that cannot be accommodated on the top without crossing the dense MCU layout.
+ 
+The Silicon Labs layout guide recommends a prepreg thickness between \SI{300}{\micro\meter} and \SI{800}{\micro\meter}. A value of \SI{294}{\micro\meter} was selected from the controlled-impedance stackups offered by JLCPCB~\cite{jlcpcb_impedance_stackup}. Following review by the manufacturer's engineers, the prepreg thickness was revised to \SI{210}{\micro\meter} in the production stackup. The before and after review stackup configurations are given in \Cref{tab:INIT_PCBStackup} and \Cref{tab:PCBStackup} respectively.
+
+\begin{table}[H]
+\centering
+\caption{PCB Stackup before review.}
+\label{tab:INIT_PCBStackup}
+\begin{tabular}{@{}lcccSS@{}}
+\toprule
+                    & {Type}  & {Material}    & {Weight (oz)} & {Thickness (mm)} & {Dk} \\
+\midrule
+Top Layer           & Signal  & Copper        & 1             & 0.0350           &         \\ 
+\midrule
+Dielectric 1        & Prepreg & 7628*1        & ---           & 0.2180           & 4.4     \\ 
+Dielectric 2        & Prepreg & 1080*1        & ---           & 0.0764           & 3.91    \\ 
+\midrule
+GND 1               & Signal  & Copper        & 0.5           & 0.0152           &         \\ 
+\midrule
+Dielectric 3        & Core    & Core          & ---           & 0.8650           & 4.6     \\ 
+\midrule
+GND 2               & Signal  & Copper        & 0.5           & 0.0152           &         \\
+\midrule
+Dielectric 4        & Prepreg & 1080*1        & ---           & 0.0764           & 3.91    \\
+Dielectric 5        & Prepreg & 7628*1        & ---           & 0.2180           & 4.4     \\ 
+\midrule
+Bottom Layer        & Signal  & Copper        & 1             & 0.0350           &         \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{PCB Stackup after review.}
+\label{tab:PCBStackup}
+\begin{tabular}{@{}lcccSS@{}}
+\toprule
+                    & {Type}  & {Material}    & {Weight (oz)} & {Thickness (mm)} & {Dk} \\
+\midrule
+Top Layer           & Signal  & Copper        & 1             & 0.0350           &         \\ 
+\midrule
+Dielectric 1        & Prepreg & 7628*1        & ---           & 0.2104           & 4.4     \\ 
+\midrule
+GND 1               & Signal  & Copper        & 0.5           & 0.0152           &         \\ 
+\midrule
+Dielectric 2        & Core    & Core          & ---           & 1.0650           & 4.6     \\ 
+\midrule
+GND 2               & Signal  & Copper        & 0.5           & 0.0152           &         \\
+\midrule
+Dielectric 3        & Prepreg & 7628*1        & ---           & 0.2104           & 4.4     \\ 
+\midrule
+Bottom Layer        & Signal  & Copper        & 1             & 0.0350           &         \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Ground Pours} 
+Ground pours are avoided on the signal layers, since a partial or unstitched ground pour does not inherently reduce EMI and can instead introduce unintended parasitic capacitances and disrupt controlled return current paths. The more effective approach used, is either to omit ground fills on signal layers entirely or to use a dense, well-stitched ground grid where shielding is specifically required~\cite{bogatin_unlearn_pcb}.
+
+Solid copper ground pours are applied to both internal ground layers. On the outer signal layers they are used more selectively. A stitched ground pour is only placed around the RF trace on the top layer to provide local shielding, improve the return current path in the RF section, and increase isolation from external interference.
+
+\subsubsection{RF Section Layout} \label{sec:rf_layout}
+The RF section layout follows that of the Silicon Labs EFR32xG22 Explorer Kit, with the component placement and routing copied closely. The spacing between components along the impedance matching trace was increased slightly relative to the reference design to facilitate assembly, as placing 0201 components in close proximity presents a practical challenge.
+ 
+The RF trace is implemented as a coplanar waveguide with ground stitching vias along its length, which minimizes electromagnetic interference by confining the field and improving the return current path. The trace geometry was calculated using the built-in controlled-impedance tool in Altium Designer Professional to satisfy the \SI{50}{\ohm} impedance requirement given the layer stackup, yielding a trace width of \SI{0.291}{\milli\meter} and a ground clearance of \SI{0.94}{\milli\meter}. Following review by JLCPCB, these dimensions were revised to a trace width of \SI{0.332}{\milli\meter} and a ground clearance of \SI{0.95}{\milli\meter} to match the manufacturer's verified controlled-impedance process.
+ 
+The antenna is positioned at the center of the board edge, as required by the reference design. A ground clearance of \SI{4}{\milli\meter} by \SI{6}{\milli\meter} is maintained around the antenna, with ground stitching vias placed along both the clearance boundary and the board edge to improve isolation and reduce radiation from the ground plane.
+
+\subsection{Final PCB Design} \label{sec:final_pcb}
+The PCB was assembled manually using T5 solder paste, with components placed by hand and reflowed in a T962A reflow oven. Heat-sensitive components, including the connector headers, were subsequently soldered by hand.
+ 
+Following assembly, the modifications described in \Cref{sec:Final_Schem} were implemented as board-level reworks, visible in \Cref{fig:PCB_IRL}. The LDO was bypassed by fitting a \SI{0}{\ohm} jumper resistor across its pads and connecting the MCU supply directly to the battery rail. The ferrite beads FB1 and FB3 were similarly replaced with \SI{0}{\ohm} jumpers. The PMOS circuit was bypassed by shorting its connections with a jumper and creating a direct path between the GPIO output and the sensor supply input. To reassign \texttt{AVDD} from the battery rail to the \SI{1.8}{\volt} DC-DC output, the trace connecting \texttt{AVDD} to the battery rail was cut and \texttt{AVDD} was instead shorted to the adjacent \texttt{DVDD} pin, which carries the \SI{1.8}{\volt} rail from the DC-DC converter. In total, 14 components of the original 36 were removed without compromising noise performance or IADC measurement precision.
+
+\begin{figure}[!b]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{Pictures/PCB_NO_REWORK.png}
+        \caption{Assembled PCB without reworks.}
+        \label{fig:PCB_norework}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{Pictures/PCB_REWORKED.png}
+        \caption{Assembled PCB with reworks.}
+        \label{fig:PCB_reworked}
+    \end{subfigure}
+    \caption{Assembled PCB without and with rework done.}
+    \label{fig:PCB_IRL}
+\end{figure}
+
+The revised design is shown in \Cref{fig:PCB_REV7_VIEWS}, incorporating the modifications described in \Cref{sec:Final_Schem}. Relocating the debug connector to the western edge of the board allowed the overall dimensions to be reduced to \SI{20.83}{\milli\meter} by \SI{25.02}{\milli\meter}, with a component height of \SI{4.53}{\milli\meter}.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth, height=0.17\textheight, keepaspectratio]{Pictures/REV7/Master_Rev7_½AA_PCB_TOP_2D.pdf}
+        \caption{2D Top View.}
+        \label{fig:PCB_REV7_2D_TOP}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth, height=0.17\textheight, keepaspectratio]{Pictures/REV7/Master_Rev7_½AA_PCB_BOT_2D.pdf}
+        \caption{2D Bottom View.}
+        \label{fig:PCB_REV7_2D_BOT}
+    \end{subfigure}
+
+    \vspace{0.5em}
+
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth, height=0.17\textheight, keepaspectratio]{Pictures/REV7/Master_Rev7_½AA_PCB_TOP_3D.pdf}
+        \caption{3D Top View.}
+        \label{fig:PCB_REV7_3D_TOP}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth, height=0.17\textheight, keepaspectratio]{Pictures/REV7/Master_Rev7_½AA_PCB_BOT_3D.pdf}
+        \caption{3D Bottom View.}
+        \label{fig:PCB_REV7_3D_BOT}
+    \end{subfigure}
+
+    \caption{Final PCB design showing 2D and 3D views from the top and bottom sides.}
+    \label{fig:PCB_REV7_VIEWS}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth, height=0.17\textheight, keepaspectratio]{Pictures/REV8/Master_Rev8_½AA_PCB_TOP_2D.pdf}
+        \caption{2D Top View.}
+        \label{fig:PCB_REV8_2D_TOP}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth, height=0.17\textheight, keepaspectratio]{Pictures/REV8/Master_Rev8_½AA_PCB_BOT_2D.pdf}
+        \caption{2D Bottom View.}
+        \label{fig:PCB_REV8_2D_BOT}
+    \end{subfigure}
+
+    \vspace{0.5em}
+
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth, height=0.17\textheight, keepaspectratio]{Pictures/REV8/Master_Rev8_½AA_PCB_TOP_3D.pdf}
+        \caption{3D Top View.}
+        \label{fig:PCB_REV8_3D_TOP}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth, height=0.17\textheight, keepaspectratio]{Pictures/REV8/Master_Rev8_½AA_PCB_BOT_3D.pdf}
+        \caption{3D Bottom View.}
+        \label{fig:PCB_REV8_3D_BOT}
+    \end{subfigure}
+    
+    \caption{Final PCB design including pogo pin debugging showing 2D and 3D views from the top and bottom sides.}
+    \label{fig:PCB_REV8_VIEWS}
+\end{figure}
+
+An alternative design was also considered in which the JST-SH debug connector is replaced by pogo pins. Pogo pins are spring-loaded contacts that establish a reliable electrical connection through mechanical compression and a constant contact force~\cite{smoot2024pogopin}, making them well suited to production programming fixtures where the connector would otherwise be redundant in the deployed product. This substitution would reduce the per-unit cost by 2.08 DKK based on Farnell listings from April 2026. The alternative layout is shown in \Cref{fig:PCB_REV8_VIEWS}.

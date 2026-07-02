@@ -1,0 +1,23 @@
+\begin{figure}[!b]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneSensorer_resistance}
+    \caption{Resistance of two PLA sensor elements, configured as the active arms of a Wheatstone half-bridge, under applied strain.}
+    \label{fig:Wheatstone_sensorer}
+\end{figure}
+
+The near-separation operating point that gives the sensor its sensitivity also makes the baseline resistance strongly temperature dependent, with \Cref{Temperature Behaviour} showing the resistance of a single element to roughly double across the \SIrange{-20}{50}{\celsius} operating range. The Wheatstone half-bridge of \Cref{sec:Wheatstone_theory} is therefore adopted to suppress this temperature dependence, and this section describes how the bridge is realized from printed elements and how the assembled bridge performs.
+
+The bridge is assembled from four printed serpentine elements of nominally identical geometry and print parameters, where two are mounted on the strained surface as the active arms of resistance $R_s$ and two are held unstrained as the passive reference arms of resistance $R_b$, arranged in the half-bridge of \Cref{eq:bridge}. Because all four arms are printed from the same conductive PLA and held at the same temperature, the strong temperature dependence discussed in \Cref{Temperature Behaviour} is common to every arm and cancels in the differential output, which is what makes the delicate near-separation operating point usable in deployment.
+
+In practice the cancellation is limited by how closely the four arms can be matched. The compensation of \Cref{eq:bridge_comp} assumes nominally identical elements, whereas the print-to-print variation inherent to the deposition of the conductive traxel leaves the elements differing slightly in both baseline resistance and temperature coefficient, so the bridge does not balance to exactly zero at rest and a finite offset voltage remains. Imperfect matching of this kind is a recognized difficulty when assembling Wheatstone bridges from 3D printed elements~\cite{3DprintWheatstoneStrain}, and it sets the achievable common-mode rejection at a level determined by the degree of mismatch rather than by the topology alone.
+
+The two active elements were characterized individually before assembly, with their resistance against applied strain shown in \Cref{fig:Wheatstone_sensorer}. Both are printed to the same serpentine design and rest at the near-separation operating point, so each shows the steep rise in resistance with strain that this point produces, and the two responses track one another closely enough for the bridge to balance about a small offset. The clearest difference between them is a lag on active sensor~1 during loading, where its resistance trails the applied strain before catching up. The exact cause is difficult to isolate, since it may originate from viscoelastic relaxation in the substrate, from differences between the two printed elements, or from the test setup, and in either case it represents a small dynamic mismatch between the two active arms.
+
+The output of the assembled bridge is shown in \Cref{fig:Wheatstone1}, where the upper panel gives the measured output voltage at an excitation of \SI{1.8}{\volt} and the lower panel normalizes this output to the excitation voltage and expresses it in millivolts per volt. The normalized representation removes the dependence on the absolute excitation level, so that the measurement is directly comparable with data acquired under different excitations. The output increases monotonically with strain, confirming that the bridge deflects in a consistent direction, but the characteristic is markedly linear. 
+
+\begin{figure}[!t]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/WheatstoneBasic}
+    \caption{Output voltage of the Wheatstone half-bridge under applied strain. The top plot shows the measured output, and the bottom plot the output normalized to the \SI{1.8}{\volt} excitation.}
+    \label{fig:Wheatstone1}
+\end{figure}

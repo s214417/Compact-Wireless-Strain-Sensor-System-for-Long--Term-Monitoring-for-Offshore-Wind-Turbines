@@ -1,0 +1,33 @@
+%The long-term stability of the sensor in constant environmental conditions was measured for the four combinations of conductor material and mounting surface shown in \Cref{fig:2by2_drift}, recorded over more than two days. The two conductor materials are the conductive PLA and the conductive TPU, and the two mounting surfaces are the compliant TPU substrate used during characterization and a steel plate representing the metallic surface of the nut on which the sensor is deployed.
+
+In its intended application the sensor is mounted on the steel surface of a nut, which is far stiffer than the compliant TPU substrate used during characterization and may therefore constrain the contacts differently and alter the long-term behavior. To assess this, together with the different behavior of the conductive materials, the long-term stability under constant environmental conditions, \SI{25}{\celsius} and \SI{50}{\percent} with relative humidity in climate chamber (Weiss WK3-340/40), was measured for the four combinations of conductor material and mounting surface shown in \Cref{fig:2by2_drift}, recorded over more than two days. The two conductor materials are the conductive PLA and the conductive TPU, while the two mounting surfaces onto which the finished sensor is fixed is a compliant TPU surface matching the printed substrate, as shown on \Cref{fig:sensor_on_TPU}, and a rigid steel plate representing the deployment surface. The metal surface was covered with Kapton tape to electrically insulate the sensor from the metal plate, as shown in \Cref{fig:sensor_on_metal}.
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[height=5.76cm]{Pictures/Sensor_on_TPU.png}
+        \caption{Sensor printed on a compliant TPU surface.}
+        \label{fig:sensor_on_TPU}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[height=5.76cm]{Pictures/Sensor_on_metal.png}
+        \caption{Sensor printed onto Kapton tape on a \SI{30}{\milli\meter} x \SI{30}{\milli\meter} steel plate.}
+        \label{fig:sensor_on_metal}
+    \end{subfigure}
+    \caption{The sensor element printed on the two test substrates, a compliant TPU surface and a rigid steel plate insulated with Kapton tape.}
+    \label{fig:metal_base_vs_TPU_base}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includestandalone[mode=buildmissing]{Standalone/Plots/2by2_drift}
+    \caption{Resistance drift in constant environmental conditions of four sensors with different substrate–conductor combinations: a) conductive TPU on a TPU substrate, b) conductive TPU on a steel substrate, c) conductive PLA on a TPU substrate, and d) conductive PLA on a steel substrate.}
+    \label{fig:2by2_drift}
+\end{figure}
+
+The conductor material has by far the larger effect on the drift. The conductive TPU, in the upper panels a) and b) of \Cref{fig:2by2_drift}, drifts strongly and monotonically downward, by roughly \SI{3}{\percent} on the TPU mounting surface and roughly \SI{8}{\percent} on the steel plate over the measurement, which is consistent with viscoelastic relaxation of the elastomeric conductor as the contacts settle under the resting load. The conductive PLA, in the lower panels c) and d), instead fluctuates only slightly about the mean, by about \SI{0.1}{\percent} on the TPU mounting surface and about \SI{0.5}{\percent} on the steel plate, without any sustained trend. The conductive PLA is therefore far more stable than the conductive TPU, and the mounting surface has only a secondary effect on the drift.
+
+As seen in \Cref{fig:2by2_drift}, the resistance also differs between the two mounting surfaces for a given conductor, with the sensors on the TPU substrate sitting at a higher resistance than those on the steel plate. This follows from the break-in step described in \Cref{Sensor Structure & the Small-Strain Operating Point}. On the compliant TPU substrate the sensor can be broken in, separating the partially fused turns so that the current is forced through the full serpentine path and the resistance rises. On the rigid steel plate the sensor cannot be flexed enough to complete the break-in, so the fused turns remain joined and the resistance stays lower.

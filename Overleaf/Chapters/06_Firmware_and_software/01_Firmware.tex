@@ -1,0 +1,39 @@
+\chapter{Firmware \& Software} \label{sec:Firmware_and_software}
+
+This chapter covers the firmware implementation, software configuration, and data handling.
+The software implementation of the system spans two distinct layers that together close the path from raw sensor measurement to user-accessible data.
+The firmware, running on the EFR32MG22E MCU, is responsible for sensor excitation, signal acquisition, and wireless transmission of measurement data over Zigbee. 
+The software layer is built on Home Assistant, an open-source platform that runs on the host acting as the network coordinator, and receives the transmitted data through the Zigbee Home Automation (ZHA) integration, where it is logged, processed, and made available for monitoring and analysis.
+Although the two layers run on separate platforms, they are tightly coupled through the Zigbee cluster definitions and attribute mapping agreed upon during firmware development.
+
+
+
+\section{Firmware Implementation} \label{sec:Firmware_Implementation }
+%Introduction section. Introduce  the module decomposition (app.c, zigbee.c, wheatstone.c, em4.c), and presents a block diagram. 
+\input{Chapters/06_Firmware_and_software/Firmware_Implementation}
+
+\subsection{Measure-Report-Sleep Cycle} \label{sec:Measure-Report-Sleep_Cycle}
+%Explains the top-level operation of the system as one coherent cycle. 
+%It covers the state machine in order: boot/reset → network join → ADC measurement → ZCL report → TX callback → EM4 entry → BURTC wake → reset. A flow diagram here. 
+\input{Chapters/06_Firmware_and_software/Measure-Report-Sleep_Cycle}
+
+\subsection{Sensor Acquisition} \label{sec:Sensor_Acquisition}
+%This section covers the analog front end in firmware.
+\input{Chapters/06_Firmware_and_software/Sensor_acquisition}
+
+\subsection{ZCL Data Reporting} \label{sec:ZCL_Data_Reporting}
+%This section covers how measurement data is packaged and transmitted to Home Assistant.
+\input{Chapters/06_Firmware_and_software/ZCL_Data_Reporting}
+
+\subsection{Zigbee Network Management} \label{sec:Zigbee_Network_Management}
+%This section explains how the device handles network bring-up.
+\input{Chapters/06_Firmware_and_software/Zigbee_Network_Management}
+
+\subsection{Power Management \& EM4 Deep Sleep} \label{sec:Power_Management_&_EM4_Deep_Sleep}
+%This section covers the deep sleep implementation.
+%How the code was made to use as little power as possible.
+\input{Chapters/06_Firmware_and_software/Power_Management}
+
+\subsection{Safety \& Robustness} \label{sec:Safety_&_Robustness}
+%This shorter section covers the no-progress watchdog, and other safety features.
+\input{Chapters/06_Firmware_and_software/Safety}
