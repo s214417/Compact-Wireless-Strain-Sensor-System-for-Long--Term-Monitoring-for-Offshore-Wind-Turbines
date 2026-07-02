@@ -1,0 +1,1162 @@
+title: SHM Wind Turbine Park 1
+
+button_card_templates:
+  # Shared base for turbine/flange/nut cards. Colour, border and status label
+  # are driven by the lowest voltage among the configured sources (or the
+  # card's own entity when no sources are given).
+  shm_base:
+    variables:
+      warn: 0.5
+      crit: 0.4
+      unit: "V"
+
+      # Physical sensor nodes. The demo park maps every nut to one of these
+      # four boards; the anchors below define which board backs which nut.
+      adc_a: &adc_a sensor.pcb_5_voltage
+      adc_b: &adc_b sensor.pcb_7_voltage
+      adc_c: &adc_c sensor.pcb_9_voltage
+      adc_d: &adc_d sensor.pcb_10_voltage
+
+      # Nut-to-sensor patterns for the three flange conditions in the demo.
+      mixed_nut_sources: &mixed_nut_sources
+        - *adc_a
+        - *adc_d
+        - *adc_c
+        - *adc_d
+        - *adc_a
+        - *adc_b
+        - *adc_a
+        - *adc_d
+        - *adc_a
+        - *adc_d
+      good_nut_sources: &good_nut_sources
+        - *adc_a
+        - *adc_d
+        - *adc_d
+        - *adc_a
+        - *adc_d
+        - *adc_a
+        - *adc_a
+        - *adc_d
+        - *adc_a
+        - *adc_d
+      weak_nut_sources: &weak_nut_sources
+        - *adc_a
+        - *adc_d
+        - *adc_a
+        - *adc_d
+        - *adc_b
+        - *adc_d
+        - *adc_a
+        - *adc_d
+        - *adc_a
+        - *adc_d
+
+      # Flange compositions per turbine.
+      turbine1_flange_sources: &turbine1_flange_sources
+        - *mixed_nut_sources
+        - *weak_nut_sources
+        - *good_nut_sources
+      turbine5_flange_sources: &turbine5_flange_sources
+        - *weak_nut_sources
+        - *good_nut_sources
+        - *good_nut_sources
+      good_flange_sources: &good_flange_sources
+        - *good_nut_sources
+        - *good_nut_sources
+        - *good_nut_sources
+
+      flange_labels: &flange_labels
+        - Flange 1
+        - Flange 2
+        - Flange 3
+      nut_labels: &nut_labels
+        - Nut 01
+        - Nut 02
+        - Nut 03
+        - Nut 04
+        - Nut 05
+        - Nut 06
+        - Nut 07
+        - Nut 08
+        - Nut 09
+        - Nut 10
+
+      # Grid presets shared by the layout-cards in the views below.
+      layout_presets:
+        wide_grid: &wide_grid
+          grid-template-columns: repeat(3, 250px)
+          grid-gap: 14px
+          justify-content: center
+          place-content: center
+          width: 100%
+        wide_grid_fixed_mediaquery: &wide_grid_fixed_mediaquery
+          "(max-width: 900px)":
+            grid-template-columns: repeat(2, 250px)
+          "(max-width: 600px)":
+            grid-template-columns: repeat(1, 250px)
+        wide_grid_fill_mediaquery: &wide_grid_fill_mediaquery
+          "(max-width: 900px)":
+            grid-template-columns: repeat(2, minmax(0, 1fr))
+          "(max-width: 600px)":
+            grid-template-columns: repeat(1, minmax(0, 1fr))
+        legend_grid: &legend_grid
+          grid-template-columns: repeat(3, 250px)
+          grid-gap: 8px
+          justify-content: center
+          place-content: center
+          width: 100%
+        nut_grid: &nut_grid
+          grid-template-columns: repeat(5, 150px)
+          grid-gap: 10px
+          justify-content: center
+          place-content: center
+          width: 100%
+        nut_grid_mediaquery: &nut_grid_mediaquery
+          "(max-width: 900px)":
+            grid-template-columns: repeat(3, 150px)
+          "(max-width: 600px)":
+            grid-template-columns: repeat(2, 150px)
+
+      # Lowest value across all sources (nested lists are flattened), or the
+      # card's own entity state. Evaluated before the styles below use it.
+      worst: |
+        [[[
+          const ids = Array.isArray(variables.sources)
+            ? variables.sources.flat(Infinity)
+            : (entity ? [entity.entity_id] : []);
+          const values = ids
+            .map((id) => parseFloat(states[id]?.state))
+            .filter((n) => !Number.isNaN(n));
+          return values.length ? Math.min(...values) : null;
+        ]]]
+    show_label: true
+    show_name: true
+    show_icon: true
+    layout: vertical
+    styles:
+      card:
+        - border-radius: 16px
+        - padding: 14px
+        - box-shadow: 0 8px 20px rgba(20, 40, 60, 0.18)
+        - background: |
+            [[[
+              const v = variables.worst;
+              const neutral = "rgba(236, 242, 245, 0.92)";
+              if (v === null || isNaN(v)) {
+                return `linear-gradient(135deg, ${neutral}, rgba(217, 224, 230, 0.92))`;
+              }
+              const accent = v > variables.warn
+                ? "rgba(76, 175, 80, 0.32)"
+                : v > variables.crit
+                  ? "rgba(255, 179, 0, 0.32)"
+                  : "rgba(229, 57, 53, 0.32)";
+              return `linear-gradient(135deg, ${neutral}, ${accent})`;
+            ]]]
+        - border-left: |
+            [[[
+              const v = variables.worst;
+              if (v === null || isNaN(v)) return "4px solid rgba(120, 130, 140, 0.6)";
+              if (v > variables.warn) return "4px solid #4caf50";
+              if (v > variables.crit) return "4px solid #ffb300";
+              return "4px solid #e53935";
+            ]]]
+      name:
+        - font-family: '"Space Grotesk", "IBM Plex Sans", sans-serif'
+        - font-size: 18px
+        - font-weight: 600
+        - letter-spacing: 0.2px
+      label:
+        - font-family: '"IBM Plex Sans", "Source Sans 3", sans-serif'
+        - font-size: 12px
+        - text-transform: none
+        - letter-spacing: 0.8px
+        - opacity: 0.85
+        - white-space: pre-line
+        - line-height: 1.2
+        - overflow: visible
+        - text-overflow: unset
+      icon:
+        - color: |
+            [[[
+              const v = variables.worst;
+              if (v === null || isNaN(v)) return "#607d8b";
+              if (v > variables.warn) return "#2e7d32";
+              if (v > variables.crit) return "#f57c00";
+              return "#c62828";
+            ]]]
+    label: |
+      [[[
+        const labels = Array.isArray(variables.labels) ? variables.labels : null;
+        const sources = Array.isArray(variables.sources) ? variables.sources : null;
+        const entries = [];
+
+        if (sources && sources.length) {
+          const grouped = sources.some((source) => Array.isArray(source));
+          sources.forEach((source, index) => {
+            const ids = Array.isArray(source) ? source : [source];
+            const values = ids
+              .map((id) => parseFloat(states[id]?.state))
+              .filter((n) => !Number.isNaN(n));
+            if (!values.length) return;
+            const fallback = grouped
+              ? `Group ${index + 1}`
+              : states[ids[0]]?.attributes?.friendly_name ?? ids[0];
+            entries.push({ label: labels?.[index] ?? fallback, value: Math.min(...values) });
+          });
+        } else {
+          const value = parseFloat(entity?.state);
+          if (!Number.isNaN(value)) {
+            const label = entity?.attributes?.friendly_name ?? entity?.entity_id ?? "Entity";
+            entries.push({ label, value });
+          }
+        }
+
+        if (!entries.length) {
+          return "STATUS: N/A\nVALUE: N/A";
+        }
+
+        const worstValue = Math.min(...entries.map((item) => item.value));
+        const precision = Number.isInteger(worstValue) ? 0 : 2;
+        const factor = 10 ** precision;
+        const worstRounded = Math.round(worstValue * factor);
+        const worstLabels = entries
+          .filter((item) => Math.round(item.value * factor) === worstRounded)
+          .map((item) => item.label);
+        const status = worstValue > variables.warn ? "OK" : worstValue > variables.crit ? "Warning" : "Critical";
+
+        const out = [`STATUS: ${status}`];
+        if (status !== "OK") {
+          out.push(`WORST: ${worstLabels.join(", ")}`);
+          out.push(`VALUE: ${worstValue.toFixed(precision)} ${variables.unit}`);
+        }
+        return out.join("\n");
+      ]]]
+
+  shm_turbine:
+    template: shm_base
+    triggers_update: all
+    icon: mdi:wind-turbine
+    size: 44px
+    styles:
+      card:
+        - min-height: 120px
+        - padding: 20px
+
+  shm_flange:
+    template: shm_turbine
+    icon: mdi:wrench
+    size: 36px
+
+  shm_nut:
+    template: shm_base
+    icon: mdi:nut
+    styles:
+      card:
+        - padding: 10px
+        - border-radius: 14px
+      name:
+        - font-size: 12px
+        - font-weight: 600
+      label:
+        - font-size: 10px
+        - white-space: pre-line
+        - line-height: 1.25
+    label: |
+      [[[
+        const v = parseFloat(entity?.state);
+        const core = entity
+          ? entity.entity_id.replace(/^sensor\./, "").replace(/_voltage$/, "")
+          : null;
+        const t = core ? parseFloat(states[`sensor.custom_${core}`]?.state) : NaN;
+        const r = core ? parseFloat(states[`sensor.custom_${core}_rssi`]?.state) : NaN;
+        const lines = [isNaN(v) ? "n/a" : `${v.toFixed(2)} ${variables.unit}`];
+        if (!isNaN(t)) lines.push(`${t.toFixed(1)} °C`);
+        if (!isNaN(r)) lines.push(`${r.toFixed(0)} dBm`);
+        const fmtAge = (ts) => {
+          if (!ts) return null;
+          const s = Math.max(0, Math.floor((Date.now() - new Date(ts).getTime()) / 1000));
+          return s < 60 ? `${s}s ago`
+               : s < 3600 ? `${Math.floor(s / 60)}m ago`
+               : s < 86400 ? `${Math.floor(s / 3600)}h ago`
+               : `${Math.floor(s / 86400)}d ago`;
+        };
+        const upd = fmtAge(entity?.last_updated);
+        if (upd) lines.push(`Updated ${upd}`);
+        return lines.join("\n");
+      ]]]
+
+  shm_legend:
+    show_icon: false
+    show_label: false
+    show_name: true
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+    styles:
+      card:
+        - padding: 8px 12px
+        - border-radius: 10px
+        - box-shadow: none
+      name:
+        - font-weight: 600
+
+views:
+  - title: Park Overview
+    path: overview
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *wide_grid
+        mediaquery: *wide_grid_fixed_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Park Overview Graphical User Interface<br><br>Tap a turbine to view the flanges and furthermore to view individual nuts</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *legend_grid
+        mediaquery: *wide_grid_fixed_mediaquery
+        cards:
+          - type: custom:button-card
+            template: shm_legend
+            name: Green = OK
+            styles:
+              card:
+                - background: rgba(76, 175, 80, 0.12)
+              name:
+                - color: "#2e7d32"
+          - type: custom:button-card
+            template: shm_legend
+            name: Yellow = Warning
+            styles:
+              card:
+                - background: rgba(255, 179, 0, 0.16)
+              name:
+                - color: "#f57c00"
+          - type: custom:button-card
+            template: shm_legend
+            name: Red = Critical
+            styles:
+              card:
+                - background: rgba(229, 57, 53, 0.14)
+              name:
+                - color: "#c62828"
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *wide_grid
+        mediaquery: *wide_grid_fixed_mediaquery
+        cards:
+          - type: custom:button-card
+            template: shm_turbine
+            name: Turbine 01
+            entity: *adc_a
+            variables:
+              sources: *turbine1_flange_sources
+              labels: *flange_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-01
+          - type: custom:button-card
+            template: shm_turbine
+            name: Turbine 02
+            entity: *adc_b
+            variables:
+              sources: *good_flange_sources
+              labels: *flange_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-02
+          - type: custom:button-card
+            template: shm_turbine
+            name: Turbine 03
+            entity: *adc_c
+            variables:
+              sources: *good_flange_sources
+              labels: *flange_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-03
+          - type: custom:button-card
+            template: shm_turbine
+            name: Turbine 04
+            entity: *adc_d
+            variables:
+              sources: *good_flange_sources
+              labels: *flange_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-04
+          - type: custom:button-card
+            template: shm_turbine
+            name: Turbine 05
+            entity: *adc_b
+            variables:
+              sources: *turbine5_flange_sources
+              labels: *flange_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-05
+          - type: custom:button-card
+            template: shm_turbine
+            name: Turbine 06
+            entity: *adc_c
+            variables:
+              sources: *good_flange_sources
+              labels: *flange_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-06
+
+  - title: Turbine 01
+    path: turbine-01
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *wide_grid
+        mediaquery: *wide_grid_fill_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 01 - Flange Overview</center>
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 1
+            entity: *adc_a
+            variables:
+              sources: *mixed_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-01-tower-01
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 2
+            entity: *adc_b
+            variables:
+              sources: *weak_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-01-tower-02
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 3
+            entity: *adc_c
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-01-tower-03
+
+  - title: Turbine 02
+    path: turbine-02
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *wide_grid
+        mediaquery: *wide_grid_fill_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 02 - Flange Overview</center>
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 1
+            entity: *adc_a
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-02-tower-01
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 2
+            entity: *adc_b
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-02-tower-02
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 3
+            entity: *adc_c
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-02-tower-03
+
+  - title: Turbine 03
+    path: turbine-03
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *wide_grid
+        mediaquery: *wide_grid_fill_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 03 - Flange Overview</center>
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 1
+            entity: *adc_a
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-03-tower-01
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 2
+            entity: *adc_b
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-03-tower-02
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 3
+            entity: *adc_c
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-03-tower-03
+
+  - title: Turbine 04
+    path: turbine-04
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *wide_grid
+        mediaquery: *wide_grid_fill_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 04 - Flange Overview</center>
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 1
+            entity: *adc_a
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-04-tower-01
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 2
+            entity: *adc_b
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-04-tower-02
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 3
+            entity: *adc_c
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-04-tower-03
+
+  - title: Turbine 05
+    path: turbine-05
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *wide_grid
+        mediaquery: *wide_grid_fill_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 05 - Flange Overview</center>
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 1
+            entity: *adc_a
+            variables:
+              sources: *weak_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-05-tower-01
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 2
+            entity: *adc_b
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-05-tower-02
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 3
+            entity: *adc_c
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-05-tower-03
+
+  - title: Turbine 06
+    path: turbine-06
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *wide_grid
+        mediaquery: *wide_grid_fill_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 06 - Flange Overview</center>
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 1
+            entity: *adc_a
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-06-tower-01
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 2
+            entity: *adc_b
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-06-tower-02
+          - type: custom:button-card
+            template: shm_flange
+            name: Flange 3
+            entity: *adc_c
+            variables:
+              sources: *good_nut_sources
+              labels: *nut_labels
+            tap_action:
+              action: navigate
+              navigation_path: turbine-06-tower-03
+
+  - title: Turbine 01 - Flange 1
+    path: turbine-01-tower-01
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 01 - Flange 1</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 01
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 02
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 03
+            entity: *adc_c
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 04
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 05
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 06
+            entity: *adc_b
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 07
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 08
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 09
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 10
+            entity: *adc_d
+
+  - title: Turbine 01 - Flange 2
+    path: turbine-01-tower-02
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 01 - Flange 2</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: &weak_nut_cards
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 01
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 02
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 03
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 04
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 05
+            entity: *adc_b
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 06
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 07
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 08
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 09
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 10
+            entity: *adc_d
+
+  - title: Turbine 01 - Flange 3
+    path: turbine-01-tower-03
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 01 - Flange 3</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: &good_nut_cards
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 01
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 02
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 03
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 04
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 05
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 06
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 07
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 08
+            entity: *adc_d
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 09
+            entity: *adc_a
+          - type: custom:button-card
+            template: shm_nut
+            name: Nut 10
+            entity: *adc_d
+
+  - title: Turbine 02 - Flange 1
+    path: turbine-02-tower-01
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 02 - Flange 1</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 02 - Flange 2
+    path: turbine-02-tower-02
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 02 - Flange 2</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 02 - Flange 3
+    path: turbine-02-tower-03
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 02 - Flange 3</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 03 - Flange 1
+    path: turbine-03-tower-01
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 03 - Flange 1</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 03 - Flange 2
+    path: turbine-03-tower-02
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 03 - Flange 2</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 03 - Flange 3
+    path: turbine-03-tower-03
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 03 - Flange 3</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 04 - Flange 1
+    path: turbine-04-tower-01
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 04 - Flange 1</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 04 - Flange 2
+    path: turbine-04-tower-02
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 04 - Flange 2</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 04 - Flange 3
+    path: turbine-04-tower-03
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 04 - Flange 3</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 05 - Flange 1
+    path: turbine-05-tower-01
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 05 - Flange 1</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *weak_nut_cards
+
+  - title: Turbine 05 - Flange 2
+    path: turbine-05-tower-02
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 05 - Flange 2</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 05 - Flange 3
+    path: turbine-05-tower-03
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 05 - Flange 3</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 06 - Flange 1
+    path: turbine-06-tower-01
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 06 - Flange 1</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 06 - Flange 2
+    path: turbine-06-tower-02
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 06 - Flange 2</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
+
+  - title: Turbine 06 - Flange 3
+    path: turbine-06-tower-03
+    subview: true
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards:
+          - type: markdown
+            view_layout:
+              grid-column: 1 / -1
+            content: |
+              <center>Turbine 06 - Flange 3</center>
+      - type: custom:layout-card
+        layout_type: grid
+        layout: *nut_grid
+        mediaquery: *nut_grid_mediaquery
+        cards: *good_nut_cards
