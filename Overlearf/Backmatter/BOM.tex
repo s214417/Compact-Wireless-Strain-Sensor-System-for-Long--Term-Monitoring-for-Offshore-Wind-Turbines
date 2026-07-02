@@ -1,0 +1,121 @@
+\chapter{Bill of Material} \label{app:BOM}
+The Bill of Materials is divided into PCB-mounted components and external components, the latter comprising the interconnecting cables, the lithium battery, and the battery holder. Unit prices reflect volume pricing and were sourced from DigiKey in June 2026, with the exception of the battery holder, which was obtained from RS Components (dk.rs), the lithium battery, which was sourced from NKON (nkon.nl), and the MCU EFR32MG22E224F512IM32, which was sourced from Mouser (mouser.dk).
+% ── Order 1 ─────────────────────────────────────────────────
+\begin{table}[!htbp]
+\centering
+\caption{Bill of Materials for the Initial Design, part 1 of 2.}
+\label{tab:bom_order1}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{@{} l X r l r r @{}}
+\toprule
+Desig. & Component & Qty & MPN & Unit & Total \\
+       &           &     &     & (DKK) & (DKK) \\
+\midrule
+ANT1     & RF Antenna, 2.4~GHz, Ceramic SMD               & 1 & 2450AT18D0100E          & 1.61 & 1.61  \\
+C1       & Cap., 18~pF, C0G, $\pm$2\%, 25~V, 0201         & 1 & GJM0335C1E180GB01D      & 0.05  & 0.05  \\
+C2       & Cap., 1.6~pF, C0G, $\pm$0.1~pF, 50~V, 0201     & 1 & GRM0335C1H1R6BA01D      & 0.02  & 0.02  \\
+C3, C17  & Cap., 10~\textmu F, X5R, 0603                   & 2 & CC0603MRX5R7BB106       & 0.56  & 1.12  \\
+C4, C8   & Cap., 120~pF, C0G, $\pm$5\%, 50~V, 0201        & 2 & GRM0335C1H121JA01D      & 0.02  & 0.04  \\
+C5       & Cap., 0.1~pF, C0G, $\pm$0.05~pF, 50~V, 0201    & 1 & GRM0335C1HR10WA01D      & 0.03  & 0.03  \\
+C6       & Cap., 1.2~pF, C0G, $\pm$0.1~pF, 50~V, 0201     & 1 & GRM0335C1H1R2BA01D      & 0.02  & 0.02  \\
+C7, C12  & Cap., 1~\textmu F, X5R, 0603                    & 2 & C0603C105M8PACTU        & 0.26  & 0.52  \\
+C9, C10  & Cap., 4.7~\textmu F, X7R, 6.3~V, 0603          & 2 & CL10B475KQ8NQNC         & 0.14  & 0.28  \\
+C11      & Cap., 47~nF, X5R, 10~V, 0201                    & 1 & CC0201KRX5R6BB473       & 0.03  & 0.03  \\
+C13, C15 & Cap., 100~nF, X5R, 16~V, 0201                   & 2 & GRM033R61C104KE14D      & 0.02  & 0.04  \\
+C14      & Cap., 1~\textmu F, 0201                          & 1 & 0201YD105MAT2A          & 0.11  & 0.11  \\
+FB1, FB3 & Ferrite Bead, 1~k$\Omega$@100~MHz, 450~mA, 0603 & 2 & BLM18AG102SN1D          & 0.10  & 0.20  \\
+FB2      & Ferrite Bead, 1~k$\Omega$@100~MHz, 250~mA, 0805 & 1 & BLM21BD102SN1D          & 0.23  & 0.23  \\
+IC1      & PMOS Power Switch, SOT-23-3                      & 1 & SIP32431DNP3-T1GE4      & 1.80  & 1.80  \\
+L1       & RF Inductor, 2.7~nH, $\pm$0.1~nH, 0201         & 1 & LQP03TN2N7B02D          & 0.08  & 0.08  \\
+L2       & RF Inductor, 3~nH, $\pm$0.1~nH, 0201           & 1 & LQP03TN3N0B02D          & 0.08  & 0.08  \\
+L3       & RF Inductor, 16~nH, $\pm$5\%, 0201              & 1 & LQP03TN16NJ02D          & 0.07  & 0.07  \\
+L4       & DC-DC Inductor, 2.2~\textmu H, 700~mA, 0603     & 1 & LQM18PZ2R2MFHD          & 0.64  & 0.64  \\
+J1       & JST SH 2-pin SMD Connector                       & 1 & SM02B-SRSS-TB(LF)(SN)   & 1.22  & 1.22  \\
+J2       & JST SH 4-pin SMD Connector                       & 1 & SM04B-SRSS-TB(LF)(SN)   & 1.62  & 1.62  \\
+J3       & JST SH 6-pin SMD Connector (Debug)               & 1 & SM06B-SRSS-TB(LF)(SN)   & 2.17  & 2.17  \\
+PS1      & LDO Regulator, 3.0~V, 200~mA, SOT-23-5          & 1 & TPS7A0530PDBVR          & 0.72  & 0.72  \\
+R1       & Resistor, 1~$\Omega$, Precision, 0603            & 1 & MCT0603MC1008FP500      & 0.45  & 0.45  \\
+R2       & Resistor, 10~k$\Omega$, 0201                     & 1 & CRCW020110K0FNED        & 0.04  & 0.04  \\
+R3       & Resistor, 100~$\Omega$, 0201                     & 1 & CRCW0201100RFNED        & 0.04  & 0.04  \\
+SW1      & Tactile Switch, SPST-NO, SMD                     & 1 & PTS810SJM250SMTRLFS     & 1.73  & 1.73  \\
+U1       & EFR32MG22E224F512IM32 SoC, QFN-32               & 1 & EFR32MG22E224F512IM32-C & 14.32 & 14.32 \\
+X1       & Crystal, 38.4~MHz, 10~pF, SMD                   & 1 & 12.85730                 & 2.02  & 2.02  \\
+X2       & Crystal, 32.768~kHz, 12.5~pF, SMD               & 1 & 7BG03276AFV             & 2.90  & 2.90  \\
+\midrule
+        &                                                   &   & \textbf{PCB Subtotal}          &       & \textbf{34.20} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Bill of Materials for the Initial Design, part 2 of 2.}
+\label{tab:bom_order1p2}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{@{} l X r l r r @{}}
+\toprule
+Desig. & Component & Qty & MPN & Unit & Total \\
+       &           &     &     & (DKK) & (DKK) \\
+\midrule
+--       & Lithium Battery, \textonehalf AA, 3.6~V, 1.2~Ah  & 1 & ER14250                 & 10.83 & 10.83 \\
+--       & \textonehalf AA Battery Holder                    & 1 & 185-4655                & 7.78  & 7.78  \\
+--       & JST SH 4-pin Cable, 150~mm                       & 1 & 4209                    & 6.26  & 6.26  \\
+--       & JST SH 2-pin Cable, 152~mm                       & 1 & A02SR02SR30K152B        & 4.34  & 4.34  \\
+--       & JST SH 6-pin Cable, 305~mm                       & 1 & A06SR06SR30K305A        & 8.13  & 8.13  \\
+\midrule
+         &                                                   &   & \textbf{External Subtotal}          &       & \textbf{37.34} \\
+\midrule
+         &                                                   &   & \textbf{Total}          &       & \textbf{71.54} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+% ── Order 2 ─────────────────────────────────────────────────
+\begin{table}[!htbp]
+\centering
+\caption{Bill of Materials for the Final Design.}
+\label{tab:bom_order2}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{@{} l X r l r r @{}}
+\toprule
+Desig. & Component & Qty & MPN & Unit & Total \\
+       &           &     &     & (DKK) & (DKK) \\
+\midrule
+ANT1    & RF Antenna, 2.4~GHz, Ceramic SMD               & 1 & 2450AT18D0100E          & 1.61  & 1.61  \\
+C1      & Cap., 18~pF, C0G, $\pm$2\%, 25~V, 0201         & 1 & GJM0335C1E180GB01D      & 0.05  & 0.05  \\
+C2      & Cap., 1.6~pF, C0G, $\pm$0.1~pF, 50~V, 0201     & 1 & GRM0335C1H1R6BA01D      & 0.02  & 0.02  \\
+C3      & Cap., 10~\textmu F, X5R, 0603                   & 1 & CC0603MRX5R7BB106       & 0.56  & 0.56  \\
+C4, C8  & Cap., 120~pF, C0G, $\pm$5\%, 50~V, 0201        & 2 & GRM0335C1H121JA01D      & 0.02  & 0.04  \\
+C5      & Cap., 0.1~pF, C0G, $\pm$0.05~pF, 50~V, 0201    & 1 & GRM0335C1HR10WA01D      & 0.03  & 0.03  \\
+C6      & Cap., 1.2~pF, C0G, $\pm$0.1~pF, 50~V, 0201     & 1 & GRM0335C1H1R2BA01D      & 0.02  & 0.02  \\
+C7      & Cap., 1~\textmu F, X5R, 0603                    & 1 & C0603C105M8PACTU        & 0.26  & 0.26  \\
+C9, C10     & Cap., 4.7~\textmu F, X7R, 6.3~V, 0603          & 2 & CL10B475KQ8NQNC         & 0.14  & 0.14  \\
+C11     & Cap., 47~nF, X5R, 10~V, 0201                    & 1 & CC0201KRX5R6BB473       & 0.03  & 0.03  \\
+C14     & Cap., 1~\textmu F, 0201                          & 1 & 0201YD105MAT2A          & 0.11  & 0.11  \\
+IC1     & PMOS Power Switch, SOT-23-3                      & 1 & SIP32431DNP3-T1GE4      & 1.80  & 1.80  \\
+L1      & RF Inductor, 2.7~nH, $\pm$0.1~nH, 0201         & 1 & LQP03TN2N7B02D          & 0.08  & 0.08  \\
+L2      & RF Inductor, 3~nH, $\pm$0.1~nH, 0201           & 1 & LQP03TN3N0B02D          & 0.08  & 0.08  \\
+L3      & RF Inductor, 16~nH, $\pm$5\%, 0201              & 1 & LQP03TN16NJ02D          & 0.07  & 0.07  \\
+L4      & DC-DC Inductor, 2.2~\textmu H, 700~mA, 0603     & 1 & LQM18PZ2R2MFHD          & 0.64  & 0.64  \\
+J1      & JST SH 2-pin SMD Connector                       & 1 & SM02B-SRSS-TB(LF)(SN)   & 1.22  & 1.22  \\
+J2      & JST SH 4-pin SMD Connector                       & 1 & SM04B-SRSS-TB(LF)(SN)   & 1.62  & 1.62  \\
+J3      & JST SH 6-pin SMD Connector (Debug)               & 1 & SM06B-SRSS-TB(LF)(SN)   & 2.17  & 2.17  \\
+U1      & EFR32MG22E224F512IM32 SoC, QFN-32               & 1 & EFR32MG22E224F512IM32-C & 14.32 & 14.32 \\
+X1      & Crystal, 38.4~MHz, 10~pF, SMD                   & 1 & 12.85730                 & 2.02  & 2.02  \\
+\midrule
+        &                                                   &   & \textbf{PCB Subtotal}          &       & \textbf{26.89} \\
+\bottomrule
+--      & Lithium Battery, \textonehalf AA, 3.6~V, 1.2~Ah  & 1 & ER14250                 & 10.83 & 10.83 \\
+--      & \textonehalf AA Battery Holder                    & 1 & 185-4655                & 7.78  & 7.78  \\
+--      & JST SH 4-pin Cable, 150~mm                       & 1 & 4209                    & 6.26  & 6.26  \\
+--      & JST SH 2-pin Cable, 152~mm                       & 1 & A02SR02SR30K152B        & 4.34  & 4.34  \\
+--      & JST SH 6-pin Cable, 305~mm                       & 1 & A06SR06SR30K305A        & 8.13  & 8.13  \\
+\midrule
+         &                                                   &   & \textbf{External Subtotal}          &       & \textbf{37.34} \\
+\midrule
+        &                                                   &   & \textbf{Total}          &       & \textbf{64.23} \\
+\bottomrule
+\end{tabularx}
+\end{table}
