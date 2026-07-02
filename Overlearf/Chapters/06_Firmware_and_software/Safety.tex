@@ -1,0 +1,21 @@
+Because the device is intended for long-term unattended operation, the firmware must recover automatically from transient faults without any external intervention.
+The dominant concern is not an incorrect measurement but a state in which the device remains awake at active current indefinitely, since such a state would drain the battery in a matter of days rather than years.
+Two mechanisms address this, namely a per-cycle retry for failed transmissions and a no-progress watchdog that guarantees the device always returns to deep sleep.
+
+The first mechanism handles the common case in which a single report is not delivered, for instance because the network is not yet ready or because a transmission is interrupted or corrupted.
+When the tracked transmission-complete callback reports a failure, the firmware does not enter sleep but instead schedules a short retry after a fixed interval of one second, after which the report is attempted again.
+This turns a transient delivery failure into a brief, bounded retry loop rather than a lost measurement, and because each attempt is inexpensive, the device recovers automatically once the link becomes available.
+
+The second mechanism protects against the more serious case in which the active phase never completes at all, such as when a network join or the ZHA interview stalls and the device would otherwise stay awake waiting forever.
+A no-progress watchdog records a deadline at start-up and the state machine checks on every iteration whether that deadline has passed.
+If the active phase has not completed within the deadline, set to sixty seconds, the watchdog forces a short EM4 cycle that reboots the device and restarts the whole sequence from a clean state.
+The deadline is armed once during initialization, and because every wake from EM4 is a full reset the watchdog is effectively re-armed at the start of every cycle without any explicit reset logic.
+This guarantees that the device can never remain in the active phase for longer than the deadline, so a stalled join or interview costs at most one wasted cycle of active current rather than the entire battery.
+
+This watchdog is implemented in software within the application rather than using the hardware watchdog peripheral of the EFR32MG22E, which is deliberately left disabled.
+The hardware watchdog is designed to detect a hung main loop by requiring periodic servicing, whereas the failure mode of concern here is different, since the main loop continues to run normally while the network simply never reaches a usable state.
+A software deadline measured against the application's own notion of progress matches this failure mode directly, and it also integrates cleanly with the deep-sleep entry path, since the watchdog requests the same EM4 cycle that the normal flow uses rather than triggering an independent hardware reset.
+
+A further safeguard exists in the handling of the transmission-complete callback, which is delivered asynchronously by the stack.
+A guard flag marks whether a tracked transmission is genuinely in flight, and any callback that arrives when no transmission is expected, such as a stale or duplicate completion, is rejected.
+This prevents a late callback from being mistaken for the completion of a later cycle, which could otherwise allow the device to sleep before its current measurement had actually been delivered.
