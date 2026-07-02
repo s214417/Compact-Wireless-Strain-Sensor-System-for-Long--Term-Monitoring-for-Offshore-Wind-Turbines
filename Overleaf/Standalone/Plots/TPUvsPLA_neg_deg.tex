@@ -41,13 +41,8 @@
 \tikzstyle{densely dashdotted}=      [dash pattern=on 3pt off 1pt on \the\pgflinewidth off 1pt]
 \tikzstyle{loosely dashdotted}=      [dash pattern=on 3pt off 4pt on \the\pgflinewidth off 4pt]
 
-
-% Standard font + uniform size for the (overlaid) time-series axes, so
-% they stay aligned and match the 11pt body. The two hysteresis axes below
-% keep their own explicit \HystW/\HystH (they override this). Include at
-% NATURAL size (no width=); tune the pins.
 \providecommand{\PlotFont}{\normalsize}
-\providecommand{\PlotWidth}{12cm}
+\providecommand{\PlotWidth}{11.5cm}
 \providecommand{\PlotHeight}{6.5cm}
 \pgfplotsset{every axis/.append style={font=\PlotFont, width=\PlotWidth, height=\PlotHeight}}
 
@@ -235,7 +230,7 @@
 \end{axis}
 
 
-\node[font=\bfseries\large, anchor=south west] at ([xshift=-25mm]left.north west) {a)};
+\node[font=\bfseries\large, anchor=south west] at ([xshift=-11.5mm, yshift=3mm]left.north west) {a)};
 \node[font=\bfseries\large, anchor=south east] at ([yshift=3mm, xshift=-4mm]hystPLA.north west) {b)};
 \node[font=\bfseries\large, anchor=south east] at ([yshift=3mm, xshift=-4mm]hystTPU.north west) {c)};
 

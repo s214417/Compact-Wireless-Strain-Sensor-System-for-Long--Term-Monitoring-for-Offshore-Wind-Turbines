@@ -40,11 +40,13 @@
 \def\XMax{47.34378}
 \def\PlotWidth{12.5cm}
 \def\PlotHeight{4.5cm}
-\def\RawYMin{34}
-\def\RawYMax{51.64}
-\def\Rzero{35.725}
-\pgfmathsetmacro{\DeltaYMin}{(\RawYMin-\Rzero)/\Rzero}
-\pgfmathsetmacro{\DeltaYMax}{(\RawYMax-\Rzero)/\Rzero}
+\def\RawYMin{36}
+\def\RawYMax{52.5}
+%\def\Rzero{35.725}
+\def\DeltaYMin{-0.035}
+\def\DeltaYMax{0.31}
+% \pgfmathsetmacro{\DeltaYMin}{(\RawYMin-\Rzero)/\Rzero}
+% \pgfmathsetmacro{\DeltaYMax}{(\RawYMax-\Rzero)/\Rzero}
 \def\StrainYMin{-0.01}
 \def\StrainYMax{0.09}
 
@@ -124,12 +126,14 @@
 ]
 \addlegendimage{ultra thick}
 \addlegendentry{Strain}
+
 \addplot[IBM1, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/WheatstoneBasic_ohm.csv};
-\addlegendentry{Active sensor 1}
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{3}}] {CSV/sensor_encapsulation.csv};
+\addlegendentry{Before potting}
+
 \addplot[IBM3, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{3}}] {CSV/WheatstoneBasic_ohm.csv};
-\addlegendentry{Active sensor 2}
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/sensor_encapsulation.csv};
+\addlegendentry{After potting}
 
 \end{axis}
 
@@ -153,9 +157,9 @@
 ]
 
 \addplot[IBM1, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}/100}] {CSV/WheatstoneBasic_ohm.csv};
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}/100}] {CSV/sensor_encapsulation.csv};
 \addplot[IBM3, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{4}/100}] {CSV/WheatstoneBasic_ohm.csv};
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{4}/100}] {CSV/sensor_encapsulation.csv};
 
 \end{axis}
 

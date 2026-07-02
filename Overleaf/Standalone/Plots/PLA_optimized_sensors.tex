@@ -41,12 +41,14 @@
 \def\PlotWidth{12.5cm}
 \def\PlotHeight{4.5cm}
 \def\RawYMin{34}
-\def\RawYMax{51.64}
-\def\Rzero{35.725}
-\pgfmathsetmacro{\DeltaYMin}{(\RawYMin-\Rzero)/\Rzero}
-\pgfmathsetmacro{\DeltaYMax}{(\RawYMax-\Rzero)/\Rzero}
+\def\RawYMax{52.5}
+%\def\Rzero{35.725}
+\def\DeltaYMin{-0.05}
+\def\DeltaYMax{0.45}
+% \pgfmathsetmacro{\DeltaYMin}{(\RawYMin-\Rzero)/\Rzero}
+% \pgfmathsetmacro{\DeltaYMax}{(\RawYMax-\Rzero)/\Rzero}
 \def\StrainYMin{-0.01}
-\def\StrainYMax{0.09}
+\def\StrainYMax{0.095}
 
 \begin{groupplot}[
     group style={group size=1 by 2, vertical sep=0.5cm, group name=dual},
@@ -118,18 +120,32 @@
     ylabel={Resistance},
     y unit={\si{\kilo\ohm}},
     xticklabels=\empty,
-    legend style={at={(0.5,1.15)}, anchor=center, legend columns=4},
+    legend style={at={(0.5,1.25)}, anchor=center, legend columns=3},
     unbounded coords=discard,
     filter discard warning=false
 ]
 \addlegendimage{ultra thick}
 \addlegendentry{Strain}
+
 \addplot[IBM1, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/WheatstoneBasic_ohm.csv};
-\addlegendentry{Active sensor 1}
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/lukas.csv};
+\addlegendentry{Stage 1}
+
 \addplot[IBM3, ultra thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/lukas2.csv};
+\addlegendentry{Stage 2}
+
+\addplot[IBM5, ultra thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{3}}] {CSV/lukas.csv};
+\addlegendentry{Stage 3}
+
+\addplot[IBM6, ultra thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{7}}] {CSV/lukas3.csv};
+\addlegendentry{Stage 4}
+
+\addplot[IBM10, ultra thick]
     table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{3}}] {CSV/WheatstoneBasic_ohm.csv};
-\addlegendentry{Active sensor 2}
+\addlegendentry{Stage 5}
 
 \end{axis}
 
@@ -153,8 +169,18 @@
 ]
 
 \addplot[IBM1, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}/100}] {CSV/WheatstoneBasic_ohm.csv};
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}/100}] {CSV/lukas.csv};
+
 \addplot[IBM3, ultra thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}/100}] {CSV/lukas2.csv};
+
+\addplot[IBM5, ultra thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{4}/100}] {CSV/lukas.csv};
+
+\addplot[IBM6, ultra thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{8}/100}] {CSV/lukas3.csv};
+
+\addplot[IBM10, ultra thick]
     table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{4}/100}] {CSV/WheatstoneBasic_ohm.csv};
 
 \end{axis}

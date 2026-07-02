@@ -38,7 +38,7 @@
 
 \begin{tikzpicture}
 \begin{groupplot}[
-    group style={group size=2 by 2, horizontal sep=2.5 cm, vertical sep=3 cm},
+    group style={group size=2 by 2, horizontal sep=2.5 cm, vertical sep=2.2 cm},
     width=\PlotWidth, height=\PlotHeight,
     grid=both,
     xmin=0, xmax=242876.67361152,
@@ -57,7 +57,7 @@
 ]
 \addplot[IBM1, thick]
     table[col sep=comma, x index=0, y expr={\thisrowno{1}/1000}] {CSV/TPUsub_TPU_latex.csv};
-\node[anchor=south west, font=\bfseries\large] at (rel axis cs:-0.25,1.25) {a)};
+\node[anchor=south west, font=\bfseries\large] at (rel axis cs:-0.4,0.9) {a)};
 
 \nextgroupplot[
     title={\normalsize{Steel substrate / condutive TPU}},
@@ -70,7 +70,7 @@
 ]
 \addplot[IBM1, thick]
     table[col sep=comma, x index=0, y expr={\thisrowno{1}/1000}] {CSV/Metalsub_TPU_latex.csv};
-\node[anchor=south west, font=\bfseries\large] at (rel axis cs:-0.25,1.25) {b)};
+\node[anchor=south west, font=\bfseries\large] at (rel axis cs:-0.4,0.9) {b)};
 
 \nextgroupplot[
     title={\normalsize{TPU substrate / conductive PLA}},
@@ -85,7 +85,7 @@
 ]
 \addplot[IBM1, thick]
     table[col sep=comma, x index=0, y expr={\thisrowno{1}/1000}] {CSV/TPUsub_PLA_latex.csv};
-\node[anchor=south west, font=\bfseries\large] at (rel axis cs:-0.25,1.25) {c)};
+\node[anchor=south west, font=\bfseries\large] at (rel axis cs:-0.4,0.9) {c)};
 
 \nextgroupplot[
     title={\normalsize{Steel substrate / condutive PLA}},
@@ -98,7 +98,7 @@
 ]
 \addplot[IBM1, thick]
     table[col sep=comma, x index=0, y expr={\thisrowno{1}/1000}] {CSV/Metalsub_PLA_latex.csv};
-\node[anchor=south west, font=\bfseries\large] at (rel axis cs:-0.25,1.25) {d)};
+\node[anchor=south west, font=\bfseries\large] at (rel axis cs:-0.4,0.9) {d)};
 
 
 

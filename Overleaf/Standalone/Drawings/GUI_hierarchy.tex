@@ -13,6 +13,25 @@
 \providecommand{\GHf}{\large\bfseries}
 \providecommand{\GHn}{\tiny\bfseries}
 
+\providecommand{\reduce}{0.75}
+\providecommand{\Ypark}{0}
+\providecommand{\Yt}{-1.9*\reduce}
+\providecommand{\Yf}{-3.6*\reduce}
+\providecommand{\Yn}{-5.2*\reduce}
+
+\providecommand{\YparkBranch}{-0.95*\reduce}
+\providecommand{\YtBranch}{-2.8*\reduce}
+\providecommand{\YfBranch}{-4.35*\reduce}
+
+% \providecommand{\Ypark}{0}
+% \providecommand{\Yt}{-2.4}
+% \providecommand{\Yf}{-4.7}
+% \providecommand{\Yn}{-7.0}
+
+% \providecommand{\YparkBranch}{-1.2}
+% \providecommand{\YtBranch}{-3.6}
+% \providecommand{\YfBranch}{-5.95}
+
 \usepackage{tikz}
 
 \tikzset{
@@ -33,37 +52,92 @@
 \begin{document}
 \begin{tikzpicture}[x={\GHx cm}, y=1cm]
 
-\node (park) [parkbox] at (11.81,0) {Wind Turbine Park};
+\node (park) [parkbox] at (11.81,\Ypark) {Wind Turbine Park};
 
 \foreach \tb/\tl/\tid in {0/1/a, 8.2/2/b, 16.4/{$n$}/c}{
-  \node (t\tid) [tbox] at (\tb+3.61,-2.4) {T\tl};
-  \node[dots, font=\GHdotsF] (tf\tid) at (\tb+4.96,-4.7) {$\cdots$};   % omitted flanges
-  \foreach \fb/\fl/\fid in {0/1/a, 2.7/2/b, 5.4/{$n$}/c}{
-    \node (f\tid\fid) [fbox] at (\tb+\fb+0.91,-4.7) {F\fl};
 
-    \node (n\tid\fid a) [ubox] at (\tb+\fb,-7.0)      {N1};
-    \node (n\tid\fid c) [ubox] at (\tb+\fb+1.82,-7.0) {N$n$};
-    \node[dots, font=\GHdotsN] (nd\tid\fid) at (\tb+\fb+0.91,-7.0) {$\cdots$};  % omitted nuts
+  \node (t\tid) [tbox] at (\tb+3.61,\Yt) {T\tl};
 
-    \draw[edge] (\tb+\fb+0.91,-5.11) -- (\tb+\fb+0.91,-5.95);
-    \draw[edge] (\tb+\fb,-5.95) -- (\tb+\fb+1.82,-5.95);
-    \draw[edge] (\tb+\fb,-5.95)      -- (n\tid\fid a.north);
-    \draw[edge] (\tb+\fb+1.82,-5.95) -- (n\tid\fid c.north);
+  \node[dots,font=\GHdotsF] (tf\tid)
+      at (\tb+4.96,\Yf) {$\cdots$};
+
+  \foreach \fb/\fl/\fid in {0/1/a,2.7/2/b,5.4/{$n$}/c}{
+
+    \node (f\tid\fid) [fbox]
+        at (\tb+\fb+0.91,\Yf) {F\fl};
+
+    \node (n\tid\fid a) [ubox]
+        at (\tb+\fb,\Yn) {N1};
+
+    \node (n\tid\fid c) [ubox]
+        at (\tb+\fb+1.82,\Yn) {N$n$};
+
+    \node[dots,font=\GHdotsN] (nd\tid\fid)
+        at (\tb+\fb+0.91,\Yn) {$\cdots$};
+
+    % Flange -> Nuts
+    \draw[edge]
+      (\tb+\fb+0.91,\Yf-0.41) --
+      (\tb+\fb+0.91,\YfBranch);
+
+    \draw[edge]
+      (\tb+\fb,\YfBranch) --
+      (\tb+\fb+1.82,\YfBranch);
+
+    \draw[edge]
+      (\tb+\fb,\YfBranch) --
+      (n\tid\fid a.north);
+
+    \draw[edge]
+      (\tb+\fb+1.82,\YfBranch) --
+      (n\tid\fid c.north);
   }
-  \draw[edge] (\tb+3.61,-2.9) -- (\tb+3.61,-3.6);
-  \draw[edge] (\tb+0.91,-3.6) -- (\tb+6.31,-3.6);
-  \draw[edge] (\tb+0.91,-3.6) -- (f\tid a.north);
-  \draw[edge] (\tb+3.61,-3.6) -- (f\tid b.north);
-  \draw[edge] (\tb+6.31,-3.6) -- (f\tid c.north);
+
+  % Turbine -> Flanges
+  \draw[edge]
+      (\tb+3.61,\Yt-0.5) --
+      (\tb+3.61,\YtBranch);
+
+  \draw[edge]
+      (\tb+0.91,\YtBranch) --
+      (\tb+6.31,\YtBranch);
+
+  \draw[edge]
+      (\tb+0.91,\YtBranch) --
+      (f\tid a.north);
+
+  \draw[edge]
+      (\tb+3.61,\YtBranch) --
+      (f\tid b.north);
+
+  \draw[edge]
+      (\tb+6.31,\YtBranch) --
+      (f\tid c.north);
 }
 
-\node[dots, font=\GHdotsT] (tdots) at (15.9,-2.4) {$\cdots$};
+\node[dots,font=\GHdotsT]
+    (tdots) at (15.9,\Yt) {$\cdots$};
 
-\draw[edge] (park.south) -- (11.81,-1.2);
-\draw[edge] (3.61,-1.2) -- (20.01,-1.2);
-\draw[edge] (3.61,-1.2)  -- (ta.north);
-\draw[edge] (11.81,-1.2) -- (tb.north);
-\draw[edge] (20.01,-1.2) -- (tc.north);
+% Park -> Turbines
+\draw[edge]
+    (park.south) --
+    (11.81,\YparkBranch);
+
+\draw[edge]
+    (3.61,\YparkBranch) --
+    (20.01,\YparkBranch);
+
+\draw[edge]
+    (3.61,\YparkBranch) --
+    (ta.north);
+
+\draw[edge]
+    (11.81,\YparkBranch) --
+    (tb.north);
+
+\draw[edge]
+    (20.01,\YparkBranch) --
+    (tc.north);
 
 \end{tikzpicture}
 \end{document}

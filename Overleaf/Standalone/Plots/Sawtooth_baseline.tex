@@ -38,7 +38,7 @@
 \begin{tikzpicture}
 \def\XMin{0}
 \def\XMax{77.09539474}
-\def\PlotWidth{12.5cm}
+\def\PlotWidth{11.25cm}
 \def\PlotHeight{4.5cm}
 \def\RawYMin{-233}
 \def\RawYMax{200}
@@ -118,10 +118,10 @@
 	name=hystaxis,
 	at={(dual c1r1.south west)},
 	anchor=north west,
-	xshift=3.5cm,
-    yshift=-1.75cm,
-	width=5.5cm,
-	height=5.5cm,
+	xshift=3.1cm,
+    yshift=-1.5cm,
+	width=5cm,
+	height=5cm,
 	xmin=\StrainYMin, xmax=\StrainYMax,
 	ymin=\NormYMin, ymax=\NormYMax,
 	grid=both,
@@ -136,7 +136,7 @@
 	colorbar,
 	colorbar style={
 		width=0.35cm,
-		height=3.94cm,
+		height=3.44cm,
 		xshift=4pt,     
 		yshift=0pt,     
 		ytick={20,40,60},
@@ -148,12 +148,8 @@
 	unbounded coords=discard,
 	filter discard warning=false,
 ]
-\addplot[
-	scatter,
-	only marks,
-	scatter src=explicit,
-	mark size=0.8pt,
-] table[col sep=comma, skip first n=1, x expr={-\thisrowno{3}}, y expr={(-1)*\thisrowno{1}/\Vexc}, meta index=0]
+\addplot[mesh, point meta=\thisrowno{0}, ultra thick]
+	table[col sep=comma, skip first n=1, x expr={-\thisrowno{3}}, y expr={(-1)*\thisrowno{1}/\Vexc}]
 	{CSV/Sawtooth_baseline_hysteresis.csv};
 \end{axis}
 

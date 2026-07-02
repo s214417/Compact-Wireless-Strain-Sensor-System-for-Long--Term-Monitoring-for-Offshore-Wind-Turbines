@@ -42,7 +42,7 @@
 \tikzstyle{loosely dashdotted}=      [dash pattern=on 3pt off 4pt on \the\pgflinewidth off 4pt]
 
 \providecommand{\PlotFont}{\normalsize}
-\providecommand{\PlotWidth}{12cm}
+\providecommand{\PlotWidth}{11cm}
 \providecommand{\PlotHeight}{6.5cm}
 \pgfplotsset{every axis/.append style={font=\PlotFont, width=\PlotWidth, height=\PlotHeight}}
 
@@ -120,16 +120,17 @@
     ylabel={Voltage},
     y unit={\si{\milli\volt}},
     axis y line*=left,
-    y axis line style={color=IBM1, thick},
-    yticklabel style={color=IBM1},
-    ytick style={color=IBM1, thick},
-    ylabel style={color=IBM1},
+    y axis line style={thick},
+    ytick style={thick},
     tick pos=left,
 ]
 \addplot[IBM1, thick]
     table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}*1000}] {CSV/FullSystem_neg_deg_ADC_latex.csv};
 \addplot[IBM5, thick]
     table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/FullSystem_neg_deg_Vout_latex.csv};
+
+\draw[-stealth,IBM1,very thick] (axis cs: {60*60*2.2},50) -- (axis cs: {60*60*0.1},75);
+\draw[-stealth,IBM5,very thick] (axis cs: {60*60*5.8},186) -- (axis cs: {60*60*0.1},169);
 \end{axis}
 
 \begin{axis}[

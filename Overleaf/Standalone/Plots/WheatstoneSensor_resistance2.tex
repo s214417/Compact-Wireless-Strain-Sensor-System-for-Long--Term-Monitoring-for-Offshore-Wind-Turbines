@@ -40,11 +40,10 @@
 \def\XMax{47.34378}
 \def\PlotWidth{12.5cm}
 \def\PlotHeight{4.5cm}
-\def\RawYMin{34}
-\def\RawYMax{51.64}
-\def\Rzero{35.725}
-\pgfmathsetmacro{\DeltaYMin}{(\RawYMin-\Rzero)/\Rzero}
-\pgfmathsetmacro{\DeltaYMax}{(\RawYMax-\Rzero)/\Rzero}
+\def\TopYMin{-0.069}
+\def\TopYMax{0.615}
+\def\BotYMin{-0.024}
+\def\BotYMax{0.215}
 \def\StrainYMin{-0.01}
 \def\StrainYMax{0.09}
 
@@ -111,25 +110,23 @@
     anchor=south west,
     xmin=\XMin,
     xmax=\XMax,
-    ymin=\RawYMin,
-    ymax=\RawYMax,
+    ymin=\TopYMin,
+    ymax=\TopYMax,
     axis on top=false,
     grid=both,
-    ylabel={Resistance},
-    y unit={\si{\kilo\ohm}},
+    ylabel = $\dfrac{\Delta R}{R_0}$,
+    ylabel style = {rotate=-90,},
     xticklabels=\empty,
-    legend style={at={(0.5,1.15)}, anchor=center, legend columns=4},
+    legend style={at={(0.5,1.15)}, anchor=center, legend columns=2},
     unbounded coords=discard,
     filter discard warning=false
 ]
 \addlegendimage{ultra thick}
 \addlegendentry{Strain}
+\addlegendimage{IBM1, ultra thick}
+\addlegendentry{Active sensor}
 \addplot[IBM1, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}}] {CSV/WheatstoneBasic_ohm.csv};
-\addlegendentry{Active sensor 1}
-\addplot[IBM3, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{3}}] {CSV/WheatstoneBasic_ohm.csv};
-\addlegendentry{Active sensor 2}
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}/100}] {CSV/finalWheatstone_resistance.csv};
 
 \end{axis}
 
@@ -140,8 +137,8 @@
     anchor=south west,
     xmin=\XMin,
     xmax=\XMax,
-    ymin=\DeltaYMin,
-    ymax=\DeltaYMax,
+    ymin=\BotYMin,
+    ymax=\BotYMax,
     axis on top=false,
     grid=both,
     xlabel={Time},
@@ -153,11 +150,14 @@
 ]
 
 \addplot[IBM1, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}/100}] {CSV/WheatstoneBasic_ohm.csv};
-\addplot[IBM3, ultra thick]
-    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{4}/100}] {CSV/WheatstoneBasic_ohm.csv};
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{4}/100}] {CSV/finalWheatstone_resistance.csv};
 
 \end{axis}
+
+\node[anchor=north east, font=\bfseries, fill=white, fill opacity=0.7, text opacity=1, inner sep=1.5pt]
+    at ([shift={(-1.5mm,-1.5mm)}]dual c1r1.north east) {Sensor 1};
+\node[anchor=north east, font=\bfseries, fill=white, fill opacity=0.7, text opacity=1, inner sep=1.5pt]
+    at ([shift={(-1.5mm,-1.5mm)}]dual c1r2.north east) {Sensor 2};
 
 \end{tikzpicture}
 \end{document}

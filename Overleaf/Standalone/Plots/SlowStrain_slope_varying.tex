@@ -1,0 +1,190 @@
+\documentclass[11pt,tikz,border=2mm]{standalone}
+\input{Setup/StandalonePreamble}
+
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage[siunitx,american]{circuitikz}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{tikz-3dplot}
+
+\usetikzlibrary{decorations.pathmorphing,patterns}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
+\usetikzlibrary{calc}
+\usetikzlibrary {datavisualization.formats.functions}
+\usepgfplotslibrary{units}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=1.18}
+
+\ctikzset{tripoles/mos style/arrows}
+
+\definecolor{IBM1}{HTML}{648fff}%blå
+\definecolor{IBM2}{HTML}{785ef0}%blå
+\definecolor{IBM3}{HTML}{dc267f}%rød
+\definecolor{IBM4}{HTML}{fe6100}%orange
+\definecolor{IBM5}{HTML}{ffb000}%gul
+\definecolor{IBM6}{HTML}{d55e00}%orange-brun
+\definecolor{IBM7}{HTML}{cc79a7}%lilla
+\definecolor{IBM8}{HTML}{0072b2}%blågrøn
+\definecolor{IBM9}{HTML}{f0e442}%gul
+\definecolor{IBM10}{HTML}{009e73}%grøn
+
+\tikzstyle{solid}=                   [dash pattern=]
+\tikzstyle{dotted}=                  [dash pattern=on \pgflinewidth off 2pt]
+\tikzstyle{densely dotted}=          [dash pattern=on \pgflinewidth off 1pt]
+\tikzstyle{loosely dotted}=          [dash pattern=on \pgflinewidth off 4pt]
+\tikzstyle{dashed}=                  [dash pattern=on 3pt off 3pt]
+\tikzstyle{densely dashed}=          [dash pattern=on 3pt off 2pt]
+\tikzstyle{loosely dashed}=          [dash pattern=on 3pt off 6pt]
+\tikzstyle{dashdotted}=              [dash pattern=on 3pt off 2pt on \the\pgflinewidth off 2pt]
+\tikzstyle{densely dashdotted}=      [dash pattern=on 3pt off 1pt on \the\pgflinewidth off 1pt]
+\tikzstyle{loosely dashdotted}=      [dash pattern=on 3pt off 4pt on \the\pgflinewidth off 4pt]
+
+\providecommand{\PlotFont}{\normalsize}
+\providecommand{\PlotWidth}{12cm}
+\providecommand{\PlotHeight}{5.25cm}
+\pgfplotsset{every axis/.append style={font=\PlotFont, width=\PlotWidth, height=\PlotHeight}}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+\begin{axis}[
+    name=left,
+    grid=both,
+    xmin=0, xmax=216000,
+    xtick={{60*60*5},{60*60*10},...,{60*60*60}},
+    scaled x ticks=false,
+    ytick={500,0,-500,-1000,-1210},
+    axis line style={opacity=0},
+    tick style={opacity=0},
+    ticklabel style={opacity=0},
+]
+
+\addplot[draw=none]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}*1000}] {CSV/Slow_strain_temp_HA_latex_2000.csv};
+\end{axis}
+
+\begin{axis}[
+    at={(left.west)},
+    anchor=west,
+    axis background/.style={fill=none},
+    axis y line*=right,
+    axis x line=none,
+    xmin=0, xmax=216000,
+    ytick={20,25},
+    yticklabels={20,25},
+    ylabel={Temperature},
+    y unit={\si{\degreeCelsius}},
+    y axis line style={color=IBM3, thick},
+    yticklabel style={color=IBM3},
+    ytick style={color=IBM3, thick},
+    ylabel style={color=IBM3, yshift=2mm},
+]
+
+\addplot[IBM3, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}}] {CSV/sidsteTest.csv};
+    
+\addplot[IBM3, dashed]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{3}}] {CSV/sidsteTest.csv};
+\end{axis}
+
+\begin{axis}[
+    name=volt,
+    at={(left.west)},
+    anchor=west,
+    axis background/.style={fill=none},
+    xmin=0, xmax=216000,
+    xtick={{60*60*5},{60*60*10},...,{60*60*60}},
+    xticklabels={5, 10,...,60},
+    scaled x ticks=false,
+    xlabel={Time},
+    x unit={\si{\hour}},
+    ylabel={Voltage},
+    y unit={\si{\milli\volt}},
+    axis y line*=left,
+    y axis line style={color=IBM1, thick},
+    ytick={500,0,-500,-1000,-1210},
+    yticklabel style={color=IBM1},
+    ytick style={color=IBM1, thick},
+    ylabel style={color=IBM1},
+    tick pos=left,
+    legend columns=2,
+    legend style={at={(0.5,1.1)}, anchor=south, font=\footnotesize,
+        /tikz/every even column/.append style={column sep=0.3cm}},
+]
+
+\addlegendimage{IBM1, thick}\addlegendentry{ADC}
+\addlegendimage{IBM3, thick}\addlegendentry{Temp. ambient}
+% \addlegendimage{IBM3, dashed}\addlegendentry{Temp. target}
+
+\addplot[IBM1, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{1}*1000}] {CSV/Slow_strain_temp_HA_latex_2000.csv};
+
+\end{axis}
+
+\coordinate (dpos) at ($(volt.south west)+(0,-2.25cm)$);
+
+\begin{axis}[
+    name=driftT,
+    at={(dpos)}, anchor=north west,
+    width=\PlotWidth, height=\PlotHeight,
+    axis background/.style={fill=none},
+    axis y line*=right, axis x line=none,
+    xmin=0, xmax=216000,
+    ytick={20,25}, yticklabels={20,25},
+    ylabel={Temperature}, y unit={\si{\degreeCelsius}},
+    y axis line style={color=IBM3, thick},
+    yticklabel style={color=IBM3},
+    ytick style={color=IBM3, thick},
+    ylabel style={color=IBM3, yshift=2mm},
+]
+\addplot[IBM3, thick]
+    table[col sep=comma, skip first n=1, x index=0, y expr={\thisrowno{2}}] {CSV/sidsteTest.csv};
+\end{axis}
+
+\begin{axis}[
+    name=drift,
+    at={(dpos)}, anchor=north west,
+    width=\PlotWidth, height=\PlotHeight,
+    axis background/.style={fill=none},
+    grid=both,
+    xmin=0, xmax=216000,
+    xtick={{60*60*5},{60*60*10},...,{60*60*60}},
+    xticklabels={5, 10,...,60},
+    scaled x ticks=false,
+    xlabel={Time}, x unit={\si{\hour}},
+    ymin=-1350, ymax=800,
+    ytick={500,0,-500,-1000,-1210},
+    ylabel={Voltage}, y unit={\si{\milli\volt}},
+    axis y line*=left,
+    y axis line style={color=IBM1, thick},
+    yticklabel style={color=IBM1},
+    ytick style={color=IBM1, thick},
+    ylabel style={color=IBM1},
+    legend columns=3,
+    legend style={at={(0.5,1.1)}, anchor=south, font=\footnotesize,
+        /tikz/every even column/.append style={column sep=0.3cm}},
+]
+\addlegendimage{IBM1, only marks, mark=*}\addlegendentry{Real envelope}
+\addlegendimage{IBM1, thick}\addlegendentry{Smooth envelope}
+\addlegendimage{IBM3, thick}\addlegendentry{Temp. ambient}
+\addplot[IBM1, thick, smooth, name path=envU]
+    table[col sep=comma, x=t_s, y=v_mV] {CSV/SlowStrain_slope_varying_envU_latex.csv};
+\addplot[IBM1, thick, smooth, name path=envL]
+    table[col sep=comma, x=t_s, y=v_mV] {CSV/SlowStrain_slope_varying_envL_latex.csv};
+\addplot[IBM1, opacity=0.1] fill between[of=envU and envL];
+\addplot[IBM1, only marks, mark=*, mark size=1.5pt]
+    table[col sep=comma, x=t_s, y=v_mV] {CSV/SlowStrain_slope_varying_envU_latex.csv};
+\addplot[IBM1, only marks, mark=*, mark size=1.5pt]
+    table[col sep=comma, x=t_s, y=v_mV] {CSV/SlowStrain_slope_varying_envL_latex.csv};
+\end{axis}
+
+\node[anchor=north west, font=\bfseries] at ([shift={(-1cm,0.9cm)}]volt.north west) {a)};
+\node[anchor=north west, font=\bfseries] at ([shift={(-1cm,0.9cm)}]drift.north west) {b)};
+
+\end{tikzpicture}
+\end{document}
